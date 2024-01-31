@@ -1,0 +1,14 @@
+C:\Users\roei9\OneDrive\Desktop\WORK\hafifa\Taki\Taki\bin\Debug\net8.0\Taki.exe
+C:\Users\roei9\OneDrive\Desktop\WORK\hafifa\Taki\Taki\bin\Debug\net8.0\Taki.deps.json
+C:\Users\roei9\OneDrive\Desktop\WORK\hafifa\Taki\Taki\bin\Debug\net8.0\Taki.runtimeconfig.json
+C:\Users\roei9\OneDrive\Desktop\WORK\hafifa\Taki\Taki\bin\Debug\net8.0\Taki.dll
+C:\Users\roei9\OneDrive\Desktop\WORK\hafifa\Taki\Taki\bin\Debug\net8.0\Taki.pdb
+C:\Users\roei9\OneDrive\Desktop\WORK\hafifa\Taki\Taki\obj\Debug\net8.0\Taki.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\roei9\OneDrive\Desktop\WORK\hafifa\Taki\Taki\obj\Debug\net8.0\Taki.AssemblyInfoInputs.cache
+C:\Users\roei9\OneDrive\Desktop\WORK\hafifa\Taki\Taki\obj\Debug\net8.0\Taki.AssemblyInfo.cs
+C:\Users\roei9\OneDrive\Desktop\WORK\hafifa\Taki\Taki\obj\Debug\net8.0\Taki.csproj.CoreCompileInputs.cache
+C:\Users\roei9\OneDrive\Desktop\WORK\hafifa\Taki\Taki\obj\Debug\net8.0\Taki.dll
+C:\Users\roei9\OneDrive\Desktop\WORK\hafifa\Taki\Taki\obj\Debug\net8.0\refint\Taki.dll
+C:\Users\roei9\OneDrive\Desktop\WORK\hafifa\Taki\Taki\obj\Debug\net8.0\Taki.pdb
+C:\Users\roei9\OneDrive\Desktop\WORK\hafifa\Taki\Taki\obj\Debug\net8.0\Taki.genruntimeconfig.cache
+C:\Users\roei9\OneDrive\Desktop\WORK\hafifa\Taki\Taki\obj\Debug\net8.0\ref\Taki.dll
