@@ -8,12 +8,10 @@ using Taki.Game.General;
 
 namespace Taki.Game.Cards
 {
-    internal class NumberCard : Card
+    internal class NumberCard(string name, Color color) : Card(name, color)
     {
         private const int MIN_NUMBER_CARD = 3;
         private const int MAX_NUMBER_CARD = 3;
-
-        public NumberCard(string name, Color color) : base(name, color) { }
 
         public static bool IsNumberCard(Card card)
         {
