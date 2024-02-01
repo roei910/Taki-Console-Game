@@ -68,7 +68,6 @@ namespace Taki.Game.Players
                     return;
                     throw new Exception("you won!");
                 }
-                //TODO: pick card again
                 throw new Exception("choosing algorithm error, card not found", e);
             }
 
