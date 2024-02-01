@@ -20,12 +20,12 @@ namespace Taki.Game.General
                 Console.WriteLine($"{i}. {actions[i]}");
         }
 
-        public static T GetUserAction<T>()
+        public static T GetUserEnum<T>()
         {
             object ?action;
             while (!Enum.TryParse(typeof(T), Console.ReadLine(), out action) ||
                 action == null || !Enum.IsDefined(typeof(T), action))
-                Console.WriteLine("please choose action again");
+                Console.WriteLine("please enum again");
             return (T)action;
         }
 
