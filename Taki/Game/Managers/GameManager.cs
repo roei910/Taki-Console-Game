@@ -13,6 +13,7 @@ using Taki.Game.Players;
 
 namespace Taki.Game.Managers
 {
+    //TODO: fix bug where the game gets stuck for no reason waiting for the computer to play a hand
     enum GameTypeEnum
     {
         Normal,
@@ -22,7 +23,7 @@ namespace Taki.Game.Managers
     internal class GameManager
     {
         private const int NUMBER_OF_TOTAL_WINNERS = 2;
-        private readonly List<IPlayerAlgorithm> algorithms =
+        private static readonly List<IPlayerAlgorithm> algorithms =
         [
             new PlayerAlgorithm(),
             new PlayerHateTakiAlgo()
@@ -58,24 +59,24 @@ namespace Taki.Game.Managers
             }
             return ruleHandler.RemoveWinner();
         }
-
-        private void CreatePlayers(LinkedList<Player> players, int numberOfPlayers)
-        {
-            Random random = new();
-            players.AddFirst(new Player(0, new ManualPlayerAlgorithm()));
-            for (int i = players.Count; i < numberOfPlayers; i++)
-            {
-                int index = random.Next(algorithms.Count);
-                players.AddLast(new Player(i, algorithms.ElementAt(index)));
-                //players.AddLast(new Player(i, new ManualPlayerAlgorithm()));
-            }
-        }
-
+        
         private void DealCards(LinkedList<Player> players, int numberOfPlayerCards)
         {
             for (int j = 0; j < numberOfPlayerCards; j++)
                 foreach (Player player in players)
                     player.AddCard(cardDeck.DrawCard());
+        }
+
+        private static void CreatePlayers(LinkedList<Player> players, int numberOfPlayers)
+        {
+            Random random = new();
+            players.AddFirst(new Player(new ManualPlayerAlgorithm()));
+            for (int i = players.Count; i < numberOfPlayers; i++)
+            {
+                int index = random.Next(algorithms.Count);
+                players.AddLast(new Player(algorithms.ElementAt(index)));
+                //players.AddLast(new Player(i, new ManualPlayerAlgorithm()));
+            }
         }
 
         private static void PrintWinnersList(int[] winnerIds)

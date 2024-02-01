@@ -12,13 +12,26 @@ using Taki.Game.Managers;
 
 namespace Taki.Game.Players
 {
-    internal class Player(int id, IPlayerAlgorithm playerAlgorithm)
+    internal class Player
     {
-        private readonly IPlayerAlgorithm choosingAlgorithm = playerAlgorithm;
+        private static int id = 0;
+        public List<Card> PlayerCards { get; set; }
+        public int Id { get; }
+        private readonly IPlayerAlgorithm choosingAlgorithm;
 
-        public int Id { get; } = id;
+        public Player(IPlayerAlgorithm playerAlgorithm)
+        {
+            PlayerCards = [];
+            Id = id++;
+            choosingAlgorithm = playerAlgorithm;
+        }
 
-        public List<Card> PlayerCards { get; set; } = [];
+        public Player(Player other)
+        {
+            PlayerCards = other.PlayerCards;
+            Id = other.Id;
+            choosingAlgorithm = other.choosingAlgorithm;
+        }
 
         public bool AskPlayerToPickCard(Card topDiscardPileCard, out Card chosenCard)
         {
@@ -37,14 +50,6 @@ namespace Taki.Game.Players
         public void AddCard(Card card)
         {
             PlayerCards.Add(card);
-        }
-
-        public string GetPlayerHand()
-        {
-            List<string> lst = [];
-            for (int i = 0; i < PlayerCards.Count(); i++)
-                lst.Add($"{i}.{PlayerCards.ElementAt(i)}");
-            return string.Join("\n", lst);
         }
 
         public bool IsHandEmpty()
@@ -75,9 +80,9 @@ namespace Taki.Game.Players
 
         public override string ToString()
         {
-            List<string> cards = PlayerCards.ToList().Select(x => x.ToString()).ToList();
+            string cardsInHand = string.Join("\n", PlayerCards.Select((x, i) => $"{i}.{x}"));
             string str = $"Player {id}, algorithm: {choosingAlgorithm.GetType()}, " +
-                $"{PlayerCards.Count} Cards:\n{GetPlayerHand()}";
+                $"{PlayerCards.Count} Cards:\n{cardsInHand}";
             return str;
         }
 
