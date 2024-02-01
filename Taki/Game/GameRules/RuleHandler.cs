@@ -12,10 +12,10 @@ using Taki.Game.Players;
 
 namespace Taki.Game.GameRules
 {
-    internal class RuleHandler(LinkedList<Player> players, CardDeck cardDeck)
+    internal class RuleHandler(PlayerHandler playerHandler, CardDeck cardDeck)
     {
-        private readonly PlayerHandler playerHandler = new(players);
-        private readonly CardDeck cardDeck = cardDeck;
+        protected readonly PlayerHandler playerHandler = playerHandler;
+        protected readonly CardDeck cardDeck = cardDeck;
         private bool isDirectionNormal = true;
         private Card? CurrentTakiCard { get; set; } = null;
         private int countPlus2 = 0;
@@ -26,8 +26,9 @@ namespace Taki.Game.GameRules
             Card topDiscard = cardDeck.GetTopDiscardPile();
             while (!UniqueCard.IsChangeColor(topDiscard) && topDiscard.Color == Color.Empty)
                 topDiscard = cardDeck.GetNextDiscard(topDiscard);
-            Player first = players.First();
+            Player first = playerHandler.CurrentPlayer;
             topDiscard = CheckCardFlags(topDiscard);
+            Console.WriteLine("here");
             if (!first.AskPlayerToPickCard(topDiscard, out Card playerCard))
                 HandlePlayerFinishTurn(first, topDiscard);
             else if (!TryHandleCard(topDiscard, playerCard))
@@ -92,7 +93,7 @@ namespace Taki.Game.GameRules
             cardDeck.AddCardToDiscardPile(card);
             if(CurrentTakiCard == null && UniqueCard.IsUniqueCard(card))
                 HandleUniqueCard(card);
-            Utilities.PrintConsoleAlert($"Player[{players.First().Id}] played {card}");
+            Utilities.PrintConsoleAlert($"Player[{playerHandler.CurrentPlayer.Id}] played {card}");
             return true;
         }
 
@@ -130,14 +131,20 @@ namespace Taki.Game.GameRules
             return topDiscard;
         }
 
-        public int RemoveWinner()
+        public int GetWinner()
         {
+            while (!PlayerFinishedHand())
+            {
+                Console.WriteLine("------------------------");
+                PlayTurn();
+                RequestNextPlayer();
+            }
             return playerHandler.RemoveWinner(isDirectionNormal);
         }
 
-        internal bool PlayerFinishedHand()
+        protected virtual bool PlayerFinishedHand()
         {
-            return playerHandler.CurrentPlayer.IsHandEmpty();
+            return playerHandler.PlayerFinishedHand();
         }
     }
 }

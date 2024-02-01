@@ -72,5 +72,10 @@ namespace Taki.Game.GameRules
             players.Remove(savedPlayer);
             return savedPlayer.Id;
         }
+
+        public bool PlayerFinishedHand()
+        {
+            return CurrentPlayer.IsHandEmpty();
+        }
     }
 }
