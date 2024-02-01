@@ -135,6 +135,5 @@ namespace Taki.Game.Deck
                 return false;
             return true;
         }
-
     }
 }
