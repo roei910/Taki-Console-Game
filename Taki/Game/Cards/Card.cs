@@ -48,8 +48,7 @@ namespace Taki.Game.Cards
         {
             if (Color.IsEmpty)
                 return Name;
-            //TODO: remove id
-            return $"{Name}({Color}), id = {Id}";
+            return $"{Name}({Color})";
         }
 
         public override bool Equals(object? obj)
