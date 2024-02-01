@@ -17,18 +17,17 @@ namespace Taki.Game.GameRules
         readonly PlayerHandler playerHandler = new(players);
         readonly CardDeck cardDeck = cardDeck;
         private bool isDirectionNormal = true;
-        private bool isTaki = false;
+        private Card? CurrentTakiCard { get; set; } = null;
         private int countPlus2 = 0;
         private Color changeColor = Color.Empty;
 
         public void PlayTurn()
         {
             Card topDiscard = cardDeck.GetTopDiscardPile();
-            while (topDiscard.Color == Color.Empty)
+            while (!UniqueCard.IsChangeColor(topDiscard) && topDiscard.Color == Color.Empty)
                 topDiscard = cardDeck.GetNextDiscard(topDiscard);
             Player first = players.First();
             topDiscard = CheckCardFlags(topDiscard);
-            //TODO: check why cards get out of hand and not return
             if (!first.AskPlayerToPickCard(topDiscard, out Card playerCard))
             {
                 HandlePlayerFinishTurn(first, topDiscard);
@@ -45,13 +44,12 @@ namespace Taki.Game.GameRules
         {
             if (first.IsHandEmpty())
                 return;
-            if (isTaki)
+            if (CurrentTakiCard != null)
             {
-                isTaki = false;
                 Utilities.PrintConsoleAlert($"Player[{first.Id}]: Taki closed!");
-                //TODO: i want to handle the last card used in taki not including the taki itself!!
-                //if (UniqueCard.IsUniqueCard(topDiscard))
-                //    HandleUniqueCard(topDiscard);
+                if (UniqueCard.IsUniqueCard(topDiscard) && !topDiscard.Equals(CurrentTakiCard))
+                    HandleUniqueCard(topDiscard);
+                CurrentTakiCard = null;
                 return;
             }
             int numberOfDrawCards = countPlus2 > 0 ? countPlus2 * 2 : 1;
@@ -63,13 +61,13 @@ namespace Taki.Game.GameRules
         {
             if (playerHandler.CurrentPlayer.IsHandEmpty())
                 return;
-            if (!isTaki)
+            if (CurrentTakiCard == null)
                 playerHandler.NextPlayer(isDirectionNormal);
         }
 
+        //TODO: shorten
         private bool TryHandleCard(Card topDiscard, Card card)
         {
-            //TODO: need to check if is taki to know what to check.
             if (!changeColor.Equals(Color.Empty))
             {
                 if (!card.CheckColorMatch(changeColor))
@@ -77,8 +75,6 @@ namespace Taki.Game.GameRules
                     Utilities.PrintConsoleError($"Please choose a {changeColor} color card");
                     return false;
                 }
-                //TODO: check this new if and see if it works
-                //should only regard the cards without color
                 if (topDiscard.Color != Color.Empty)
                     changeColor = Color.Empty;
             }
@@ -97,12 +93,13 @@ namespace Taki.Game.GameRules
             }
             
             cardDeck.AddCardToDiscardPile(card);
-            if(!isTaki && UniqueCard.IsUniqueCard(card))
+            if(CurrentTakiCard == null && UniqueCard.IsUniqueCard(card))
                 HandleUniqueCard(card);
             Utilities.PrintConsoleAlert($"Player[{players.First().Id}] played {card}");
             return true;
         }
 
+        //TODO: shorten
         private void HandleUniqueCard(Card card)
         {
             if (UniqueCard.IsPlus(card))
@@ -110,7 +107,7 @@ namespace Taki.Game.GameRules
             else if (UniqueCard.IsPlus2(card))
                 countPlus2++;
             else if (UniqueCard.IsTaki(card))
-                isTaki = true;
+                CurrentTakiCard = card;
             else if (UniqueCard.IsSuperTaki(card))
             {
                 HandleUniqueCard(new UniqueCard(UniqueCardEnum.ChangeColor));
@@ -132,7 +129,7 @@ namespace Taki.Game.GameRules
         {
             if (UniqueCard.IsPlus2(topDiscard) && countPlus2 == 0)
                 topDiscard = new NumberCard("", topDiscard.Color);
-            if (changeColor != Color.Empty)//problem with change color
+            if (changeColor != Color.Empty)
                 topDiscard = new NumberCard("", changeColor);
             return topDiscard;
         }
