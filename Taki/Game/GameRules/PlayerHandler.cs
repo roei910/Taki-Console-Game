@@ -14,7 +14,8 @@ namespace Taki.Game.GameRules
     internal class PlayerHandler(LinkedList<Player> players)
     {
         private readonly LinkedList<Player> players = players;
-        public Player CurrentPlayer = players.First();
+        public Player CurrentPlayer { get; private set; } = players.First();
+
         public void DrawCards(int numberOfCards, CardDeck cardDeck)
         {
             Enumerable.Range(0, numberOfCards).ToList()
@@ -64,7 +65,7 @@ namespace Taki.Game.GameRules
             first.PlayerCards = savedCards;
         }
 
-        internal int RemoveWinner(bool isDirectionNormal)
+        public int RemoveWinner(bool isDirectionNormal)
         {
             Player savedPlayer = CurrentPlayer;
             NextPlayer(isDirectionNormal);
