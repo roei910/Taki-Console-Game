@@ -4,13 +4,14 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Taki.Game.Cards;
 
 namespace Taki.Game.General
 {
     internal class Enums
     {
         public static Dictionary<UniqueCardEnum, string> UniqueTakiNames =
-            new Dictionary<UniqueCardEnum, string>()
+            new()
         {
             { UniqueCardEnum.Taki, "TAKI" },
             { UniqueCardEnum.ChangeColor, "Change-Color" },
@@ -23,38 +24,12 @@ namespace Taki.Game.General
         };
 
         public static Dictionary<CardColorsEnum, Color> CardColors =
-            new Dictionary<CardColorsEnum, Color>()
+            new()
         {
             { CardColorsEnum.Green, Color.Green },
             { CardColorsEnum.Red, Color.Red },
             { CardColorsEnum.Yellow, Color.Yellow },
             { CardColorsEnum.Blue, Color.Blue },
         };
-    }
-
-    enum GameTypeEnum
-    {
-        Normal,
-        Pyramid
-    }
-
-    enum UniqueCardEnum
-    {
-        Taki,
-        ChangeColor,
-        Stop,
-        ChangeDirection,
-        Plus,
-        Plus2,
-        SuperTaki,
-        SwitchCardsWithDirection
-    }
-
-    enum CardColorsEnum
-    {
-        Green,
-        Red,
-        Yellow,
-        Blue
     }
 }

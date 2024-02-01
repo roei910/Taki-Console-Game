@@ -15,8 +15,8 @@ namespace Taki.Game.GameRules
     //TODO: something wrong with taki or super taki - fix
     internal class RuleHandler(LinkedList<Player> players, CardDeck cardDeck)
     {
-        PlayerHandler playerHandler = new (players);
-        CardDeck cardDeck = cardDeck;
+        readonly PlayerHandler playerHandler = new(players);
+        readonly CardDeck cardDeck = cardDeck;
         private bool isDirectionNormal = true;
         private bool isTaki = false;
         private int countPlus2 = 0;
@@ -25,7 +25,9 @@ namespace Taki.Game.GameRules
         public void PlayTurn()
         {
             Card topDiscard = cardDeck.GetTopDiscardPile();
-            while (UniqueCard.IsSwitchCardsWithDirection(topDiscard))
+            //while (UniqueCard.IsSwitchCardsWithDirection(topDiscard))//need to check all cards without color
+            //    topDiscard = cardDeck.GetNextDiscard(topDiscard);
+            while (topDiscard.Color == Color.Empty)
                 topDiscard = cardDeck.GetNextDiscard(topDiscard);
             Player first = players.First();
             topDiscard = CheckCardFlags(topDiscard);
@@ -70,7 +72,7 @@ namespace Taki.Game.GameRules
 
         private bool TryHandleCard(Card topDiscard, Card card)
         {
-            //tODO need to check if is taki to know what to check.
+            //TODO: need to check if is taki to know what to check.
             if (!changeColor.Equals(Color.Empty))
             {
                 if (!card.CheckColorMatch(changeColor))
@@ -78,7 +80,11 @@ namespace Taki.Game.GameRules
                     Utilities.PrintConsoleError($"Please choose a {changeColor} color card");
                     return false;
                 }
-                changeColor = Color.Empty;
+
+                //TODO: check this new if and see if it works
+                //should only regard the cards without color
+                if (topDiscard.Color != Color.Empty)
+                    changeColor = Color.Empty;
             }
             else if (countPlus2 != 0)
             {

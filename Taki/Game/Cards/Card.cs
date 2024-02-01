@@ -8,6 +8,13 @@ using Taki.Game.General;
 
 namespace Taki.Game.Cards
 {
+    enum CardColorsEnum
+    {
+        Green,
+        Red,
+        Yellow,
+        Blue
+    }
     internal abstract class Card(string name, Color color)
     {
         public string Name { get; } = name;
@@ -40,8 +47,7 @@ namespace Taki.Game.Cards
                 return false;
             if(obj is not Card)
                 return false;
-            Card ?card = obj as Card;
-            if (card == null)
+            if (obj is not Card card)
                 throw new ArgumentException("not card");
             return Name == card.Name && Color == card.Color;
         }

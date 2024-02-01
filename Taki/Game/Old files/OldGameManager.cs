@@ -36,7 +36,7 @@ namespace Taki.Game.Managers
             //new PlayerAlgorithm(),
             new ManualPlayerAlgorithm()
         ];
-        LinkedList<Player> players;
+        readonly LinkedList<Player> players;
         private readonly CardDeck cardDeck;
         bool isDirectionNormal;
 
@@ -243,9 +243,7 @@ namespace Taki.Game.Managers
             NextPlayer();
             while (!players.First().Equals(first))
             {
-                List<Card> cards = players.First().PlayerCards;
-                players.First().PlayerCards = savedCards;
-                savedCards = cards;
+                (savedCards, players.First().PlayerCards) = (players.First().PlayerCards, savedCards);
                 NextPlayer();
             }
             first.PlayerCards = savedCards;

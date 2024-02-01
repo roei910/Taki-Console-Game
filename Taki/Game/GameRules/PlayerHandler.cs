@@ -13,7 +13,7 @@ namespace Taki.Game.GameRules
 {
     internal class PlayerHandler(LinkedList<Player> players)
     {
-        private LinkedList<Player> players = players;
+        private readonly LinkedList<Player> players = players;
         public Player CurrentPlayer = players.First();
         public void DrawCards(int numberOfCards, CardDeck cardDeck)
         {

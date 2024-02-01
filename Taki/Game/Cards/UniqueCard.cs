@@ -9,6 +9,17 @@ using Taki.Game.General;
 
 namespace Taki.Game.Cards
 {
+    enum UniqueCardEnum
+    {
+        Taki,
+        ChangeColor,
+        Stop,
+        ChangeDirection,
+        Plus,
+        Plus2,
+        SuperTaki,
+        SwitchCardsWithDirection
+    }
     internal class UniqueCard
         (UniqueCardEnum uniqueCardEnum, Color color) : 
         Card(Enums.UniqueTakiNames[uniqueCardEnum], color)

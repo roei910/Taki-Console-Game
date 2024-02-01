@@ -127,7 +127,7 @@ namespace Taki.Game.Deck
 
         private Card GetRandomDiscardCard()
         {
-            Random random = new Random();
+            Random random = new ();
             int index = random.Next(discardPile.Count);
             Card card = discardPile.ElementAt(index);
             discardPile.Remove(card);

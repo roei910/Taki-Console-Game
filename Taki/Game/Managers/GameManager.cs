@@ -13,6 +13,11 @@ using Taki.Game.Players;
 
 namespace Taki.Game.Managers
 {
+    enum GameTypeEnum
+    {
+        Normal,
+        Pyramid
+    }
     internal class GameManager
     {
         private const int NUMBER_OF_TOTAL_WINNERS = 2;

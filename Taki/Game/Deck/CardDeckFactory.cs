@@ -6,14 +6,13 @@ namespace Taki.Game.Deck
     internal abstract class CardDeckFactory
     {
         private static readonly List<UniqueCardEnum> uniqueCardsWithColor =
-            new List<UniqueCardEnum>
-            { UniqueCardEnum.Stop, UniqueCardEnum.Plus, UniqueCardEnum.Taki,
-                    UniqueCardEnum.ChangeDirection, UniqueCardEnum.Plus2};
+            [ UniqueCardEnum.Stop, UniqueCardEnum.Plus, UniqueCardEnum.Taki,
+                    UniqueCardEnum.ChangeDirection, UniqueCardEnum.Plus2];
 
         public static CardDeck GenerateCardDeck()
         {
             List<Card> cards = GetCardsList();
-            LinkedList<Card> linkedCards = new LinkedList<Card>(cards);
+            LinkedList<Card> linkedCards = new(cards);
             CardDeck cardDeck = new(linkedCards);
             return cardDeck;
         }
