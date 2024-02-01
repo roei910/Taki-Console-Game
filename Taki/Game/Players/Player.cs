@@ -81,7 +81,7 @@ namespace Taki.Game.Players
         public override string ToString()
         {
             string cardsInHand = string.Join("\n", PlayerCards.Select((x, i) => $"{i}.{x}"));
-            string str = $"Player {id}, algorithm: {choosingAlgorithm.GetType()}, " +
+            string str = $"Player {Id}, algorithm: {choosingAlgorithm}, " +
                 $"{PlayerCards.Count} Cards:\n{cardsInHand}";
             return str;
         }
