@@ -17,6 +17,8 @@ namespace Taki.Game.Cards
     }
     internal abstract class Card(string name, Color color)
     {
+        private static int id = 0;
+        public int Id { get; } = id++;
         public string Name { get; } = name;
         public Color Color { get; set; } = color;
         public static Dictionary<CardColorsEnum, Color> CardColors =
@@ -46,7 +48,8 @@ namespace Taki.Game.Cards
         {
             if (Color.IsEmpty)
                 return Name;
-            return $"{Name}({Color})";
+            //TODO: remove id
+            return $"{Name}({Color}), id = {Id}";
         }
 
         public override bool Equals(object? obj)
@@ -57,7 +60,7 @@ namespace Taki.Game.Cards
                 return false;
             if (obj is not Card card)
                 throw new ArgumentException("not card");
-            return Name == card.Name && Color == card.Color;
+            return Name == card.Name && Color == card.Color && Id == card.Id;
         }
 
         public override int GetHashCode()
