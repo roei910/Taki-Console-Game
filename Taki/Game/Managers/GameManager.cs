@@ -18,6 +18,7 @@ namespace Taki.Game.Managers
         Normal,
         Pyramid
     }
+
     internal class GameManager
     {
         private const int NUMBER_OF_TOTAL_WINNERS = 2;
@@ -47,7 +48,6 @@ namespace Taki.Game.Managers
             PrintWinnersList(winnerIds);
         }
 
-        //TODO: check problem with getting more than 1 winner.
         private int GetWinnerById()
         {
             while (!ruleHandler.PlayerFinishedHand())
