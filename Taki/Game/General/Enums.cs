@@ -40,14 +40,14 @@ namespace Taki.Game.General
 
     enum UniqueCardEnum
     {
-        Taki,//work
-        ChangeColor,//work
-        Stop,//work
-        ChangeDirection,//work
-        Plus,//work, error with multiple plus
-        Plus2,//work 
-        SuperTaki,//work
-        SwitchCardsWithDirection//work
+        Taki,
+        ChangeColor,
+        Stop,
+        ChangeDirection,
+        Plus,
+        Plus2,
+        SuperTaki,
+        SwitchCardsWithDirection
     }
 
     enum CardColorsEnum
