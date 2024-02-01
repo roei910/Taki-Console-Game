@@ -14,8 +14,8 @@ namespace Taki.Game.GameRules
 {
     internal class RuleHandler(LinkedList<Player> players, CardDeck cardDeck)
     {
-        readonly PlayerHandler playerHandler = new(players);
-        readonly CardDeck cardDeck = cardDeck;
+        private readonly PlayerHandler playerHandler = new(players);
+        private readonly CardDeck cardDeck = cardDeck;
         private bool isDirectionNormal = true;
         private Card? CurrentTakiCard { get; set; } = null;
         private int countPlus2 = 0;
