@@ -27,7 +27,7 @@ internal class Program
                 gameManager.StartGame();
                 break;
             case GameTypeEnum.Pyramid:
-                gameManager = new PyramidGameManager(numberOfPlayers);
+                gameManager = new GameManager(numberOfPlayers);
                 Console.WriteLine("Starting a new game of TAKI pyramid edition!");
                 gameManager.StartGame();
                 break;
