@@ -19,7 +19,6 @@ namespace Taki.Game.Algorithm
             Card card;
             var filter = currentPlayer.PlayerCards
                 .Where(card => card.SimilarTo(topDeckCard)).ToList();
-            Debug.WriteLine(currentPlayer.ToString());
             if(UniqueCard.IsPlus2(topDeckCard))
             {
                 card = filter.Where(card => card.Equals(topDeckCard))

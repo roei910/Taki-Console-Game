@@ -68,7 +68,6 @@ namespace Taki.Game.Managers
                 int index = random.Next(algorithms.Count);
                 players.AddLast(new Player(i, algorithms.ElementAt(index)));
                 //players.AddLast(new Player(i, new ManualPlayerAlgorithm()));
-                Debug.WriteLine(players.ElementAt(i));
             }
         }
 
