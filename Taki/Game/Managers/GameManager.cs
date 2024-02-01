@@ -13,7 +13,9 @@ using Taki.Game.Players;
 
 namespace Taki.Game.Managers
 {
+    //TODO: game stuck after change-color card
     //TODO: fix bug where the game gets stuck for no reason waiting for the computer to play a hand
+    //TODO: check why game is stuck on taki closed and not continuing1
     enum GameTypeEnum
     {
         Normal,
@@ -22,14 +24,15 @@ namespace Taki.Game.Managers
 
     internal class GameManager
     {
+        private static readonly int NUMBER_OF_PLAYER_CARDS_PYRAMID = 10;
         private const int NUMBER_OF_TOTAL_WINNERS = 2;
         private static readonly List<IPlayerAlgorithm> algorithms =
         [
             new PlayerAlgorithm(),
             new PlayerHateTakiAlgo()
         ];
-        private readonly CardDeck cardDeck;
-        private readonly RuleHandler ruleHandler;
+        protected CardDeck cardDeck;
+        protected RuleHandler ruleHandler;
 
         public GameManager(int numberOfPlayers, int numberOfPlayerCards)
         {
@@ -38,26 +41,26 @@ namespace Taki.Game.Managers
             CreatePlayers(players, numberOfPlayers);
             DealCards(players, numberOfPlayerCards);
             cardDeck.DrawFirstCard();
-            ruleHandler = new (players, cardDeck);
+            ruleHandler = new(new PlayerHandler(players), cardDeck); ;
+        }
+
+        public GameManager(int numberOfPlayers)
+        {
+            //TODO: need to create pyramid players
+            LinkedList<Player> players = new();
+            cardDeck = CardDeckFactory.GenerateCardDeck();
+            CreatePlayers(players, numberOfPlayers);
+            DealCards(players, NUMBER_OF_PLAYER_CARDS_PYRAMID);
+            cardDeck.DrawFirstCard();
+            ruleHandler = new PyramidRuleHandler(new PlayerHandler(players), cardDeck);
         }
 
         public void StartGame()
         {
             int[] winnerIds = new int[NUMBER_OF_TOTAL_WINNERS];
             for (int i = 0; i < winnerIds.Length; i++)
-                winnerIds[i] = GetWinnerById();
+                winnerIds[i] = ruleHandler.GetWinner();
             PrintWinnersList(winnerIds);
-        }
-
-        private int GetWinnerById()
-        {
-            while (!ruleHandler.PlayerFinishedHand())
-            {
-                Console.WriteLine("------------------------");
-                ruleHandler.PlayTurn();
-                ruleHandler.RequestNextPlayer();
-            }
-            return ruleHandler.RemoveWinner();
         }
         
         private void DealCards(LinkedList<Player> players, int numberOfPlayerCards)
@@ -71,11 +74,14 @@ namespace Taki.Game.Managers
         {
             Random random = new();
             players.AddFirst(new Player(new ManualPlayerAlgorithm()));
+            Debug.WriteLine(players.ElementAt(0));
+
             for (int i = players.Count; i < numberOfPlayers; i++)
             {
                 int index = random.Next(algorithms.Count);
                 players.AddLast(new Player(algorithms.ElementAt(index)));
                 //players.AddLast(new Player(i, new ManualPlayerAlgorithm()));
+                Debug.WriteLine(players.ElementAt(i));
             }
         }
 
