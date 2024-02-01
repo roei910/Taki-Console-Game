@@ -41,5 +41,10 @@ namespace Taki.Game.Algorithm
             return count.OrderByDescending(v => v.Count()).ToList()
                 .First().FirstOrDefault(new NumberCard("", Color.Green)).Color;
         }
+
+        public override string ToString()
+        {
+            return "Player Algo";
+        }
     }
 }

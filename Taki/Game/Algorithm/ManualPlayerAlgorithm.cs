@@ -41,5 +41,10 @@ namespace Taki.Game.Algorithm
         {
             return index >= -1 && index < maxCards;
         }
+
+        public override string ToString()
+        {
+            return "Manual Player Algo";
+        }
     }
 }

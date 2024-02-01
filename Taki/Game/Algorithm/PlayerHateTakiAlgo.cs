@@ -24,5 +24,10 @@ namespace Taki.Game.Algorithm
                 takiFlag = true;
             return base.ChooseCard(topDeckCard, currentPlayer);
         }
+
+        public override string ToString()
+        {
+            return "Player Hate Taki Algo";
+        }
     }
 }
