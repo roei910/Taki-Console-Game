@@ -19,6 +19,14 @@ namespace Taki.Game.Cards
     {
         public string Name { get; } = name;
         public Color Color { get; set; } = color;
+        public static Dictionary<CardColorsEnum, Color> CardColors =
+            new()
+        {
+            { CardColorsEnum.Green, Color.Green },
+            { CardColorsEnum.Red, Color.Red },
+            { CardColorsEnum.Yellow, Color.Yellow },
+            { CardColorsEnum.Blue, Color.Blue },
+        };
 
         public bool SimilarTo(Card other)
         {

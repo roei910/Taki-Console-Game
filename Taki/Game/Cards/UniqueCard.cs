@@ -22,63 +22,76 @@ namespace Taki.Game.Cards
     }
     internal class UniqueCard
         (UniqueCardEnum uniqueCardEnum, Color color) : 
-        Card(Enums.UniqueTakiNames[uniqueCardEnum], color)
+        Card(UniqueTakiNames[uniqueCardEnum], color)
     {
+        public static Dictionary<UniqueCardEnum, string> UniqueTakiNames =
+            new()
+        {
+            { UniqueCardEnum.Taki, "TAKI" },
+            { UniqueCardEnum.ChangeColor, "Change-Color" },
+            { UniqueCardEnum.Stop, "Stop" },
+            { UniqueCardEnum.ChangeDirection, "Change-Direction" },
+            { UniqueCardEnum.Plus, "Plus" },
+            { UniqueCardEnum.Plus2, "Plus2" },
+            { UniqueCardEnum.SuperTaki, "SUPER-TAKI" },
+            { UniqueCardEnum.SwitchCardsWithDirection, "Switch-Cards-With-Direction"}
+        };
+
         public UniqueCard(UniqueCardEnum uniqueCardEnum) 
             : this(uniqueCardEnum, Color.Empty) { }
 
         public static bool IsTaki(Card card)
         {
             return IsUniqueCard(card) && 
-                card.Name == Enums.UniqueTakiNames[UniqueCardEnum.Taki];
+                card.Name == UniqueTakiNames[UniqueCardEnum.Taki];
         }
 
         public static bool IsSuperTaki(Card card)
         {
             return IsUniqueCard(card) && 
-                card.Name == Enums.UniqueTakiNames[UniqueCardEnum.SuperTaki];
+                card.Name == UniqueTakiNames[UniqueCardEnum.SuperTaki];
         }
 
         public static bool IsChangeColor(Card card)
         {
             return IsUniqueCard(card) && 
-                card.Name == Enums.UniqueTakiNames[UniqueCardEnum.ChangeColor];
+                card.Name == UniqueTakiNames[UniqueCardEnum.ChangeColor];
         }
 
         public static bool IsStop(Card card)
         {
             return IsUniqueCard(card) && 
-                card.Name == Enums.UniqueTakiNames[UniqueCardEnum.Stop];
+                card.Name == UniqueTakiNames[UniqueCardEnum.Stop];
         }
 
         public static bool IsChangeDirection(Card card)
         {
             return IsUniqueCard(card) && 
-                card.Name == Enums.UniqueTakiNames[UniqueCardEnum.ChangeDirection];
+                card.Name == UniqueTakiNames[UniqueCardEnum.ChangeDirection];
         }
 
         public static bool IsPlus(Card card)
         {
             return IsUniqueCard(card) && 
-                card.Name == Enums.UniqueTakiNames[UniqueCardEnum.Plus];
+                card.Name == UniqueTakiNames[UniqueCardEnum.Plus];
         }
 
         public static bool IsPlus2(Card card)
         {
             return IsUniqueCard(card) &&
-                card.Name == Enums.UniqueTakiNames[UniqueCardEnum.Plus2];
+                card.Name == UniqueTakiNames[UniqueCardEnum.Plus2];
         }
 
         public static bool IsSwitchCardsWithDirection(Card card)
         {
             return IsUniqueCard(card) &&
-                card.Name == Enums.UniqueTakiNames[UniqueCardEnum.SwitchCardsWithDirection];
+                card.Name == UniqueTakiNames[UniqueCardEnum.SwitchCardsWithDirection];
         }
 
         public static bool IsUniqueCard(Card card)
         {
             return IsCard(card) &&
-                Enums.UniqueTakiNames.ContainsValue(card.Name);
+                UniqueTakiNames.ContainsValue(card.Name);
         }
     }
 }

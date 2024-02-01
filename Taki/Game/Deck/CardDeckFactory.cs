@@ -28,7 +28,7 @@ namespace Taki.Game.Deck
             List<Card> cards = [];
             foreach (var _ in Enumerable.Range(0, 2))
                 foreach (var number in Enumerable.Range(3, 7))
-                    Enums.CardColors.Values.ToList()
+                    Card.CardColors.Values.ToList()
                         .ForEach(color => cards.Add(new NumberCard(number.ToString(), color)));
             return cards;
         }
@@ -43,7 +43,7 @@ namespace Taki.Game.Deck
                 cards.Add(new UniqueCard(UniqueCardEnum.SwitchCardsWithDirection));
 
                 foreach (UniqueCardEnum uniqueCardEnum in uniqueCardsWithColor)
-                    Enums.CardColors.Values.ToList()
+                    Card.CardColors.Values.ToList()
                         .ForEach(color => cards.Add(new UniqueCard(uniqueCardEnum, color)));
             }
 
