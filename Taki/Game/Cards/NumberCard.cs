@@ -10,13 +10,16 @@ namespace Taki.Game.Cards
 {
     internal class NumberCard : Card
     {
+        private const int MIN_NUMBER_CARD = 3;
+        private const int MAX_NUMBER_CARD = 3;
+
         public NumberCard(string name, Color color) : base(name, color) { }
 
         public static bool IsNumberCard(Card card)
         {
             return IsCard(card) &&
                 int.TryParse(card.Name, out int num) && 
-                num <= 9 && num >= 3;
+                num <= MAX_NUMBER_CARD && num >= MIN_NUMBER_CARD;
         }
     }
 }
