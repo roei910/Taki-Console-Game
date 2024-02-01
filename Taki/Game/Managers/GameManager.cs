@@ -20,18 +20,16 @@ namespace Taki.Game.Managers
         [
             new PlayerAlgorithm(),
             new PlayerHateTakiAlgo()
-            //new ManualPlayerAlgorithm()
         ];
-        readonly LinkedList<Player> players;//remove from here, add player handler
         private readonly CardDeck cardDeck;
         private readonly RuleHandler ruleHandler;
 
         public GameManager(int numberOfPlayers, int numberOfPlayerCards)
         {
-            players = new ();
+            LinkedList<Player> players = new ();
             cardDeck = CardDeckFactory.GenerateCardDeck();
-            CreatePlayers(numberOfPlayers);
-            DealCards(numberOfPlayerCards);
+            CreatePlayers(players, numberOfPlayers);
+            DealCards(players, numberOfPlayerCards);
             cardDeck.DrawFirstCard();
             ruleHandler = new (players, cardDeck);
         }
@@ -55,7 +53,7 @@ namespace Taki.Game.Managers
             return ruleHandler.RemoveWinner();
         }
 
-        private void CreatePlayers(int numberOfPlayers)
+        private void CreatePlayers(LinkedList<Player> players, int numberOfPlayers)
         {
             Random random = new();
             players.AddFirst(new Player(0, new ManualPlayerAlgorithm()));
@@ -68,7 +66,7 @@ namespace Taki.Game.Managers
             }
         }
 
-        private void DealCards(int numberOfPlayerCards)
+        private void DealCards(LinkedList<Player> players, int numberOfPlayerCards)
         {
             for (int j = 0; j < numberOfPlayerCards; j++)
                 foreach (Player player in players)
