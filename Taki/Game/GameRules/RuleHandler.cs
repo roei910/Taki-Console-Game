@@ -29,11 +29,8 @@ namespace Taki.Game.GameRules
             Player first = players.First();
             topDiscard = CheckCardFlags(topDiscard);
             if (!first.AskPlayerToPickCard(topDiscard, out Card playerCard))
-            {
                 HandlePlayerFinishTurn(first, topDiscard);
-                return;
-            }
-            if (!TryHandleCard(topDiscard, playerCard))
+            else if (!TryHandleCard(topDiscard, playerCard))
             {
                 playerHandler.ReturnUnhandledCard(playerCard);
                 PlayTurn();
@@ -99,7 +96,6 @@ namespace Taki.Game.GameRules
             return true;
         }
 
-        //TODO: shorten
         private void HandleUniqueCard(Card card)
         {
             if (UniqueCard.IsPlus(card))
