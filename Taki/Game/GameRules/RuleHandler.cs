@@ -12,7 +12,6 @@ using Taki.Game.Players;
 
 namespace Taki.Game.GameRules
 {
-    //TODO: something wrong with taki or super taki - fix
     internal class RuleHandler(LinkedList<Player> players, CardDeck cardDeck)
     {
         readonly PlayerHandler playerHandler = new(players);
@@ -25,8 +24,6 @@ namespace Taki.Game.GameRules
         public void PlayTurn()
         {
             Card topDiscard = cardDeck.GetTopDiscardPile();
-            //while (UniqueCard.IsSwitchCardsWithDirection(topDiscard))//need to check all cards without color
-            //    topDiscard = cardDeck.GetNextDiscard(topDiscard);
             while (topDiscard.Color == Color.Empty)
                 topDiscard = cardDeck.GetNextDiscard(topDiscard);
             Player first = players.First();
@@ -80,7 +77,6 @@ namespace Taki.Game.GameRules
                     Utilities.PrintConsoleError($"Please choose a {changeColor} color card");
                     return false;
                 }
-
                 //TODO: check this new if and see if it works
                 //should only regard the cards without color
                 if (topDiscard.Color != Color.Empty)
@@ -123,11 +119,7 @@ namespace Taki.Game.GameRules
             else if (UniqueCard.IsStop(card))
                 playerHandler.NextPlayer(isDirectionNormal);
             else if (UniqueCard.IsChangeColor(card))
-            {
                 changeColor = playerHandler.GetColorFromPlayer();
-                //changeColor = Utilities.GetColorFromUserEnum<CardColorsEnum>("of color");
-                //Utilities.PrintConsoleAlert($"Please choose a card with the new color: {changeColor}");
-            }
             else if (UniqueCard.IsChangeDirection(card))
                 isDirectionNormal = !isDirectionNormal;
             else if (UniqueCard.IsSwitchCardsWithDirection(card))

@@ -80,15 +80,5 @@ namespace Taki.Game.Cards
             return IsCard(card) &&
                 Enums.UniqueTakiNames.ContainsValue(card.Name);
         }
-
-
-
-
-
-
-        public UniqueCardEnum GetUniqueCardEnum()
-        {
-            return Enums.UniqueTakiNames.Where((enumVal, name) => name.Equals(Name)).First().Key;
-        }
     }
 }

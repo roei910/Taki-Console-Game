@@ -104,13 +104,6 @@ namespace Taki.Game.Deck
             return discardPile.Count + drawPile.Count;
         }
 
-        //TODO: remove! not used in new
-        public bool CanPlayCard(Card playerCard)
-        {
-            Card topDiscardCard = GetTopDiscardPile();
-            return playerCard.SimilarTo(topDiscardCard);
-        }
-
         public override string ToString()
         {
             return $"Card deck: {drawPile.Count} cards in draw pile, {discardPile.Count} card in discard pile";

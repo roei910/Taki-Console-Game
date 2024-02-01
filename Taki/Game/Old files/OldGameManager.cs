@@ -131,12 +131,12 @@ namespace Taki.Game.Managers
         private bool TryAddCardToDiscardPile(Card card)
         {
             //TODO: ??? fix behavior where user takes out a card from hand when giving one
-            if (!cardDeck.CanPlayCard(card))
-            {
-                players.First().AddCard(card);
-                Utilities.PrintConsoleError("Please follow the card stacking rules");
-                return false;
-            }
+            //if (!cardDeck.CanPlayCard(card))
+            //{
+            //    players.First().AddCard(card);
+            //    Utilities.PrintConsoleError("Please follow the card stacking rules");
+            //    return false;
+            //}
             cardDeck.AddCardToDiscardPile(card);
             return true;
         }

@@ -58,11 +58,11 @@ namespace Taki.Game.GameRules
         {
             //TODO: ??? fix behavior where user takes out a card from hand when giving one
 
-            if (!cardDeck.CanPlayCard(card))
-            {
-                Utilities.PrintConsoleError("Please follow the card stacking rules");
-                return false;
-            }
+            //if (!cardDeck.CanPlayCard(card))
+            //{
+            //    Utilities.PrintConsoleError("Please follow the card stacking rules");
+            //    return false;
+            //}
             cardDeck.AddCardToDiscardPile(card);
             return true;
         }
