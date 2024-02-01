@@ -47,6 +47,7 @@ namespace Taki.Game.Managers
             PrintWinnersList(winnerIds);
         }
 
+        //TODO: check problem with getting more than 1 winner.
         private int GetWinnerById()
         {
             while (!ruleHandler.PlayerFinishedHand())
