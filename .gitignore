@@ -3,3 +3,21 @@
 ################################################################################
 
 /.vs
+/Taki/bin/Debug/net8.0/Taki.dll
+/Taki/bin/Debug/net8.0/Taki.exe
+/Taki/bin/Debug/net8.0/Taki.pdb
+/Taki/obj/Debug/net8.0/ref/Taki.dll
+/Taki/obj/Debug/net8.0/apphost.exe
+/Taki/obj/Debug/net8.0/Taki.AssemblyInfo.cs
+/Taki/obj/Debug/net8.0/Taki.AssemblyInfoInputs.cache
+/Taki/obj/Debug/net8.0/Taki.assets.cache
+/Taki/obj/Debug/net8.0/Taki.csproj.FileListAbsolute.txt
+/Taki/obj/Debug/net8.0/Taki.dll
+/Taki/obj/Debug/net8.0/Taki.GeneratedMSBuildEditorConfig.editorconfig
+/Taki/obj/Debug/net8.0/Taki.genruntimeconfig.cache
+/Taki/obj/Debug/net8.0/Taki.pdb
+*.json
+/Taki/obj/project.assets.json
+/Taki/obj/project.nuget.cache
+/Taki/obj/Taki.csproj.nuget.dgspec.json
+/Taki/obj/Debug/net8.0/refint/Taki.dll
