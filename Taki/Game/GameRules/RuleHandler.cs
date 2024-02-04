@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Taki.Game.Cards;
 using Taki.Game.Deck;
 using Taki.Game.General;
@@ -23,11 +19,13 @@ namespace Taki.Game.GameRules
     //TODO: Taki - problems with stacking and handling of unique cards, also error with SUPER-TAKI AND ANOTHER SUPER-TAKI
     //TODO: +2, stacking +2's - after +2 is done iwant to be able to put another +2 if i have one.
     //TODO: change the way we save plus2's
-    //TODO: test pyramid winning functionality, need to delete the wrong player won message
-    //TODO: check error with change-color card not allowing to put any more cards, go over change color
 
     //TODO: check finishing cards while playing taki - not behaving as expected
 
+    //TODO: ERROR with the player choosing their own new color, happends after using plus and change color,
+          //also happends with switch cards with direction after plus card
+
+    //TODO: check error after winning the player says cannot draw cards and then wins.
     internal class RuleHandler(PlayerHandler playerHandler, CardDeck cardDeck)
     {
         protected readonly PlayerHandler playerHandler = playerHandler;
@@ -40,7 +38,6 @@ namespace Taki.Game.GameRules
         public void PlayTurn()
         {
             Card topDiscard = cardDeck.GetTopDiscardPile();
-            //check if the card is not change color and has no color
             while (changeColor == Color.Empty && 
                 !UniqueCard.IsChangeColor(topDiscard) && 
                 topDiscard.Color == Color.Empty)
