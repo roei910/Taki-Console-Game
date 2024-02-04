@@ -20,6 +20,8 @@ namespace Taki.Game.Managers
     //TODO: Taki - problem with the last card not registering as unique and executing the functionality  for the card
     //TODO: Taki - problems with stacking and handling of unique cards
     //TODO: +2, stacking +2's - after +2 is done iwant to be able to put another +2 if i can.
+    //TODO: check error stuck after switch cards with direction
+    //TODO: fix error cannot put change direction on plus same color
     enum GameTypeEnum
     {
         Normal,
@@ -77,8 +79,8 @@ namespace Taki.Game.Managers
             for (int i = players.Count; i < numberOfPlayers; i++)
             {
                 int index = random.Next(algorithms.Count);
-                //players.AddLast(new Player(algorithms.ElementAt(index)));
-                players.AddLast(new Player(new ManualPlayerAlgorithm()));
+                players.AddLast(new Player(algorithms.ElementAt(index)));
+                //players.AddLast(new Player(new ManualPlayerAlgorithm()));
                 Debug.WriteLine(players.ElementAt(i));
             }
         }
