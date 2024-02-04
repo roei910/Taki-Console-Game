@@ -22,9 +22,11 @@ namespace Taki.Game.GameRules
             Enumerable.Range(0, numberOfCards).ToList()
                 .ForEach(x =>
                 {
-                    if (!cardDeck.CanDrawCard())
+                    if(!cardDeck.TryDrawCard(out Card ?card))
                         return;
-                    CurrentPlayer.AddCard(cardDeck.DrawCard());
+                    if (card == null)
+                        throw new NullReferenceException("card is null");
+                    CurrentPlayer.AddCard(card);
                     cardsDraw++;
                 });
             if(cardsDraw == 0)
