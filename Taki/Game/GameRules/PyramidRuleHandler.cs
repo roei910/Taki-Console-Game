@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Taki.Game.Deck;
+using Taki.Game.General;
 using Taki.Game.Players;
 
 namespace Taki.Game.GameRules
@@ -19,7 +20,8 @@ namespace Taki.Game.GameRules
                     return true;
                 playerHandler.DrawCards(player.CurrentNumberOfCards() - 1, cardDeck);
                 player.CurrentCardsMinus1();
-                throw new Exception("check if this is working");
+                Utilities.PrintConsoleError($"Player[{player.Id}] finished his current hand," +
+                    $" currently on {player.CurrentNumberOfCards()} card(s)");
                 return false;
             }
             return false;
