@@ -14,8 +14,6 @@ using Taki.Game.Players;
 namespace Taki.Game.Managers
 {
     //TODO: game stuck after change-color card
-    //TODO: fix bug where the game gets stuck for no reason waiting for the computer to play a hand
-    //TODO: check why game is stuck on taki closed and not continuing1
     enum GameTypeEnum
     {
         Normal,
@@ -46,11 +44,13 @@ namespace Taki.Game.Managers
 
         public GameManager(int numberOfPlayers)
         {
-            //TODO: need to create pyramid players
             LinkedList<Player> players = new();
             cardDeck = CardDeckFactory.GenerateCardDeck();
             CreatePlayers(players, numberOfPlayers);
             DealCards(players, NUMBER_OF_PLAYER_CARDS_PYRAMID);
+            var pyramidPlayers = players.Select(x => new PyramidPlayer(x)).ToList();
+            players = [];
+            pyramidPlayers.ForEach(x => players.AddLast(x));
             cardDeck.DrawFirstCard();
             ruleHandler = new PyramidRuleHandler(new PlayerHandler(players), cardDeck);
         }
@@ -80,6 +80,21 @@ namespace Taki.Game.Managers
             {
                 int index = random.Next(algorithms.Count);
                 players.AddLast(new Player(algorithms.ElementAt(index)));
+                //players.AddLast(new Player(i, new ManualPlayerAlgorithm()));
+                Debug.WriteLine(players.ElementAt(i));
+            }
+        }
+
+        private static void CreatePlayersPyramid(LinkedList<Player> players, int numberOfPlayers)
+        {
+            Random random = new();
+            players.AddFirst(new PyramidPlayer(new Player(new ManualPlayerAlgorithm())));
+            Debug.WriteLine(players.ElementAt(0));
+
+            for (int i = players.Count; i < numberOfPlayers; i++)
+            {
+                int index = random.Next(algorithms.Count);
+                players.AddLast(new PyramidPlayer(new Player(algorithms.ElementAt(index))));
                 //players.AddLast(new Player(i, new ManualPlayerAlgorithm()));
                 Debug.WriteLine(players.ElementAt(i));
             }
