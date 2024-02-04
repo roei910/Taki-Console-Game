@@ -93,7 +93,8 @@ namespace Taki.Game.GameRules
                 return false;
             }
             cardDeck.AddCardToDiscardPile(card);
-            //TODO: check if player finished hand and give more cards or declare win.
+            if (playerHandler.CurrentPlayer.IsHandEmpty())
+                return true;
             if(CurrentTakiCard == null && UniqueCard.IsUniqueCard(card))
                 HandleUniqueCard(card);
             Utilities.PrintConsoleAlert($"Player[{playerHandler.CurrentPlayer.Id}] played {card}");
