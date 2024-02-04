@@ -28,7 +28,6 @@ namespace Taki.Game.GameRules
                 topDiscard = cardDeck.GetNextDiscard(topDiscard);
             Player first = playerHandler.CurrentPlayer;
             topDiscard = CheckCardFlags(topDiscard);
-            Console.WriteLine("here");
             if (!first.AskPlayerToPickCard(topDiscard, out Card playerCard))
                 HandlePlayerFinishTurn(first, topDiscard);
             else if (!TryHandleCard(topDiscard, playerCard))
@@ -40,14 +39,19 @@ namespace Taki.Game.GameRules
 
         private void HandlePlayerFinishTurn(Player first, Card topDiscard)
         {
+            Console.WriteLine("here");
             if (first.IsHandEmpty())
                 return;
             if (CurrentTakiCard != null)
             {
                 Utilities.PrintConsoleAlert($"Player[{first.Id}]: Taki closed!");
                 if (UniqueCard.IsUniqueCard(topDiscard) && !topDiscard.Equals(CurrentTakiCard))
+                {
+                    CurrentTakiCard = null;
                     HandleUniqueCard(topDiscard);
+                }
                 CurrentTakiCard = null;
+
                 return;
             }
             int numberOfDrawCards = countPlus2 > 0 ? countPlus2 * 2 : 1;
@@ -89,8 +93,8 @@ namespace Taki.Game.GameRules
                 Utilities.PrintConsoleError("Please follow the card stacking rules");
                 return false;
             }
-            
             cardDeck.AddCardToDiscardPile(card);
+            //TODO: check if player finished hand and give more cards or declare win.
             if(CurrentTakiCard == null && UniqueCard.IsUniqueCard(card))
                 HandleUniqueCard(card);
             Utilities.PrintConsoleAlert($"Player[{playerHandler.CurrentPlayer.Id}] played {card}");
@@ -99,6 +103,7 @@ namespace Taki.Game.GameRules
 
         private void HandleUniqueCard(Card card)
         {
+            Console.WriteLine($"card is {card}");
             if (UniqueCard.IsPlus(card))
                 PlayTurn();
             else if (UniqueCard.IsPlus2(card))
