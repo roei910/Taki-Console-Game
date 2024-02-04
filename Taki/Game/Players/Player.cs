@@ -62,17 +62,11 @@ namespace Taki.Game.Players
             try
             {
                 PlayerCards.Remove(card);
-                if (IsHandEmpty())
-                    throw new Exception("you won!");
             }
             catch (Exception e)
             {
                 if (IsHandEmpty())
-                {
-                    Utilities.PrintConsoleError($"Player[{Id}] won");
                     return;
-                    throw new Exception("you won!");
-                }
                 throw new Exception("choosing algorithm error, card not found", e);
             }
 
