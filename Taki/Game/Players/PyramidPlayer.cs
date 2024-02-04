@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Taki.Game.Algorithm;
 using Taki.Game.Cards;
+using Taki.Game.General;
 
 namespace Taki.Game.Players
 {
@@ -19,6 +21,7 @@ namespace Taki.Game.Players
 
         public void CurrentCardsMinus1()
         {
+            Debug.WriteLine($"Player[{Id}]: finished hand {currentNumberOfCards}");
             currentNumberOfCards--;
         }
 
