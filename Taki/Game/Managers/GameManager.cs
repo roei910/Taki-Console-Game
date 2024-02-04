@@ -5,22 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Taki.Game.Algorithm;
-using Taki.Game.Cards;
 using Taki.Game.Deck;
 using Taki.Game.GameRules;
-using Taki.Game.General;
 using Taki.Game.Players;
 
 namespace Taki.Game.Managers
 {
-    //TODO: fix messages in screen not appearing in the right timeline
-    //TODO: if no one can play the game is a tie, must declare it.
-    //TODO: Taki - problem with the last card not registering as unique and executing the functionality for the card
-    //TODO: Taki - problems with stacking and handling of unique cards, also error with SUPER-TAKI AND ANOTHER SUPER-TAKI
-    //TODO: +2, stacking +2's - after +2 is done iwant to be able to put another +2 if i have one.
-    //TODO: check error stuck after switch cards with direction - seems to work, try again
-    //TODO: fix error cannot put change direction on plus same color - tried to test, but worked. try again
-    //TODO: add functionality to shuffle cards after draw pile empty
     enum GameTypeEnum
     {
         Normal,
@@ -30,7 +20,7 @@ namespace Taki.Game.Managers
     internal class GameManager
     {
         private static readonly int NUMBER_OF_PLAYER_CARDS_PYRAMID = 10;
-        private static bool FULLY_MANUAL_GAME = true;
+        private static readonly bool FULLY_MANUAL_GAME = false;
         private const int NUMBER_OF_TOTAL_WINNERS = 2;
         private static readonly List<IPlayerAlgorithm> algorithms =
         [

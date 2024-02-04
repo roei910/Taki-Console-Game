@@ -12,6 +12,21 @@ using Taki.Game.Players;
 
 namespace Taki.Game.GameRules
 {
+    //not important
+    //TODO: fix messages in screen not appearing in the right timeline - happends in taki
+    //TODO: check error stuck after switch cards with direction - seems to work, try again
+    //TODO: fix error cannot put change direction on plus same color - tried to test, but worked. try again
+    //TODO: if no one can play the game is a tie, must declare it.
+
+    //very important
+    //TODO: Taki - problem with the last card not registering as unique and executing the functionality for the card
+    //TODO: Taki - problems with stacking and handling of unique cards, also error with SUPER-TAKI AND ANOTHER SUPER-TAKI
+    //TODO: +2, stacking +2's - after +2 is done iwant to be able to put another +2 if i have one.
+    //TODO: change the way we save plus2's
+    //TODO: test pyramid winning functionality, need to delete the wrong player won message
+    //TODO: putting taki card and then change direction and finishing turn is working, try taki after taki after -1(finish turn).
+    //TODO: check finishing cards while playing taki - not behaving as expected
+    //TODO: check error with change-color card not allowing to put any more cards, go over change color
     internal class RuleHandler(PlayerHandler playerHandler, CardDeck cardDeck)
     {
         protected readonly PlayerHandler playerHandler = playerHandler;
@@ -24,6 +39,8 @@ namespace Taki.Game.GameRules
         public void PlayTurn()
         {
             Card topDiscard = cardDeck.GetTopDiscardPile();
+
+            //TODO:check this again if needed or not
             while (!UniqueCard.IsChangeColor(topDiscard) && topDiscard.Color == Color.Empty)
                 topDiscard = cardDeck.GetNextDiscard(topDiscard);
             Player first = playerHandler.CurrentPlayer;
@@ -54,7 +71,7 @@ namespace Taki.Game.GameRules
                 return;
             }
             int numberOfDrawCards = countPlus2 > 0 ? countPlus2 * 2 : 1;
-            countPlus2 = 0;
+            countPlus2 = 0;                
             playerHandler.DrawCards(numberOfDrawCards, cardDeck);
         }
 
