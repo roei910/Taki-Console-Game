@@ -13,15 +13,14 @@ using Taki.Game.Players;
 
 namespace Taki.Game.Managers
 {
-    //TODO: game stuck after change-color card
     //TODO: fix messages in screen not appearing in the right timeline
     //TODO: if no one can play the game is a tie, must declare it.
-    //TODO: if no cards to deal then we continue without dealing cards
-    //TODO: Taki - problem with the last card not registering as unique and executing the functionality  for the card
-    //TODO: Taki - problems with stacking and handling of unique cards
-    //TODO: +2, stacking +2's - after +2 is done iwant to be able to put another +2 if i can.
-    //TODO: check error stuck after switch cards with direction
-    //TODO: fix error cannot put change direction on plus same color
+    //TODO: Taki - problem with the last card not registering as unique and executing the functionality for the card
+    //TODO: Taki - problems with stacking and handling of unique cards, also error with SUPER-TAKI AND ANOTHER SUPER-TAKI
+    //TODO: +2, stacking +2's - after +2 is done iwant to be able to put another +2 if i have one.
+    //TODO: check error stuck after switch cards with direction - seems to work, try again
+    //TODO: fix error cannot put change direction on plus same color - tried to test, but worked. try again
+    //TODO: add functionality to shuffle cards after draw pile empty
     enum GameTypeEnum
     {
         Normal,
@@ -31,6 +30,7 @@ namespace Taki.Game.Managers
     internal class GameManager
     {
         private static readonly int NUMBER_OF_PLAYER_CARDS_PYRAMID = 10;
+        private static bool FULLY_MANUAL_GAME = true;
         private const int NUMBER_OF_TOTAL_WINNERS = 2;
         private static readonly List<IPlayerAlgorithm> algorithms =
         [
@@ -79,8 +79,10 @@ namespace Taki.Game.Managers
             for (int i = players.Count; i < numberOfPlayers; i++)
             {
                 int index = random.Next(algorithms.Count);
-                players.AddLast(new Player(algorithms.ElementAt(index)));
-                //players.AddLast(new Player(new ManualPlayerAlgorithm()));
+                if(FULLY_MANUAL_GAME)
+                    players.AddLast(new Player(new ManualPlayerAlgorithm()));
+                else
+                    players.AddLast(new Player(algorithms.ElementAt(index)));
                 Debug.WriteLine(players.ElementAt(i));
             }
         }
