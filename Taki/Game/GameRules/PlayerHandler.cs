@@ -18,9 +18,21 @@ namespace Taki.Game.GameRules
 
         public void DrawCards(int numberOfCards, CardDeck cardDeck)
         {
+            int cardsDraw = 0;
             Enumerable.Range(0, numberOfCards).ToList()
-                    .ForEach(x => CurrentPlayer.AddCard(cardDeck.DrawCard()));
-            Utilities.PrintConsoleError($"Player[{CurrentPlayer.Id}]: drew {numberOfCards} card(s)");
+                .ForEach(x =>
+                {
+                    if (!cardDeck.CanDrawCard())
+                        return;
+                    CurrentPlayer.AddCard(cardDeck.DrawCard());
+                    cardsDraw++;
+                });
+            if(cardsDraw == 0)
+            {
+                Utilities.PrintConsoleError($"Player[{CurrentPlayer.Id}]: cannot draw card(s)");
+                return;
+            }
+            Utilities.PrintConsoleError($"Player[{CurrentPlayer.Id}]: drew {cardsDraw} card(s)");
         }
 
         public void NextPlayer(bool isDirectionNormal)
@@ -69,7 +81,8 @@ namespace Taki.Game.GameRules
         {
             Player savedPlayer = CurrentPlayer;
             NextPlayer(isDirectionNormal);
-            players.Remove(savedPlayer);
+            if(!players.Remove(savedPlayer))
+                throw new Exception("error removing the player");
             return savedPlayer.Id;
         }
 

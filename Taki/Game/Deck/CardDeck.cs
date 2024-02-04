@@ -42,6 +42,10 @@ namespace Taki.Game.Deck
             return discardPile.Find(discardCard)!.Next!.Value;
         }
 
+        public bool CanDrawCard()
+        {
+            return drawPile.Count > 0;
+        }
         public void DrawFirstCard()
         {
             TryDrawFirstCard(out Card? card);
