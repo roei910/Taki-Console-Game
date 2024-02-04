@@ -36,9 +36,18 @@ namespace Taki.Game.Algorithm
             var count = currentPlayer.PlayerCards
                 .Where(p => p.Color != Color.Empty)
                 .GroupBy(p => p.Color).ToList();
-
-            return count.OrderByDescending(v => v.Count()).ToList()
-                .First().FirstOrDefault(new NumberCard("", Color.Green)).Color;
+            try
+            {
+                Card card = count.OrderByDescending(v => v.Count()).ToList()
+                .First().First();
+                Color color = card == null ? Color.Blue : card.Color;
+                return color;
+            }
+            catch
+            {
+                return Color.Blue;
+            }
+            
         }
 
         public override string ToString()
