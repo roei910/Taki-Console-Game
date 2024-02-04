@@ -21,7 +21,7 @@ namespace Taki.Game.Algorithm
                 .Where(card => card.SimilarTo(topDeckCard)).ToList();
             if(UniqueCard.IsPlus2(topDeckCard))
             {
-                card = filter.Where(card => card.Equals(topDeckCard))
+                card = filter.Where(card => card.Id == topDeckCard.Id)
                     .FirstOrDefault(topDeckCard);
                 Utilities.PrintConsoleAlert($"Player[{currentPlayer.Id}] chose {card}");
                 return card;

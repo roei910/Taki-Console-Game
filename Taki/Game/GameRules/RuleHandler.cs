@@ -39,13 +39,12 @@ namespace Taki.Game.GameRules
 
         private void HandlePlayerFinishTurn(Player first, Card topDiscard)
         {
-            Console.WriteLine("here");
             if (first.IsHandEmpty())
                 return;
             if (CurrentTakiCard != null)
             {
                 Utilities.PrintConsoleAlert($"Player[{first.Id}]: Taki closed!");
-                if (UniqueCard.IsUniqueCard(topDiscard) && !topDiscard.Equals(CurrentTakiCard))
+                if (UniqueCard.IsUniqueCard(topDiscard) && topDiscard.Id != CurrentTakiCard.Id)
                 {
                     CurrentTakiCard = null;
                     HandleUniqueCard(topDiscard);
