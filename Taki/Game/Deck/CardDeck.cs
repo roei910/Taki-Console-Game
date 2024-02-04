@@ -39,7 +39,17 @@ namespace Taki.Game.Deck
 
         public Card GetNextDiscard(Card discardCard)
         {
-            return discardPile.Find(discardCard)!.Next!.Value;
+            try
+            {
+                LinkedListNode<Card>? card = discardPile.Find(discardCard)?.Next;
+                if (card == null)
+                    throw new NullReferenceException("null exception");
+                return card.Value;
+            }
+            catch (Exception ex) 
+            {
+                throw new Exception("error with getting the next card", ex);
+            }
         }
 
         public bool CanDrawCard()
