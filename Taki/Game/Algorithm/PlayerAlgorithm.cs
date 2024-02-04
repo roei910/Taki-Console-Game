@@ -33,7 +33,6 @@ namespace Taki.Game.Algorithm
 
         public Color ChooseColor(Player currentPlayer)
         {
-            Utilities.PrintConsoleError("from player");
             var count = currentPlayer.PlayerCards
                 .Where(p => p.Color != Color.Empty)
                 .GroupBy(p => p.Color).ToList();
