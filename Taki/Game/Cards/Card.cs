@@ -53,13 +53,9 @@ namespace Taki.Game.Cards
 
         public override bool Equals(object? obj)
         {
-            if(obj == null)
-                return false;
-            if(obj is not Card)
-                return false;
-            if (obj is not Card card)
+            if (obj == null || obj is not Card card)
                 throw new ArgumentException("not card");
-            return Name == card.Name && Color == card.Color && Id == card.Id;
+            return Name == card.Name && Color == card.Color;
         }
 
         public override int GetHashCode()
