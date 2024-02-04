@@ -109,7 +109,10 @@ namespace Taki.Game.GameRules
             else if (UniqueCard.IsPlus2(card))
                 countPlus2++;
             else if (UniqueCard.IsTaki(card))
+            {
+                Console.WriteLine("TAKI open");
                 CurrentTakiCard = card;
+            }
             else if (UniqueCard.IsSuperTaki(card))
             {
                 HandleUniqueCard(new UniqueCard(UniqueCardEnum.ChangeColor));

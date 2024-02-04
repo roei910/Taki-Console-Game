@@ -14,6 +14,12 @@ using Taki.Game.Players;
 namespace Taki.Game.Managers
 {
     //TODO: game stuck after change-color card
+    //TODO: fix messages in screen not appearing in the right timeline
+    //TODO: if no one can play the game is a tie, must declare it.
+    //TODO: if no cards to deal then we continue without dealing cards
+    //TODO: Taki - problem with the last card not registering as unique and executing the functionality  for the card
+    //TODO: Taki - problems with stacking and handling of unique cards
+    //TODO: +2, stacking +2's - after +2 is done iwant to be able to put another +2 if i can.
     enum GameTypeEnum
     {
         Normal,
@@ -71,8 +77,8 @@ namespace Taki.Game.Managers
             for (int i = players.Count; i < numberOfPlayers; i++)
             {
                 int index = random.Next(algorithms.Count);
-                players.AddLast(new Player(algorithms.ElementAt(index)));
-                //players.AddLast(new Player(i, new ManualPlayerAlgorithm()));
+                //players.AddLast(new Player(algorithms.ElementAt(index)));
+                players.AddLast(new Player(new ManualPlayerAlgorithm()));
                 Debug.WriteLine(players.ElementAt(i));
             }
         }
