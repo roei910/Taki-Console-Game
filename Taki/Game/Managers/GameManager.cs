@@ -38,21 +38,13 @@ namespace Taki.Game.Managers
             cardDeck = CardDeckFactory.GenerateCardDeck();
             CreatePlayers(players, numberOfPlayers);
             DealCards(players, numberOfPlayerCards);
-            cardDeck.DrawFirstCard();
-            ruleHandler = new(new PlayerHandler(players), cardDeck); ;
+            ruleHandler = new(new PlayerHandler(players), cardDeck);
+            Initialize(players);
         }
 
-        public GameManager(int numberOfPlayers)
+        protected virtual void Initialize(LinkedList<Player> players)
         {
-            LinkedList<Player> players = new();
-            cardDeck = CardDeckFactory.GenerateCardDeck();
-            CreatePlayers(players, numberOfPlayers);
-            DealCards(players, NUMBER_OF_PLAYER_CARDS_PYRAMID);
-            var pyramidPlayers = players.Select(x => new PyramidPlayer(x)).ToList();
-            players = [];
-            pyramidPlayers.ForEach(x => players.AddLast(x));
             cardDeck.DrawFirstCard();
-            ruleHandler = new PyramidRuleHandler(new PlayerHandler(players), cardDeck);
         }
 
         public void StartGame()
