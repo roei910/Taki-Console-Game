@@ -24,9 +24,10 @@ namespace Taki.Game.GameRules
     //TODO: +2, stacking +2's - after +2 is done iwant to be able to put another +2 if i have one.
     //TODO: change the way we save plus2's
     //TODO: test pyramid winning functionality, need to delete the wrong player won message
-    //TODO: putting taki card and then change direction and finishing turn is working, try taki after taki after -1(finish turn).
-    //TODO: check finishing cards while playing taki - not behaving as expected
     //TODO: check error with change-color card not allowing to put any more cards, go over change color
+
+    //TODO: check finishing cards while playing taki - not behaving as expected
+
     internal class RuleHandler(PlayerHandler playerHandler, CardDeck cardDeck)
     {
         protected readonly PlayerHandler playerHandler = playerHandler;
@@ -39,9 +40,10 @@ namespace Taki.Game.GameRules
         public void PlayTurn()
         {
             Card topDiscard = cardDeck.GetTopDiscardPile();
-
-            //TODO:check this again if needed or not
-            while (!UniqueCard.IsChangeColor(topDiscard) && topDiscard.Color == Color.Empty)
+            //check if the card is not change color and has no color
+            while (changeColor == Color.Empty && 
+                !UniqueCard.IsChangeColor(topDiscard) && 
+                topDiscard.Color == Color.Empty)
                 topDiscard = cardDeck.GetNextDiscard(topDiscard);
             Player first = playerHandler.CurrentPlayer;
             topDiscard = CheckCardFlags(topDiscard);
