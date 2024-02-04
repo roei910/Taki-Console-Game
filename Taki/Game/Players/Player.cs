@@ -36,7 +36,7 @@ namespace Taki.Game.Players
         public bool AskPlayerToPickCard(Card topDiscardPileCard, out Card chosenCard)
         {
             chosenCard = choosingAlgorithm.ChooseCard(topDiscardPileCard, this);
-            if (chosenCard.Equals(topDiscardPileCard))
+            if (chosenCard.Id == topDiscardPileCard.Id)
                 return false;
             TryRemoveCardFromHand(chosenCard);
             return true;
@@ -92,7 +92,7 @@ namespace Taki.Game.Players
                 return false;
             if (obj is not Player)
                 return false;
-            return id == ((Player)obj).Id;
+            return Id == ((Player)obj).Id;
         }
 
         public override int GetHashCode()
