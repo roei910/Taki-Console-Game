@@ -57,9 +57,9 @@ namespace Taki.Game.GameRules
             List<Card> savedCards = first.PlayerCards;
             first.PlayerCards = [];
             NextPlayer(isDirectionNormal);
-            while (!players.First().Equals(first))
+            while (CurrentPlayer.Id != first.Id)
             {
-                (savedCards, players.First().PlayerCards) = (players.First().PlayerCards, savedCards);
+                (savedCards, CurrentPlayer.PlayerCards) = (CurrentPlayer.PlayerCards, savedCards);
                 NextPlayer(isDirectionNormal);
             }
             first.PlayerCards = savedCards;
