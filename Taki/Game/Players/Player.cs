@@ -15,9 +15,9 @@ namespace Taki.Game.Players
     internal class Player
     {
         private static int id = 0;
-        public List<Card> PlayerCards { get; set; }
         public int Id { get; }
         private readonly IPlayerAlgorithm choosingAlgorithm;
+        public List<Card> PlayerCards { get; set; }
 
         public Player(IPlayerAlgorithm playerAlgorithm)
         {
