@@ -21,5 +21,10 @@ namespace Taki.Game.Players
         {
             currentNumberOfCards--;
         }
+
+        public override string ToString()
+        {
+            return $"Pyramid player: current hand is {currentNumberOfCards}\n" + base.ToString();
+        }
     }
 }
