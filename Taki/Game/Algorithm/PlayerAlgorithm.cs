@@ -27,7 +27,8 @@ namespace Taki.Game.Algorithm
                 return card;
             }
             card = filter.FirstOrDefault(topDeckCard);
-            Utilities.PrintConsoleAlert($"Player[{currentPlayer.Id}] has {currentPlayer.PlayerCards.Count} cards in hand");
+            if(currentPlayer.PlayerCards.Count != 0)
+                Utilities.PrintConsoleAlert($"Player[{currentPlayer.Id}] has {currentPlayer.PlayerCards.Count} cards in hand");
             return card;
         }
 

@@ -20,8 +20,10 @@ namespace Taki.Game.GameRules
                     return true;
                 playerHandler.DrawCards(player.CurrentNumberOfCards() - 1, cardDeck);
                 player.CurrentCardsMinus1();
-                Utilities.PrintConsoleError($"Player[{player.Id}] finished his current hand," +
-                    $" currently on {player.CurrentNumberOfCards()} card(s)");
+                if(player.CurrentNumberOfCards() != 0)
+                    Utilities.PrintConsoleError($"Player[{player.Id}] finished his current hand," +
+                        $" currently on {player.CurrentNumberOfCards()} card(s)");
+
                 return false;
             }
             return false;
