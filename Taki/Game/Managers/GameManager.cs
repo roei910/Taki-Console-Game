@@ -39,11 +39,6 @@ namespace Taki.Game.Managers
             Initialize(players);
         }
 
-        protected virtual void Initialize(LinkedList<Player> players)
-        {
-            cardDeck.DrawFirstCard();
-        }
-
         public void StartGame()
         {
             int[] winnerIds = new int[NUMBER_OF_TOTAL_WINNERS];
@@ -90,5 +85,11 @@ namespace Taki.Game.Managers
             for (int i = 0; i < winnerIds.Length; i++)
                 Console.WriteLine($"{i + 1}. id {winnerIds[i]}");
         }
+
+        protected virtual void Initialize(LinkedList<Player> players)
+        {
+            cardDeck.DrawFirstCard();
+        }
+
     }
 }

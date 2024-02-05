@@ -17,6 +17,11 @@ namespace Taki.Game.Deck
             return cardDeck;
         }
 
+        public static int MaxNumberOfCards()
+        {
+            return GenerateCardDeck().GetNumberOfCards();
+        }
+
         private static List<Card> GetCardsList()
         {
             List<Card> cards = [.. GenerateNumberCards(), .. GenerateUniqueCards()];
@@ -51,11 +56,6 @@ namespace Taki.Game.Deck
                 cards.Add(new UniqueCard(UniqueCardEnum.ChangeColor));
 
             return cards;
-        }
-
-        public static int MaxNumberOfCards()
-        {
-            return GenerateCardDeck().GetNumberOfCards();
         }
     }
 }

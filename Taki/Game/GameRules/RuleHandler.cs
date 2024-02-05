@@ -18,6 +18,17 @@ namespace Taki.Game.GameRules
         private Color changeColor = Color.Empty;
         private int noPlayCounter = 0;
 
+        public int GetWinner()
+        {
+            while (!PlayerFinishedHand())
+            {
+                Console.WriteLine("------------------------");
+                PlayTurn();
+                RequestNextPlayer();
+            }
+            return playerHandler.RemoveWinner(isDirectionNormal);
+        }
+
         public void PlayTurn()
         {
             Card topDiscard = cardDeck.GetTopDiscardPile();
@@ -43,6 +54,14 @@ namespace Taki.Game.GameRules
             }
         }
 
+        public void RequestNextPlayer()
+        {
+            if (playerHandler.CurrentPlayer.IsHandEmpty())
+                return;
+            if (CurrentTakiCard == null)
+                playerHandler.NextPlayer(isDirectionNormal);
+        }
+
         private void HandlePlayerFinishTurn(Player first, Card topDiscard)
         {
             if (first.IsHandEmpty())
@@ -64,14 +83,6 @@ namespace Taki.Game.GameRules
                 noPlayCounter++;
             if (noPlayCounter == 8)
                 throw new Exception("no play for 8 rounds, we will call this a tie ;)");
-        }
-
-        public void RequestNextPlayer()
-        {
-            if (playerHandler.CurrentPlayer.IsHandEmpty())
-                return;
-            if (CurrentTakiCard == null)
-                playerHandler.NextPlayer(isDirectionNormal);
         }
 
         private bool TryHandleCard(Card topDiscard, Card card)
@@ -142,17 +153,6 @@ namespace Taki.Game.GameRules
                 return false;
             }
             return true;
-        }
-
-        public int GetWinner()
-        {
-            while (!PlayerFinishedHand())
-            {
-                Console.WriteLine("------------------------");
-                PlayTurn();
-                RequestNextPlayer();
-            }
-            return playerHandler.RemoveWinner(isDirectionNormal);
         }
 
         protected virtual bool PlayerFinishedHand()

@@ -37,14 +37,14 @@ namespace Taki.Game.Algorithm
             return changeColor;
         }
 
-        public override string ToString()
-        {
-            return "Manual Player Algo";
-        }
-
         public Card ChoosePlus2Card(Card topDiscardPileCard, Player player)
         {
             return ChooseCard(topDiscardPileCard, player);
+        }
+
+        public override string ToString()
+        {
+            return "Manual Player Algo";
         }
 
         private static bool IsValidIndex(int index, int maxCards)
