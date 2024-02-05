@@ -13,19 +13,14 @@ namespace Taki.Game.GameRules
     //TODO: check error stuck after switch cards with direction - seems to work, try again
     //TODO: fix error cannot put change direction on plus same color - tried to test, but worked. try again
     //TODO: if no one can play the game is a tie, must declare it.
-
-    //very important
-    //TODO: Taki - problems with stacking and handling of unique cards, also error with SUPER-TAKI AND ANOTHER SUPER-TAKI
     //TODO: need to edit the behavior of asking card, need to know how to ask for specific card only or every card that fits
-    //TODO: check finishing cards in hand while playing taki - not behaving as expected IN PYRAMID only
-    //TODO: check if after using a change color the color doesnt change back to empty
-
+    //TODO: pyramid error - player says cannot draw cards before winning
     internal class RuleHandler(PlayerHandler playerHandler, CardDeck cardDeck)
     {
         protected readonly PlayerHandler playerHandler = playerHandler;
         protected readonly CardDeck cardDeck = cardDeck;
-        private bool isDirectionNormal = true;
-        private Card? CurrentTakiCard { get; set; } = null;
+        protected bool isDirectionNormal = true;
+        protected Card? CurrentTakiCard { get; set; } = null;
         private int countPlus2 = 0;
         private Color changeColor = Color.Empty;
 
@@ -85,7 +80,7 @@ namespace Taki.Game.GameRules
                     Utilities.PrintConsoleError($"Please choose a {changeColor} color card");
                     return false;
                 }
-                if (topDiscard.Color != Color.Empty)
+                if (card.Color != Color.Empty || CurrentTakiCard == null)
                     changeColor = Color.Empty;
             }
             else if (countPlus2 != 0)
