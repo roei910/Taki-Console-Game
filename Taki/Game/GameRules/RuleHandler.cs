@@ -8,10 +8,7 @@ using Taki.Game.Players;
 
 namespace Taki.Game.GameRules
 {
-    //not important
-    //TODO: fix messages in screen not appearing in the right timeline - happends in taki
     //TODO: if no one can play the game is a tie, must declare it.
-    //TODO: need to edit the behavior of asking card, need to know how to ask for specific card only or every card that fits
     internal class RuleHandler(PlayerHandler playerHandler, CardDeck cardDeck)
     {
         protected readonly PlayerHandler playerHandler = playerHandler;
@@ -31,6 +28,9 @@ namespace Taki.Game.GameRules
             Player first = playerHandler.CurrentPlayer;
             if (changeColor != Color.Empty)
                 topDiscard = new NumberCard("", changeColor);
+
+            //TODO: need to edit the behavior of asking card, need to know how to ask for specific card only or every card that fits
+            //TODO: only demand +2 when needed
             if (!first.AskPlayerToPickCard(topDiscard, out Card playerCard))
                 HandlePlayerFinishTurn(first, topDiscard);
             else if (!TryHandleCard(topDiscard, playerCard))
