@@ -29,9 +29,11 @@ namespace Taki.Game.GameRules
             if (changeColor != Color.Empty)
                 topDiscard = new NumberCard("", changeColor);
 
-            //TODO: need to edit the behavior of asking card, need to know how to ask for specific card only or every card that fits
-            //TODO: only demand +2 when needed
-            if (!first.AskPlayerToPickCard(topDiscard, out Card playerCard))
+            bool isPlayerPickCard = (countPlus2 > 0) ?
+                first.AskPlayerToPickCardPlus2(topDiscard, out Card playerCard) :
+                first.AskPlayerToPickCard(topDiscard, out playerCard);
+
+            if (!isPlayerPickCard)
                 HandlePlayerFinishTurn(first, topDiscard);
             else if (!TryHandleCard(topDiscard, playerCard))
             {

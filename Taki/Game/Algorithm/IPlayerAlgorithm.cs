@@ -15,5 +15,6 @@ namespace Taki.Game.Algorithm
     {
         Card ChooseCard(Card topDeckCard, Player currentPlayer);
         Color ChooseColor(Player currentPlayer);
+        Card ChoosePlus2Card(Card topDiscardPileCard, Player player);
     }
 }

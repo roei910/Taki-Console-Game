@@ -51,6 +51,14 @@ namespace Taki.Game.Algorithm
             
         }
 
+        public Card ChoosePlus2Card(Card topDeckCard, Player currentPlayer)
+        {
+            Card card = currentPlayer.PlayerCards
+                .Where(UniqueCard.IsPlus2).FirstOrDefault(topDeckCard);
+            Utilities.PrintConsoleAlert($"Player[{currentPlayer.Id}] chose {card}");
+            return card;
+        }
+
         public override string ToString()
         {
             return "Player Algo";

@@ -95,5 +95,14 @@ namespace Taki.Game.Players
         {
             return id.GetHashCode();
         }
+
+        internal bool AskPlayerToPickCardPlus2(Card topDiscardPileCard, out Card chosenCard)
+        {
+            chosenCard = choosingAlgorithm.ChoosePlus2Card(topDiscardPileCard, this);
+            if (chosenCard.Id == topDiscardPileCard.Id)
+                return false;
+            TryRemoveCardFromHand(chosenCard);
+            return true;
+        }
     }
 }

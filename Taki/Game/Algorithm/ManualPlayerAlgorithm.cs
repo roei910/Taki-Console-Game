@@ -46,5 +46,10 @@ namespace Taki.Game.Algorithm
         {
             return "Manual Player Algo";
         }
+
+        public Card ChoosePlus2Card(Card topDiscardPileCard, Player player)
+        {
+            return ChooseCard(topDiscardPileCard, player);
+        }
     }
 }
