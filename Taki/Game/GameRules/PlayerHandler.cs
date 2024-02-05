@@ -16,7 +16,7 @@ namespace Taki.Game.GameRules
         private readonly LinkedList<Player> players = players;
         public Player CurrentPlayer { get; private set; } = players.First();
 
-        public void DrawCards(int numberOfCards, CardDeck cardDeck)
+        public bool DrawCards(int numberOfCards, CardDeck cardDeck)
         {
             int cardsDraw = 0;
             Enumerable.Range(0, numberOfCards).ToList()
@@ -30,8 +30,9 @@ namespace Taki.Game.GameRules
                     cardsDraw++;
                 });
             if(cardsDraw == 0)
-                return;
+                return false;
             Utilities.PrintConsoleError($"Player[{CurrentPlayer.Id}]: drew {cardsDraw} card(s)");
+            return true;
         }
 
         public void NextPlayer(bool isDirectionNormal)
