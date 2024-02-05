@@ -19,7 +19,6 @@ namespace Taki.Game.Managers
 
     internal class GameManager
     {
-        private static readonly int NUMBER_OF_PLAYER_CARDS_PYRAMID = 10;
         private static readonly bool FULLY_MANUAL_GAME = false;
         private const int NUMBER_OF_TOTAL_WINNERS = 2;
         private static readonly List<IPlayerAlgorithm> algorithms =
@@ -49,7 +48,15 @@ namespace Taki.Game.Managers
         {
             int[] winnerIds = new int[NUMBER_OF_TOTAL_WINNERS];
             for (int i = 0; i < winnerIds.Length; i++)
+            {
                 winnerIds[i] = ruleHandler.GetWinner();
+                Console.WriteLine($"Winner #{i+1} is Player[{winnerIds[i]}]");
+                if (i < winnerIds.Length-1)
+                {
+                    Console.WriteLine("Press any key to continue");
+                    Console.ReadKey();
+                }
+            }
             PrintWinnersList(winnerIds);
         }
         
@@ -63,8 +70,8 @@ namespace Taki.Game.Managers
         private static void CreatePlayers(LinkedList<Player> players, int numberOfPlayers)
         {
             Random random = new();
-            players.AddFirst(new Player(new ManualPlayerAlgorithm()));
-            Debug.WriteLine(players.ElementAt(0));
+            //players.AddFirst(new Player(new ManualPlayerAlgorithm()));
+            //Debug.WriteLine(players.ElementAt(0));
 
             for (int i = players.Count; i < numberOfPlayers; i++)
             {
