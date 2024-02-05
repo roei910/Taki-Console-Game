@@ -46,7 +46,6 @@ namespace Taki.Game.Players
         public Color ChooseColor()
         {
             Color color = choosingAlgorithm.ChooseColor(this);
-            Debug.WriteLine($"Player[{Id}] chose color: {color}");
             return color;
         }
 
