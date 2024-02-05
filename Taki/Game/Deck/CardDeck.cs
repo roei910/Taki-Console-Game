@@ -52,10 +52,6 @@ namespace Taki.Game.Deck
             }
         }
 
-        public bool CanDrawCard()
-        {
-            return drawPile.Count > 0;
-        }
         public void DrawFirstCard()
         {
             TryDrawFirstCard(out Card? card);

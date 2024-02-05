@@ -84,21 +84,6 @@ namespace Taki.Game.Managers
             }
         }
 
-        private static void CreatePlayersPyramid(LinkedList<Player> players, int numberOfPlayers)
-        {
-            Random random = new();
-            players.AddFirst(new PyramidPlayer(new Player(new ManualPlayerAlgorithm())));
-            Debug.WriteLine(players.ElementAt(0));
-
-            for (int i = players.Count; i < numberOfPlayers; i++)
-            {
-                int index = random.Next(algorithms.Count);
-                players.AddLast(new PyramidPlayer(new Player(algorithms.ElementAt(index))));
-                //players.AddLast(new Player(i, new ManualPlayerAlgorithm()));
-                Debug.WriteLine(players.ElementAt(i));
-            }
-        }
-
         private static void PrintWinnersList(int[] winnerIds)
         {
             Console.WriteLine("The winners by order:");

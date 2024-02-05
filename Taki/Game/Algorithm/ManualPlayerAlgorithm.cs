@@ -37,11 +37,6 @@ namespace Taki.Game.Algorithm
             return changeColor;
         }
 
-        private bool IsValidIndex(int index, int maxCards)
-        {
-            return index >= -1 && index < maxCards;
-        }
-
         public override string ToString()
         {
             return "Manual Player Algo";
@@ -51,5 +46,11 @@ namespace Taki.Game.Algorithm
         {
             return ChooseCard(topDiscardPileCard, player);
         }
+
+        private static bool IsValidIndex(int index, int maxCards)
+        {
+            return index >= -1 && index < maxCards;
+        }
+
     }
 }
