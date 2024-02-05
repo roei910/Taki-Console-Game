@@ -19,13 +19,6 @@ namespace Taki.Game.Algorithm
             Card card;
             var filter = currentPlayer.PlayerCards
                 .Where(card => card.SimilarTo(topDeckCard)).ToList();
-            if(UniqueCard.IsPlus2(topDeckCard))
-            {
-                card = filter.Where(card => card.Id == topDeckCard.Id)
-                    .FirstOrDefault(topDeckCard);
-                Utilities.PrintConsoleAlert($"Player[{currentPlayer.Id}] chose {card}");
-                return card;
-            }
             card = filter.FirstOrDefault(topDeckCard);
             if(currentPlayer.PlayerCards.Count != 0)
                 Utilities.PrintConsoleAlert($"Player[{currentPlayer.Id}] has {currentPlayer.PlayerCards.Count} cards in hand");
