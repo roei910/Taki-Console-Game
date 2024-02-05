@@ -23,7 +23,11 @@ namespace Taki.Game.GameRules
                 if(player.CurrentNumberOfCards() != 0)
                     Utilities.PrintConsoleError($"Player[{player.Id}] finished his current hand," +
                         $" currently on {player.CurrentNumberOfCards()} card(s)");
-
+                if(CurrentTakiCard != null)
+                {
+                    CurrentTakiCard = null;
+                    playerHandler.NextPlayer(isDirectionNormal);
+                }
                 return false;
             }
             return false;
