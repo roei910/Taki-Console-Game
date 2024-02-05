@@ -32,7 +32,8 @@ namespace Taki.Game.GameRules
                 topDiscard.Color == Color.Empty)
                 topDiscard = cardDeck.GetNextDiscard(topDiscard);
             Player first = playerHandler.CurrentPlayer;
-            topDiscard = CheckCardFlags(topDiscard);
+            if (changeColor != Color.Empty)
+                topDiscard = new NumberCard("", changeColor);
             if (!first.AskPlayerToPickCard(topDiscard, out Card playerCard))
                 HandlePlayerFinishTurn(first, topDiscard);
             else if (!TryHandleCard(topDiscard, playerCard))
@@ -70,32 +71,10 @@ namespace Taki.Game.GameRules
                 playerHandler.NextPlayer(isDirectionNormal);
         }
 
-        //TODO: shorten
         private bool TryHandleCard(Card topDiscard, Card card)
         {
-            if (!changeColor.Equals(Color.Empty))
-            {
-                if (!card.CheckColorMatch(changeColor))
-                {
-                    Utilities.PrintConsoleError($"Please choose a {changeColor} color card");
-                    return false;
-                }
-                if (card.Color != Color.Empty || CurrentTakiCard == null)
-                    changeColor = Color.Empty;
-            }
-            else if (countPlus2 != 0)
-            {
-                if (!UniqueCard.IsPlus2(card) && countPlus2 > 0)
-                {
-                    Utilities.PrintConsoleError($"you can only put plus2 cards");
-                    return false;
-                }
-            }
-            else if (!card.SimilarTo(topDiscard))
-            {
-                Utilities.PrintConsoleError("Please follow the card stacking rules");
+            if (!CheckCardFlags(topDiscard, card))
                 return false;
-            }
             cardDeck.AddCardToDiscardPile(card);
             if (playerHandler.CurrentPlayer.IsHandEmpty())
                 return true;
@@ -134,11 +113,32 @@ namespace Taki.Game.GameRules
                 throw new NotImplementedException("card functionality not implemented yet");
         }
 
-        private Card CheckCardFlags(Card topDiscard)
+        private bool CheckCardFlags(Card topDiscard, Card card)
         {
-            if (changeColor != Color.Empty)
-                topDiscard = new NumberCard("", changeColor);
-            return topDiscard;
+            if (!changeColor.Equals(Color.Empty))
+            {
+                if (!card.CheckColorMatch(changeColor))
+                {
+                    Utilities.PrintConsoleError($"Please choose a {changeColor} color card");
+                    return false;
+                }
+                if (card.Color != Color.Empty || CurrentTakiCard == null)
+                    changeColor = Color.Empty;
+            }
+            else if (countPlus2 != 0)
+            {
+                if (!UniqueCard.IsPlus2(card) && countPlus2 > 0)
+                {
+                    Utilities.PrintConsoleError($"you can only put plus2 cards");
+                    return false;
+                }
+            }
+            else if (!card.SimilarTo(topDiscard))
+            {
+                Utilities.PrintConsoleError("Please follow the card stacking rules");
+                return false;
+            }
+            return true;
         }
 
         public int GetWinner()
