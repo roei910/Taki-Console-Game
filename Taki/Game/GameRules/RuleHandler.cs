@@ -10,11 +10,8 @@ namespace Taki.Game.GameRules
 {
     //not important
     //TODO: fix messages in screen not appearing in the right timeline - happends in taki
-    //TODO: check error stuck after switch cards with direction - seems to work, try again
-    //TODO: fix error cannot put change direction on plus same color - tried to test, but worked. try again
     //TODO: if no one can play the game is a tie, must declare it.
     //TODO: need to edit the behavior of asking card, need to know how to ask for specific card only or every card that fits
-    //TODO: pyramid error - player says cannot draw cards before winning
     internal class RuleHandler(PlayerHandler playerHandler, CardDeck cardDeck)
     {
         protected readonly PlayerHandler playerHandler = playerHandler;
