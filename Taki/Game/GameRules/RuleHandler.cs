@@ -8,7 +8,6 @@ using Taki.Game.Players;
 
 namespace Taki.Game.GameRules
 {
-    //TODO: if no one can play the game is a tie, must declare it.
     internal class RuleHandler(PlayerHandler playerHandler, CardDeck cardDeck)
     {
         protected readonly PlayerHandler playerHandler = playerHandler;
@@ -17,6 +16,7 @@ namespace Taki.Game.GameRules
         protected Card? CurrentTakiCard { get; set; } = null;
         private int countPlus2 = 0;
         private Color changeColor = Color.Empty;
+        private int noPlayCounter = 0;
 
         public void PlayTurn()
         {
@@ -37,6 +37,7 @@ namespace Taki.Game.GameRules
                 HandlePlayerFinishTurn(first, topDiscard);
             else if (!TryHandleCard(topDiscard, playerCard))
             {
+                noPlayCounter = 0;
                 playerHandler.ReturnUnhandledCard(playerCard);
                 PlayTurn();
             }
@@ -58,8 +59,11 @@ namespace Taki.Game.GameRules
                 return;
             }
             int numberOfDrawCards = countPlus2 > 0 ? countPlus2 * 2 : 1;
-            countPlus2 = 0;                
-            playerHandler.DrawCards(numberOfDrawCards, cardDeck);
+            countPlus2 = 0;
+            if (!playerHandler.DrawCards(numberOfDrawCards, cardDeck))
+                noPlayCounter++;
+            if (noPlayCounter == 8)
+                throw new Exception("no play for 8 rounds, we will call this a tie ;)");
         }
 
         public void RequestNextPlayer()
@@ -80,12 +84,12 @@ namespace Taki.Game.GameRules
             if(CurrentTakiCard == null && UniqueCard.IsUniqueCard(card))
                 HandleUniqueCard(card);
             Utilities.PrintConsoleAlert($"Player[{playerHandler.CurrentPlayer.Id}] played {card}");
+            noPlayCounter = 0;
             return true;
         }
 
         private void HandleUniqueCard(Card card)
         {
-            Console.WriteLine($"card is {card}");
             if (UniqueCard.IsPlus(card))
                 PlayTurn();
             else if (UniqueCard.IsPlus2(card))
