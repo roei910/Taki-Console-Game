@@ -30,10 +30,7 @@ namespace Taki.Game.GameRules
                     cardsDraw++;
                 });
             if(cardsDraw == 0)
-            {
-                Utilities.PrintConsoleError($"Player[{CurrentPlayer.Id}]: cannot draw card(s)");
                 return;
-            }
             Utilities.PrintConsoleError($"Player[{CurrentPlayer.Id}]: drew {cardsDraw} card(s)");
         }
 
