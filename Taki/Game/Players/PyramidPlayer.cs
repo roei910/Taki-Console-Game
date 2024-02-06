@@ -19,10 +19,10 @@ namespace Taki.Game.Players
             return currentNumberOfCards;
         }
 
-        public void CurrentCardsMinus1()
+        public int GetNextPlayerHand()
         {
             Debug.WriteLine($"Player[{Id}]: finished hand {currentNumberOfCards}");
-            currentNumberOfCards--;
+            return --currentNumberOfCards;
         }
 
         public override string ToString()
