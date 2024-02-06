@@ -90,5 +90,10 @@ namespace Taki.Game.GameRules
         {
             return CurrentPlayer.IsHandEmpty();
         }
+
+        public int NumberOfPlayersLeft()
+        {
+            return players.Count;
+        }
     }
 }
