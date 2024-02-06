@@ -53,8 +53,7 @@ namespace Taki.Game.Cards
 
         public override bool Equals(object? obj)
         {
-            Card? card = obj as Card;
-            if(card == null)
+            if (obj is not Card card)
                 throw new ArgumentException("not card");
             return SameCard(obj) && card.Id == Id;
         }

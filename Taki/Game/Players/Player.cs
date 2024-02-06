@@ -32,7 +32,7 @@ namespace Taki.Game.Players
 
         public Player(Player other)
         {
-            PlayerCards = other.PlayerCards;
+            PlayerCards = new(other.PlayerCards);
             Id = other.Id;
             choosingAlgorithm = other.choosingAlgorithm;
             Name = other.Name;
@@ -83,16 +83,14 @@ namespace Taki.Game.Players
 
         public override bool Equals(object? obj)
         {
-            if (obj == null)
+            if (obj is not Player player)
                 return false;
-            if (obj is not Player)
-                return false;
-            return Id == ((Player)obj).Id;
+            return Id == player.Id;
         }
 
         public override int GetHashCode()
         {
-            return id.GetHashCode();
+            return Id.GetHashCode();
         }
     }
 }
