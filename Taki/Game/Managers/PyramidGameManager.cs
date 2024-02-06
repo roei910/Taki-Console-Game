@@ -8,8 +8,8 @@ using Taki.Game.Players;
 
 namespace Taki.Game.Managers
 {
-    internal class PyramidGameManager(int numberOfPlayers) 
-        : GameManager(numberOfPlayers, NUMBER_OF_PLAYER_CARDS_PYRAMID)
+    internal class PyramidGameManager(int numberOfPlayers, List<string> names) 
+        : GameManager(numberOfPlayers, NUMBER_OF_PLAYER_CARDS_PYRAMID, names)
     {
         private static readonly int NUMBER_OF_PLAYER_CARDS_PYRAMID = 10;
 

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Taki.Game.Algorithm;
 using Taki.Game.Cards;
 using Taki.Game.General;
@@ -16,15 +17,17 @@ namespace Taki.Game.Players
     internal class Player
     {
         private static int id = 0;
-        public int Id { get; }
         private readonly IPlayerAlgorithm choosingAlgorithm;
+        public string Name { get; }
+        public int Id { get; }
         public List<Card> PlayerCards { get; set; }
 
-        public Player(IPlayerAlgorithm playerAlgorithm)
+        public Player(string personName, IPlayerAlgorithm playerAlgorithm)
         {
             PlayerCards = [];
             Id = id++;
-            choosingAlgorithm = playerAlgorithm;
+            choosingAlgorithm = playerAlgorithm ?? throw new ArgumentNullException(nameof(playerAlgorithm));
+            Name = personName;
         }
 
         public Player(Player other)
@@ -32,6 +35,7 @@ namespace Taki.Game.Players
             PlayerCards = other.PlayerCards;
             Id = other.Id;
             choosingAlgorithm = other.choosingAlgorithm;
+            Name = other.Name;
         }
 
         public bool AskPlayerToPickCard(Card topDiscardPileCard, out Card chosenCard)

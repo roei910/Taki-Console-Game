@@ -18,7 +18,7 @@ namespace Taki.Game.GameRules
         private Color changeColor = Color.Empty;
         private int noPlayCounter = 0;
 
-        public int GetWinner()
+        public Player GetWinner()
         {
             while (!PlayerFinishedHand())
             {

@@ -29,11 +29,11 @@ namespace Taki.Game.Managers
         protected CardDeck cardDeck;
         protected RuleHandler ruleHandler;
 
-        public GameManager(int numberOfPlayers, int numberOfPlayerCards)
+        public GameManager(int numberOfPlayers, int numberOfPlayerCards, List<string> names)
         {
             LinkedList<Player> players = new ();
             cardDeck = CardDeckFactory.GenerateCardDeck();
-            CreatePlayers(players, numberOfPlayers);
+            CreatePlayers(players, numberOfPlayers, names);
             DealCards(players, numberOfPlayerCards);
             ruleHandler = new(new PlayerHandler(players), cardDeck);
             Initialize(players);
@@ -41,18 +41,18 @@ namespace Taki.Game.Managers
 
         public void StartGame()
         {
-            int[] winnerIds = new int[NUMBER_OF_TOTAL_WINNERS];
-            for (int i = 0; i < winnerIds.Length; i++)
+            List<Player> winners = [];
+            for (int i = 0; i < NUMBER_OF_TOTAL_WINNERS; i++)
             {
-                winnerIds[i] = ruleHandler.GetWinner();
-                Console.WriteLine($"Winner #{i+1} is Player[{winnerIds[i]}]");
-                if (i < winnerIds.Length-1)
+                winners.Add(ruleHandler.GetWinner());
+                Console.WriteLine($"Winner #{i+1} is {winners.ElementAt(i).Name}");
+                if (i < NUMBER_OF_TOTAL_WINNERS - 1)
                 {
                     Console.WriteLine("Press any key to continue");
                     Console.ReadKey();
                 }
             }
-            PrintWinnersList(winnerIds);
+            PrintWinnersList(winners);
         }
         
         private void DealCards(LinkedList<Player> players, int numberOfPlayerCards)
@@ -62,7 +62,7 @@ namespace Taki.Game.Managers
                     player.AddCard(cardDeck.DrawCard());
         }
 
-        private static void CreatePlayers(LinkedList<Player> players, int numberOfPlayers)
+        private static void CreatePlayers(LinkedList<Player> players, int numberOfPlayers, List<string> names)
         {
             Random random = new();
             //players.AddFirst(new Player(new ManualPlayerAlgorithm()));
@@ -72,18 +72,20 @@ namespace Taki.Game.Managers
             {
                 int index = random.Next(algorithms.Count);
                 if(FULLY_MANUAL_GAME)
-                    players.AddLast(new Player(new ManualPlayerAlgorithm()));
+                    players.AddLast(new Player(names.ElementAt(i), new ManualPlayerAlgorithm()));
                 else
-                    players.AddLast(new Player(algorithms.ElementAt(index)));
+                    players.AddLast(new Player(names.ElementAt(i), algorithms.ElementAt(index)));
                 Debug.WriteLine(players.ElementAt(i));
             }
         }
 
-        private static void PrintWinnersList(int[] winnerIds)
+        private static void PrintWinnersList(List<Player> winners)
         {
             Console.WriteLine("The winners by order:");
-            for (int i = 0; i < winnerIds.Length; i++)
-                Console.WriteLine($"{i + 1}. id {winnerIds[i]}");
+            winners.ForEach(p =>
+            {
+                Console.WriteLine($"{winners.IndexOf(p)}. {p.Name}");
+            });
         }
 
         protected virtual void Initialize(LinkedList<Player> players)

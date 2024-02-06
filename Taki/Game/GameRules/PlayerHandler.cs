@@ -77,13 +77,13 @@ namespace Taki.Game.GameRules
             first.PlayerCards = savedCards;
         }
 
-        public int RemoveWinner(bool isDirectionNormal)
+        public Player RemoveWinner(bool isDirectionNormal)
         {
             Player savedPlayer = CurrentPlayer;
             NextPlayer(isDirectionNormal);
             if(!players.Remove(savedPlayer))
                 throw new Exception("error removing the player");
-            return savedPlayer.Id;
+            return savedPlayer;
         }
 
         public bool PlayerFinishedHand()
