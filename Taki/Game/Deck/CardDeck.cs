@@ -20,13 +20,6 @@ namespace Taki.Game.Deck
             ShuffleDeck();
         }
 
-        public CardDeck(CardDeck cardDeck)
-        {
-            discardPile = new LinkedList<Card>(discardPile);
-            drawPile = new LinkedList<Card>(discardPile);
-            ShuffleDeck();
-        }
-
         public Card GetTopDiscardPile()
         {
             try
