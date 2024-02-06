@@ -20,11 +20,6 @@ namespace Taki.Game.Deck
             ShuffleDeck();
         }
 
-        public Card GetTopDrawCard()
-        {
-            return drawPile.First();
-        }
-
         public Card GetTopDiscardPile()
         {
             try
@@ -42,9 +37,7 @@ namespace Taki.Game.Deck
             try
             {
                 LinkedListNode<Card>? card = discardPile.Find(discardCard)?.Next;
-                if (card == null)
-                    throw new NullReferenceException("null exception");
-                return card.Value;
+                return card == null ? throw new NullReferenceException("null exception") : card.Value;
             }
             catch (Exception ex) 
             {
@@ -54,30 +47,25 @@ namespace Taki.Game.Deck
 
         public void DrawFirstCard()
         {
-            TryDrawFirstCard(out Card? card);
+            TryDrawCard(out Card? card);
             while (card?.GetType() == typeof(UniqueCard))
             {
-                AddCardToEndOfDrawPile(card);
-                TryDrawFirstCard(out card);
+                drawPile.AddLast(card);
+                TryDrawCard(out card);
             }
             AddCardToDiscardPile(card!);
         }
 
-        public void AddCardToEndOfDrawPile(Card card)
-        {
-            drawPile.AddLast(card);
-        }
-
         public Card DrawCard()
         {
-            if (IsDrawPileEmpty())
+            if (drawPile.Count == 0)
             {
                 drawPile = discardPile;
                 drawPile = new();
                 ShuffleDeck();
                 DrawFirstCard();
             }
-            Card card = GetTopDrawCard();
+            Card card = drawPile.First();
             drawPile.Remove(card);
             return card;
         }
@@ -104,11 +92,6 @@ namespace Taki.Game.Deck
             discardPile.AddFirst(card);
         }
 
-        public bool IsDrawPileEmpty()
-        {
-            return drawPile.Count == 0;
-        }
-
         public int GetNumberOfCards()
         {
             return discardPile.Count + drawPile.Count;
@@ -133,17 +116,9 @@ namespace Taki.Game.Deck
             Random random = new ();
             int index = random.Next(discardPile.Count);
             Card card = discardPile.ElementAt(index);
-            discardPile.Remove(card);
+            if (!discardPile.Remove(card))
+                throw new Exception("error getting random discard card");
             return card;
-        }
-
-        private bool TryDrawFirstCard(out Card? card)
-        {
-            if (!TryDrawCard(out card))
-                return false;
-            if (card == null)
-                return false;
-            return true;
         }
     }
 }
