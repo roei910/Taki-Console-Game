@@ -63,6 +63,15 @@ namespace Taki.Game.Players
             return PlayerCards.Count == 0;
         }
 
+        public bool AskPlayerToPickCardPlus2(Card topDiscardPileCard, out Card chosenCard)
+        {
+            chosenCard = choosingAlgorithm.ChoosePlus2Card(topDiscardPileCard, this);
+            if (chosenCard.Id == topDiscardPileCard.Id)
+                return false;
+            TryRemoveCardFromHand(chosenCard);
+            return true;
+        }
+
         private void TryRemoveCardFromHand(Card card)
         {
             try
@@ -98,15 +107,6 @@ namespace Taki.Game.Players
         public override int GetHashCode()
         {
             return id.GetHashCode();
-        }
-
-        internal bool AskPlayerToPickCardPlus2(Card topDiscardPileCard, out Card chosenCard)
-        {
-            chosenCard = choosingAlgorithm.ChoosePlus2Card(topDiscardPileCard, this);
-            if (chosenCard.Id == topDiscardPileCard.Id)
-                return false;
-            TryRemoveCardFromHand(chosenCard);
-            return true;
         }
     }
 }
