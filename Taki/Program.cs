@@ -15,19 +15,20 @@ internal class Program
     {
         GameManager gameManager;
         GameTypeEnum typeOfGame = Utilities.GetEnumFromUser<GameTypeEnum>("of game", GameTypeEnum.Normal.GetHashCode());
+        List<string> names = [];
         int numberOfPlayers, numberOfPlayerCards;
-        numberOfPlayers = GetNumberOfPlayers();
+        numberOfPlayers = GetNumberOfPlayers(names);
         switch (typeOfGame)
         {
             case GameTypeEnum.Normal:
                 numberOfPlayerCards = GetNumberOfPlayerCards(numberOfPlayers);
-                gameManager = new (numberOfPlayers, numberOfPlayerCards);
+                gameManager = new (numberOfPlayers, numberOfPlayerCards, names);
                 Console.WriteLine("Starting a new game of TAKI!");
                 WriteMessageToScreen(numberOfPlayers, numberOfPlayerCards);
                 gameManager.StartGame();
                 break;
             case GameTypeEnum.Pyramid:
-                gameManager = new PyramidGameManager(numberOfPlayers);
+                gameManager = new PyramidGameManager(numberOfPlayers, names);
                 Console.WriteLine("Starting a new game of TAKI pyramid edition!");
                 gameManager.StartGame();
                 break;
@@ -61,7 +62,7 @@ internal class Program
         return numberOfPlayerCards;
     }
 
-    private static int GetNumberOfPlayers()
+    private static int GetNumberOfPlayers(List<string> names)
     {
         Console.WriteLine($"Please enter number of players," +
             $" a number between {MIN_NUMBER_OF_PLAYERS} and {MAX_NUMBER_OF_PLAYERS}");
@@ -77,6 +78,17 @@ internal class Program
             Console.WriteLine($"Too many players for the game, setting as max value {MAX_NUMBER_OF_PLAYERS}");
             return MAX_NUMBER_OF_PLAYERS;
         }
+        Enumerable.Range(0, numberOfPlayers).ToList().ForEach(i =>
+        {
+            Console.WriteLine($"Please enter name #{i + 1}");
+            string? name = Console.ReadLine();
+            while (name == null)
+            {
+                Console.WriteLine("Please enter a valid name");
+                name = Console.ReadLine();
+            }
+            names.Add(name);
+        });
         return numberOfPlayers;
     }
 
