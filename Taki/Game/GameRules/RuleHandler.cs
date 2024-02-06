@@ -20,6 +20,8 @@ namespace Taki.Game.GameRules
 
         public Player GetWinner()
         {
+            if (playerHandler.NumberOfPlayersLeft() == 1)
+                return playerHandler.RemoveWinner(isDirectionNormal);
             while (!PlayerFinishedHand())
             {
                 Console.WriteLine("------------------------");
