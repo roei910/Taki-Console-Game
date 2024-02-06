@@ -90,8 +90,7 @@ namespace Taki.Game.Players
         public override string ToString()
         {
             string cardsInHand = string.Join("\n", PlayerCards.Select((x, i) => $"{i}.{x}"));
-            string str = $"Player[{Id}] {Name}" +
-                $"{PlayerCards.Count} Cards:\n{cardsInHand}";
+            string str = $"Player[{Id}] {Name}, {PlayerCards.Count} Cards:\n{cardsInHand}";
             return str;
         }
 
