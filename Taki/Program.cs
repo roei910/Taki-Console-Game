@@ -4,28 +4,22 @@ using Taki.Game.Deck;
 using Taki.Game.General;
 using Taki.Game.Managers;
 
-internal class Program
+GameManagerFactory factory = new();
+GameManager manager;
+GameTypeEnum typeOfGame = GameManagerFactory.GetGameType();
+
+switch (typeOfGame)
 {
-    private static void Main(string[] args)
-    {
-        GameManagerFactory factory = new ();
-        GameManager manager;
-        GameTypeEnum typeOfGame = GameManagerFactory.GetGameType();
-
-        switch (typeOfGame)
-        {
-            case GameTypeEnum.Normal:
-                manager = factory.CreateNormal();
-                Console.WriteLine("Starting a new game of TAKI!");
-                break;
-            case GameTypeEnum.Pyramid:
-                manager = factory.CreatePyramid();
-                Console.WriteLine("Starting a new game of TAKI pyramid edition!");
-                break;
-            default:
-                throw new Exception("type enum was wrong");
-        }
-
-        manager.StartGame();
-    }
+    case GameTypeEnum.Normal:
+        manager = factory.CreateNormal();
+        Console.WriteLine("Starting a new game of TAKI!");
+        break;
+    case GameTypeEnum.Pyramid:
+        manager = factory.CreatePyramid();
+        Console.WriteLine("Starting a new game of TAKI pyramid edition!");
+        break;
+    default:
+        throw new Exception("type enum was wrong");
 }
+
+manager.StartGame();
