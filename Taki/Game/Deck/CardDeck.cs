@@ -22,8 +22,8 @@ namespace Taki.Game.Deck
 
         public CardDeck(CardDeck cardDeck)
         {
-            discardPile = new LinkedList<Card>(cardDeck.discardPile);
-            drawPile = new LinkedList<Card>(cardDeck.discardPile);
+            discardPile = new (cardDeck.discardPile);
+            drawPile = new (cardDeck.drawPile);
             ShuffleDeck();
         }
 
