@@ -87,7 +87,7 @@ namespace Taki.Game.GameRules
 
         private bool TryHandleCard(Card topDiscard, Card card)
         {
-            if (!CheckCardFlags(topDiscard, card))
+            if (!CheckCardValid(topDiscard, card))
                 return false;
             cardDeck.AddCardToDiscardPile(card);
             if (playerHandler.CurrentPlayer.IsHandEmpty())
@@ -127,7 +127,7 @@ namespace Taki.Game.GameRules
                 throw new NotImplementedException("card functionality not implemented yet");
         }
 
-        private bool CheckCardFlags(Card topDiscard, Card card)
+        private bool CheckCardValid(Card topDiscard, Card card)
         {
             if (!changeColor.Equals(Color.Empty))
             {
