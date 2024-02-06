@@ -18,16 +18,13 @@ namespace Taki.Game.GameRules
                 PyramidPlayer player = (PyramidPlayer)playerHandler.CurrentPlayer;
                 if (player.CurrentNumberOfCards() == 0)
                     return true;
-                
-                player.CurrentCardsMinus1();
-                if(player.CurrentNumberOfCards() != 0)
+                if(player.GetNextPlayerHand() != 0)
                 {
                     if (!playerHandler.DrawCards(player.CurrentNumberOfCards(), cardDeck))
                         throw new Exception("player cannot get more cards and is stuck!");
                     Utilities.PrintConsoleError($"Player[{player.Id}] finished his current hand," +
                         $" currently on {player.CurrentNumberOfCards()} card(s)");
                 }
-                    
                 if(CurrentTakiCard != null)
                 {
                     CurrentTakiCard = null;
