@@ -58,7 +58,7 @@ namespace Taki.Game.GameRules
 
         public void RequestNextPlayer()
         {
-            if (playerHandler.CurrentPlayer.IsHandEmpty())
+            if (playerHandler.CurrentPlayer.IsHandEmpty() && PlayerFinishedHand())
                 return;
             if (CurrentTakiCard == null)
                 playerHandler.NextPlayer(isDirectionNormal);
@@ -92,8 +92,6 @@ namespace Taki.Game.GameRules
             if (!CheckCardValid(topDiscard, card))
                 return false;
             cardDeck.AddCardToDiscardPile(card);
-            if (playerHandler.CurrentPlayer.IsHandEmpty())
-                return true;
             if(CurrentTakiCard == null && UniqueCard.IsUniqueCard(card))
                 HandleUniqueCard(card);
             Utilities.PrintConsoleAlert($"Player[{playerHandler.CurrentPlayer.Id}] played {card}");
