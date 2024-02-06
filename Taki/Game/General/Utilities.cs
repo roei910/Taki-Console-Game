@@ -32,14 +32,18 @@ namespace Taki.Game.General
         public static T GetEnumFromUser<T>(string message = "", int defaultIndex = -1)
         {
             T[] values = (T[])Enum.GetValues(typeof(T));
+
             if(message == "")
                 Console.WriteLine("Please choose the type by index:");
             else
                 Console.WriteLine($"Please choose the type {message} by index:");
+
             for (int i = 0; i < values.Length; i++)
                 Console.WriteLine($"{i}. {values[i]}");
+
             int index;
             int.TryParse(Console.ReadLine(), out index);
+
             if (index >= values.Length || index < 0)
             {
                 if (defaultIndex != -1)
@@ -47,6 +51,7 @@ namespace Taki.Game.General
                 else
                     return GetEnumFromUser<T>();
             }
+
             return values[index];
         }
 

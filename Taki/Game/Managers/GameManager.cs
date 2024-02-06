@@ -11,15 +11,9 @@ using Taki.Game.Players;
 
 namespace Taki.Game.Managers
 {
-    enum GameTypeEnum
-    {
-        Normal,
-        Pyramid
-    }
-
     internal class GameManager
     {
-        private static readonly bool FULLY_MANUAL_GAME = false;
+        private static readonly bool FULLY_MANUAL_GAME = true;
         private const int NUMBER_OF_TOTAL_WINNERS = 2;
         private static readonly List<IPlayerAlgorithm> algorithms =
         [
@@ -32,10 +26,14 @@ namespace Taki.Game.Managers
         public GameManager(int numberOfPlayers, int numberOfPlayerCards, List<string> names)
         {
             LinkedList<Player> players = new ();
-            cardDeck = CardDeckFactory.GenerateCardDeck();
+            CardDeckFactory factory = new ();
+            cardDeck = factory.NewCardDeck();
+
             CreatePlayers(players, numberOfPlayers, names);
             DealCards(players, numberOfPlayerCards);
+            
             ruleHandler = new(new PlayerHandler(players), cardDeck);
+
             Initialize(players);
         }
 
@@ -52,7 +50,8 @@ namespace Taki.Game.Managers
                     Console.ReadKey();
                 }
             }
-            PrintWinnersList(winners);
+            Console.WriteLine("The winners by order:");
+            winners.ForEach(p => Console.WriteLine($"{winners.IndexOf(p)}. {p.Name}"));
         }
         
         private void DealCards(LinkedList<Player> players, int numberOfPlayerCards)
@@ -77,15 +76,6 @@ namespace Taki.Game.Managers
                     players.AddLast(new Player(names.ElementAt(i), algorithms.ElementAt(index)));
                 Debug.WriteLine(players.ElementAt(i));
             }
-        }
-
-        private static void PrintWinnersList(List<Player> winners)
-        {
-            Console.WriteLine("The winners by order:");
-            winners.ForEach(p =>
-            {
-                Console.WriteLine($"{winners.IndexOf(p)}. {p.Name}");
-            });
         }
 
         protected virtual void Initialize(LinkedList<Player> players)

@@ -43,7 +43,8 @@ namespace Taki.Game.Players
             chosenCard = choosingAlgorithm.ChooseCard(topDiscardPileCard, this);
             if (chosenCard.Id == topDiscardPileCard.Id)
                 return false;
-            TryRemoveCardFromHand(chosenCard);
+            if (!PlayerCards.Remove(chosenCard))
+                throw new Exception("card not found in player cards");
             return true;
         }
 
@@ -68,23 +69,9 @@ namespace Taki.Game.Players
             chosenCard = choosingAlgorithm.ChoosePlus2Card(topDiscardPileCard, this);
             if (chosenCard.Id == topDiscardPileCard.Id)
                 return false;
-            TryRemoveCardFromHand(chosenCard);
+            if (!PlayerCards.Remove(chosenCard))
+                throw new Exception("card not found in player cards");
             return true;
-        }
-
-        private void TryRemoveCardFromHand(Card card)
-        {
-            try
-            {
-                PlayerCards.Remove(card);
-            }
-            catch (Exception e)
-            {
-                if (IsHandEmpty())
-                    return;
-                throw new Exception("choosing algorithm error, card not found", e);
-            }
-
         }
 
         public override string ToString()

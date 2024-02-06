@@ -3,23 +3,28 @@ using Taki.Game.General;
 
 namespace Taki.Game.Deck
 {
-    internal abstract class CardDeckFactory
+    internal class CardDeckFactory
     {
         private static readonly List<UniqueCardEnum> uniqueCardsWithColor =
             [ UniqueCardEnum.Stop, UniqueCardEnum.Plus, UniqueCardEnum.Taki,
                     UniqueCardEnum.ChangeDirection, UniqueCardEnum.Plus2];
+        private readonly CardDeck cardDeck;
 
-        public static CardDeck GenerateCardDeck()
+        public CardDeckFactory() 
         {
             List<Card> cards = GetCardsList();
             LinkedList<Card> linkedCards = new(cards);
-            CardDeck cardDeck = new(linkedCards);
-            return cardDeck;
+            cardDeck = new(linkedCards);
+        }
+
+        public CardDeck NewCardDeck()
+        {
+            return new CardDeck(cardDeck);
         }
 
         public static int MaxNumberOfCards()
         {
-            return GenerateCardDeck().GetNumberOfCards();
+            return GetCardsList().Count;
         }
 
         private static List<Card> GetCardsList()
