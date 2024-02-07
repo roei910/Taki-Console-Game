@@ -11,6 +11,7 @@ using Taki.Game.Players;
 
 namespace Taki.Game.GameRules
 {
+    //TODO: separate drawing cards from player handler to card deck handler
     internal class PlayerHandler(LinkedList<Player> players)
     {
         private readonly LinkedList<Player> players = players;
