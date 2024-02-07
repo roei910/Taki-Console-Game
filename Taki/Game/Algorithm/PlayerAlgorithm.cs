@@ -14,7 +14,6 @@ namespace Taki.Game.Algorithm
 {
     internal class PlayerAlgorithm : IPlayerAlgorithm
     {
-        protected Communicator communicator = Communicator.GetCommunicator();
         public Card ChooseCard(Card topDeckCard, Player currentPlayer)
         {
             Card card;

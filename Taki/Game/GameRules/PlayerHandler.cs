@@ -13,7 +13,6 @@ namespace Taki.Game.GameRules
 {
     internal class PlayerHandler(LinkedList<Player> players)
     {
-        protected Communicator communicator = Communicator.GetCommunicator();
         private readonly LinkedList<Player> players = players;
         public Player CurrentPlayer { get; private set; } = players.First();
 

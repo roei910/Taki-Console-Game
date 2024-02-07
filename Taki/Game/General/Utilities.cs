@@ -10,7 +10,6 @@ namespace Taki.Game.General
 {
     internal class Utilities
     {
-        protected static Communicator communicator = Communicator.GetCommunicator();
         public static void PrintEnumValues<T>()
         {
             if (Enum.GetValues(typeof(T)).Length <= 0)

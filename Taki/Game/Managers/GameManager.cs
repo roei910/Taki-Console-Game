@@ -14,7 +14,6 @@ namespace Taki.Game.Managers
 {
     internal class GameManager
     {
-        protected Communicator communicator = Communicator.GetCommunicator();
         private static readonly bool FULLY_MANUAL_GAME = true;
         private const int NUMBER_OF_TOTAL_WINNERS = 2;
         private static readonly List<IPlayerAlgorithm> algorithms =

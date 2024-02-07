@@ -8,9 +8,9 @@ using Taki.Game.Players;
 
 namespace Taki.Game.GameRules
 {
+    //TODO: check what happends when finishing hand with plus card
     internal class RuleHandler(PlayerHandler playerHandler, CardDeck cardDeck)
     {
-        protected readonly Communicator communicator = Communicator.GetCommunicator();
         protected readonly PlayerHandler playerHandler = playerHandler;
         protected readonly CardDeck cardDeck = cardDeck;
         protected bool isDirectionNormal = true;

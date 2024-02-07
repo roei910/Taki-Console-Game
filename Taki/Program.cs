@@ -7,7 +7,6 @@ using Taki.Game.Managers;
 GameManagerFactory factory = new();
 GameManager manager;
 GameTypeEnum typeOfGame = GameManagerFactory.GetGameType();
-Communicator communicator = Communicator.GetCommunicator();
 
 switch (typeOfGame)
 {

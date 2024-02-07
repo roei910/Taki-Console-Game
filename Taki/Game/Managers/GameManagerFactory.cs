@@ -16,7 +16,6 @@ namespace Taki.Game.Managers
 
     internal class GameManagerFactory
     {
-        protected static Communicator communicator = Communicator.GetCommunicator();
         private static readonly int MIN_NUMBER_OF_PLAYERS = 2;
         private static readonly int MAX_NUMBER_OF_PLAYERS = 8;
         private static readonly int MIN_NUMBER_OF_PLAYER_CARDS = 7;
