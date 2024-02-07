@@ -13,12 +13,20 @@ namespace Taki.Game.GameRules
 {
     internal class MoveHandler
     {
-        public bool IsTaki { get; private set; } = false;
-        public bool IsPlus2 { get; private set; } = false;
         public Color ChangeColor { get; private set; } = Color.Empty;
         protected Card? CurrentTakiCard { get; set; } = null;
         private int countPlus2 = 0;
         private int noPlayCounter = 0;
+
+        public bool IsTaki()
+        {
+            return CurrentTakiCard != null;
+        }
+
+        public bool IsPlus2()
+        {
+            return countPlus2 > 0;
+        }
 
         internal static bool IsValidDiscard(Card topDiscard, Color changeColor)
         {
@@ -35,17 +43,17 @@ namespace Taki.Game.GameRules
 
         internal void CloseTaki(Card topDiscard, Player first, Action<Card> next)
         {
-            if (CurrentTakiCard != null)
-            {
-                Communicator.PrintMessage($"Player[{first.Id}]: Taki closed!", Communicator.MessageType.Alert);
-                if (UniqueCard.IsUniqueCard(topDiscard) && topDiscard.Id != CurrentTakiCard.Id)
-                {
-                    CurrentTakiCard = null;
-                    next(topDiscard);
-                }
-                CurrentTakiCard = null;
-                return;
-            }
+            if (CurrentTakiCard == null)
+                throw new Exception("trying to close taki by accident");
+            Communicator.PrintMessage($"Player[{first.Id}]: Taki closed!", Communicator.MessageType.Alert);
+            if (UniqueCard.IsUniqueCard(topDiscard) && topDiscard.Id != CurrentTakiCard.Id)
+                next(topDiscard);
+            CloseTaki();
+        }
+
+        internal void CloseTaki()
+        {
+            CurrentTakiCard = null;
         }
 
         internal void FinishPlus2(CardDeck cardDeck, Func<int, CardDeck, bool> drawCards)
@@ -54,7 +62,11 @@ namespace Taki.Game.GameRules
             countPlus2 = 0;
             if (!drawCards(numberOfDrawCards, cardDeck))
                 noPlayCounter++;
-            IsPlus2 = false;
+        }
+
+        internal void IncrementPlus2()
+        {
+            countPlus2++;
         }
 
         internal void ResetPlayCounter()
@@ -62,26 +74,14 @@ namespace Taki.Game.GameRules
             noPlayCounter = 0;
         }
 
-        internal void IncrementPlus2()
-        {
-            countPlus2++;
-            IsPlus2 = true;
-        }
-
         internal void UpdateTakiCard(Card currentTaki)
         {
             CurrentTakiCard = currentTaki;
-            IsTaki = true;
         }
 
         internal void UpdateChangeColor(Color color)
         {
             ChangeColor = color;
-        }
-
-        internal void CloseTaki()
-        {
-            CurrentTakiCard = null;
         }
     }
 }
