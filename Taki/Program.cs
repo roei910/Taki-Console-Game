@@ -13,13 +13,11 @@ switch (typeOfGame)
 {
     case GameTypeEnum.Normal:
         manager = factory.CreateNormal();
-        communicator.PrintMessage(Communicator.MessageType.Normal,
-            "Starting a new game of TAKI!");
+        communicator.PrintMessage("Starting a new game of TAKI!");
         break;
     case GameTypeEnum.Pyramid:
         manager = factory.CreatePyramid();
-        communicator.PrintMessage(Communicator.MessageType.Normal,
-            "Starting a new game of TAKI pyramid edition!");
+        communicator.PrintMessage("Starting a new game of TAKI pyramid edition!");
         break;
     default:
         throw new Exception("type enum was wrong");
