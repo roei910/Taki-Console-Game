@@ -10,6 +10,7 @@ namespace Taki.Game.GameRules
 {
     internal class RuleHandler(PlayerHandler playerHandler, CardDeck cardDeck)
     {
+        protected readonly Communicator communicator = Communicator.GetCommunicator();
         protected readonly PlayerHandler playerHandler = playerHandler;
         protected readonly CardDeck cardDeck = cardDeck;
         protected bool isDirectionNormal = true;
@@ -24,7 +25,7 @@ namespace Taki.Game.GameRules
                 return playerHandler.RemoveWinner(isDirectionNormal);
             while (!PlayerFinishedHand())
             {
-                Console.WriteLine("------------------------");
+                communicator.PrintMessage("------------------------");
                 PlayTurn();
                 RequestNextPlayer();
             }
@@ -70,7 +71,7 @@ namespace Taki.Game.GameRules
                 return;
             if (CurrentTakiCard != null)
             {
-                Utilities.PrintConsoleAlert($"Player[{first.Id}]: Taki closed!");
+                communicator.PrintMessage($"Player[{first.Id}]: Taki closed!", Communicator.MessageType.Alert);
                 if (UniqueCard.IsUniqueCard(topDiscard) && topDiscard.Id != CurrentTakiCard.Id)
                 {
                     CurrentTakiCard = null;
@@ -94,7 +95,9 @@ namespace Taki.Game.GameRules
             cardDeck.AddCardToDiscardPile(card);
             if(CurrentTakiCard == null && UniqueCard.IsUniqueCard(card))
                 HandleUniqueCard(card);
-            Utilities.PrintConsoleAlert($"Player[{playerHandler.CurrentPlayer.Id}] played {card}");
+            communicator.PrintMessage(
+                $"Player[{playerHandler.CurrentPlayer.Id}] played {card}", 
+                Communicator.MessageType.Alert);
             noPlayCounter = 0;
             return true;
         }
@@ -107,7 +110,7 @@ namespace Taki.Game.GameRules
                 countPlus2++;
             else if (UniqueCard.IsTaki(card))
             {
-                Console.WriteLine("TAKI open");
+                communicator.PrintMessage("TAKI open");
                 CurrentTakiCard = card;
             }
             else if (UniqueCard.IsSuperTaki(card))
@@ -133,7 +136,8 @@ namespace Taki.Game.GameRules
             {
                 if (!card.CheckColorMatch(changeColor))
                 {
-                    Utilities.PrintConsoleError($"Please choose a {changeColor} color card");
+                    communicator.PrintMessage($"Please choose a {changeColor} color card", 
+                        Communicator.MessageType.Error);
                     return false;
                 }
                 if (card.Color != Color.Empty || CurrentTakiCard == null)
@@ -143,13 +147,15 @@ namespace Taki.Game.GameRules
             {
                 if (!UniqueCard.IsPlus2(card) && countPlus2 > 0)
                 {
-                    Utilities.PrintConsoleError($"you can only put plus2 cards");
+                    communicator.PrintMessage($"you can only put plus2 cards", 
+                        Communicator.MessageType.Error);
                     return false;
                 }
             }
             else if (!card.SimilarTo(topDiscard))
             {
-                Utilities.PrintConsoleError("Please follow the card stacking rules");
+                communicator.PrintMessage("Please follow the card stacking rules", 
+                    Communicator.MessageType.Error);
                 return false;
             }
             return true;

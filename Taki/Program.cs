@@ -7,17 +7,19 @@ using Taki.Game.Managers;
 GameManagerFactory factory = new();
 GameManager manager;
 GameTypeEnum typeOfGame = GameManagerFactory.GetGameType();
+Communicator communicator = Communicator.GetCommunicator();
 
 switch (typeOfGame)
 {
     case GameTypeEnum.Normal:
         manager = factory.CreateNormal();
-        communicator.PrintMessage(Communicator.MessageType.Normal, )
-        Console.WriteLine();
+        communicator.PrintMessage(Communicator.MessageType.Normal,
+            "Starting a new game of TAKI!");
         break;
     case GameTypeEnum.Pyramid:
         manager = factory.CreatePyramid();
-        Console.WriteLine("Starting a new game of TAKI pyramid edition!");
+        communicator.PrintMessage(Communicator.MessageType.Normal,
+            "Starting a new game of TAKI pyramid edition!");
         break;
     default:
         throw new Exception("type enum was wrong");

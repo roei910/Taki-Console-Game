@@ -14,6 +14,7 @@ namespace Taki.Game.Algorithm
 {
     internal class PlayerAlgorithm : IPlayerAlgorithm
     {
+        protected Communicator communicator = Communicator.GetCommunicator();
         public Card ChooseCard(Card topDeckCard, Player currentPlayer)
         {
             Card card;
@@ -21,7 +22,8 @@ namespace Taki.Game.Algorithm
                 .Where(card => card.SimilarTo(topDeckCard)).ToList();
             card = filter.FirstOrDefault(topDeckCard);
             if(currentPlayer.PlayerCards.Count != 0)
-                Utilities.PrintConsoleAlert($"Player[{currentPlayer.Id}] has {currentPlayer.PlayerCards.Count} cards in hand");
+                communicator.PrintMessage($"Player[{currentPlayer.Id}] has {currentPlayer.PlayerCards.Count} cards in hand", 
+                    Communicator.MessageType.Alert);
             return card;
         }
 
@@ -48,7 +50,8 @@ namespace Taki.Game.Algorithm
         {
             Card card = currentPlayer.PlayerCards
                 .Where(UniqueCard.IsPlus2).FirstOrDefault(topDeckCard);
-            Utilities.PrintConsoleAlert($"Player[{currentPlayer.Id}] chose {card}");
+            communicator.PrintMessage($"Player[{currentPlayer.Id}] chose {card}", 
+                Communicator.MessageType.Alert);
             return card;
         }
 

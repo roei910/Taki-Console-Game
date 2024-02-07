@@ -16,6 +16,7 @@ namespace Taki.Game.Managers
 
     internal class GameManagerFactory
     {
+        protected static Communicator communicator = Communicator.GetCommunicator();
         private static readonly int MIN_NUMBER_OF_PLAYERS = 2;
         private static readonly int MAX_NUMBER_OF_PLAYERS = 8;
         private static readonly int MIN_NUMBER_OF_PLAYER_CARDS = 7;
@@ -47,13 +48,13 @@ namespace Taki.Game.Managers
             int maxNumberOfPlayerCards = CardDeckFactory.MaxNumberOfCards() / numberOfPlayers - 1;
             if (maxNumberOfPlayerCards > MAX_NUMBER_OF_PLAYER_CARDS)
                 maxNumberOfPlayerCards = MAX_NUMBER_OF_PLAYER_CARDS;
-            Console.WriteLine($"Please enter number of player cards," +
+            communicator.PrintMessage($"Please enter number of player cards," +
                 $" a number between {MIN_NUMBER_OF_PLAYER_CARDS} and {maxNumberOfPlayerCards}");
             int numberOfPlayerCards = GetNumberFromUser();
 
             if (numberOfPlayerCards > maxNumberOfPlayerCards)
             {
-                Console.WriteLine($"Too many cards per player, max is {maxNumberOfPlayerCards}." +
+                communicator.PrintMessage($"Too many cards per player, max is {maxNumberOfPlayerCards}." +
                     $" setting as the max value");
                 numberOfPlayerCards = maxNumberOfPlayerCards;
 
@@ -62,7 +63,7 @@ namespace Taki.Game.Managers
 
             else if (numberOfPlayerCards < MIN_NUMBER_OF_PLAYER_CARDS)
             {
-                Console.WriteLine($"Not enough cards per player, " +
+                communicator.PrintMessage($"Not enough cards per player, " +
                     $"min is {MIN_NUMBER_OF_PLAYER_CARDS} setting as min value");
                 numberOfPlayerCards = MIN_NUMBER_OF_PLAYER_CARDS;
             }
@@ -72,32 +73,32 @@ namespace Taki.Game.Managers
 
         private static int GetNumberOfPlayers(out List<string> names)
         {
-            Console.WriteLine($"Please enter number of players," +
+            communicator.PrintMessage($"Please enter number of players," +
                 $" a number between {MIN_NUMBER_OF_PLAYERS} and {MAX_NUMBER_OF_PLAYERS}");
             int numberOfPlayers = GetNumberFromUser();
 
             if (numberOfPlayers < MIN_NUMBER_OF_PLAYERS)
             {
-                Console.WriteLine($"Not enough players, setting as min value {MIN_NUMBER_OF_PLAYERS}");
+                communicator.PrintMessage($"Not enough players, setting as min value {MIN_NUMBER_OF_PLAYERS}");
 
                 numberOfPlayers = MIN_NUMBER_OF_PLAYERS;
             }
             else if (numberOfPlayers > MAX_NUMBER_OF_PLAYERS)
             {
-                Console.WriteLine($"Too many players for the game, setting as max value {MAX_NUMBER_OF_PLAYERS}");
+                communicator.PrintMessage($"Too many players for the game, setting as max value {MAX_NUMBER_OF_PLAYERS}");
 
                 numberOfPlayers = MAX_NUMBER_OF_PLAYERS;
             }
 
             names = Enumerable.Range(0, numberOfPlayers).ToList().Select(i =>
             {
-                Console.WriteLine($"Please enter name #{i + 1}");
-                string? name = Console.ReadLine();
+                communicator.PrintMessage($"Please enter name #{i + 1}");
+                string? name = communicator.ReadMessage();
 
                 while (name is null)
                 {
-                    Console.WriteLine("Please enter a valid name");
-                    name = Console.ReadLine();
+                    communicator.PrintMessage("Please enter a valid name");
+                    name = communicator.ReadMessage();
                 }
 
                 return name;
@@ -110,15 +111,15 @@ namespace Taki.Game.Managers
         {
             int number;
 
-            while (!int.TryParse(Console.ReadLine(), out number))
-                Console.WriteLine("Please enter a number");
+            while (!int.TryParse(communicator.ReadMessage(), out number))
+                communicator.PrintMessage("Please enter a number");
             return number;
         }
 
         private static void WriteMessageToScreen(int numberOfPlayers, int numberOfPlayerCards)
         {
-            Console.WriteLine($"{numberOfPlayers} players, {numberOfPlayerCards} cards per player");
-            Console.WriteLine();
+            communicator.PrintMessage($"{numberOfPlayers} players, {numberOfPlayerCards} cards per player");
+            communicator.PrintMessage();
         }
     }
 }

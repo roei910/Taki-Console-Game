@@ -13,6 +13,7 @@ namespace Taki.Game.GameRules
 {
     internal class PlayerHandler(LinkedList<Player> players)
     {
+        protected Communicator communicator = Communicator.GetCommunicator();
         private readonly LinkedList<Player> players = players;
         public Player CurrentPlayer { get; private set; } = players.First();
 
@@ -31,7 +32,8 @@ namespace Taki.Game.GameRules
                 });
             if(cardsDraw == 0)
                 return false;
-            Utilities.PrintConsoleError($"Player[{CurrentPlayer.Id}]: drew {cardsDraw} card(s)");
+            communicator.PrintMessage($"Player[{CurrentPlayer.Id}]: drew {cardsDraw} card(s)",
+                Communicator.MessageType.Error);
             return true;
         }
 
@@ -59,7 +61,8 @@ namespace Taki.Game.GameRules
         public Color GetColorFromPlayer()
         {
             Color color = CurrentPlayer.ChooseColor();
-            Utilities.PrintConsoleAlert($"Player chose color {color}");
+            communicator.PrintMessage($"Player chose color {color}", 
+                Communicator.MessageType.Alert);
             return color;
         }
 

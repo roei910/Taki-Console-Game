@@ -10,22 +10,23 @@ namespace Taki.Game.General
 {
     internal class Utilities
     {
+        protected static Communicator communicator = Communicator.GetCommunicator();
         public static void PrintEnumValues<T>()
         {
             if (Enum.GetValues(typeof(T)).Length <= 0)
                 throw new ArgumentException("Not an enum");
             T[] actions = (T[])Enum.GetValues(typeof(T));
-            Console.WriteLine("Please choose an action by index");
+            communicator.PrintMessage("Please choose an action by index");
             for (int i = 0; i < actions.Length; i++)
-                Console.WriteLine($"{i}. {actions[i]}");
+                communicator.PrintMessage($"{i}. {actions[i]}");
         }
 
         public static T GetUserEnum<T>()
         {
             object ?action;
-            while (!Enum.TryParse(typeof(T), Console.ReadLine(), out action) ||
+            while (!Enum.TryParse(typeof(T), communicator.ReadMessage(), out action) ||
                 action == null || !Enum.IsDefined(typeof(T), action))
-                Console.WriteLine("please enum again");
+                communicator.PrintMessage("please enum again");
             return (T)action;
         }
 
@@ -34,15 +35,15 @@ namespace Taki.Game.General
             T[] values = (T[])Enum.GetValues(typeof(T));
 
             if(message == "")
-                Console.WriteLine("Please choose the type by index:");
+                communicator.PrintMessage("Please choose the type by index:");
             else
-                Console.WriteLine($"Please choose the type {message} by index:");
+                communicator.PrintMessage($"Please choose the type {message} by index:");
 
             for (int i = 0; i < values.Length; i++)
-                Console.WriteLine($"{i}. {values[i]}");
+                communicator.PrintMessage($"{i}. {values[i]}");
 
             int index;
-            int.TryParse(Console.ReadLine(), out index);
+            int.TryParse(communicator.ReadMessage(), out index);
 
             if (index >= values.Length || index < 0)
             {
@@ -62,23 +63,6 @@ namespace Taki.Game.General
                 throw new ArgumentNullException("error trying to get color");
             Color color = Color.FromName(enumString);
             return color;
-        }
-
-        public static void PrintConsoleError(string errorMessage)
-        {
-            PrintMessageColor(ConsoleColor.Red, errorMessage);
-        }
-
-        public static void PrintConsoleAlert(string inputMessage)
-        {
-            PrintMessageColor(ConsoleColor.Yellow, inputMessage);
-        }
-
-        private static void PrintMessageColor(ConsoleColor color, string message)
-        {
-            Console.ForegroundColor = color;
-            Console.WriteLine(message);
-            Console.ForegroundColor = ConsoleColor.White;
         }
     }
 }

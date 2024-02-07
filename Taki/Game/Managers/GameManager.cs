@@ -7,12 +7,14 @@ using System.Threading.Tasks;
 using Taki.Game.Algorithm;
 using Taki.Game.Deck;
 using Taki.Game.GameRules;
+using Taki.Game.General;
 using Taki.Game.Players;
 
 namespace Taki.Game.Managers
 {
     internal class GameManager
     {
+        protected Communicator communicator = Communicator.GetCommunicator();
         private static readonly bool FULLY_MANUAL_GAME = true;
         private const int NUMBER_OF_TOTAL_WINNERS = 2;
         private static readonly List<IPlayerAlgorithm> algorithms =
@@ -43,15 +45,15 @@ namespace Taki.Game.Managers
             for (int i = 0; i < NUMBER_OF_TOTAL_WINNERS; i++)
             {
                 winners.Add(ruleHandler.GetWinner());
-                Console.WriteLine($"Winner #{i+1} is {winners.ElementAt(i).Name}");
+                communicator.PrintMessage($"Winner #{i + 1} is {winners.ElementAt(i).Name}");
                 if (i < NUMBER_OF_TOTAL_WINNERS - 1)
                 {
-                    Console.WriteLine("Press any key to continue");
-                    Console.ReadKey();
+                    communicator.PrintMessage("Press any key to continue");
+                    communicator.ReadMessage();
                 }
             }
-            Console.WriteLine("The winners by order:");
-            winners.ForEach(p => Console.WriteLine($"{winners.IndexOf(p)}. {p.Name}"));
+            communicator.PrintMessage("The winners by order:");
+            winners.ForEach(p => communicator.PrintMessage($"{winners.IndexOf(p)}. {p.Name}"));
         }
         
         private void DealCards(LinkedList<Player> players, int numberOfPlayerCards)
