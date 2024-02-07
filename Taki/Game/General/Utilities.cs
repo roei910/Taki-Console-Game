@@ -42,8 +42,7 @@ namespace Taki.Game.General
             for (int i = 0; i < values.Length; i++)
                 communicator.PrintMessage($"{i}. {values[i]}");
 
-            int index;
-            int.TryParse(communicator.ReadMessage(), out index);
+            _ = int.TryParse(communicator.ReadMessage(), out int index);
 
             if (index >= values.Length || index < 0)
             {
@@ -58,9 +57,8 @@ namespace Taki.Game.General
 
         public static Color GetColorFromUserEnum<EnumType>(string message = "", int defaultIndex = -1)
         {
-            string ?enumString = GetEnumFromUser<EnumType>(message, defaultIndex)?.ToString();
-            if (enumString == null)
-                throw new ArgumentNullException("error trying to get color");
+            string? enumString = (GetEnumFromUser<EnumType>(message, defaultIndex)?.ToString()) ?? throw 
+                new ArgumentNullException("error trying to get color");
             Color color = Color.FromName(enumString);
             return color;
         }
