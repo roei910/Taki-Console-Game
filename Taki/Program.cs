@@ -12,7 +12,8 @@ switch (typeOfGame)
 {
     case GameTypeEnum.Normal:
         manager = factory.CreateNormal();
-        Console.WriteLine("Starting a new game of TAKI!");
+        communicator.PrintMessage(Communicator.MessageType.Normal, )
+        Console.WriteLine();
         break;
     case GameTypeEnum.Pyramid:
         manager = factory.CreatePyramid();
