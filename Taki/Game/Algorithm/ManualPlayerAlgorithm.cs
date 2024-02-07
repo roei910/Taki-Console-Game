@@ -18,16 +18,16 @@ namespace Taki.Game.Algorithm
 
         public Card ChooseCard(Card topDeckCard, Player currentPlayer)
         {
-            communicator.PrintMessage($"The top deck card is {topDeckCard}", Communicator.MessageType.Alert);
+            Communicator.PrintMessage($"The top deck card is {topDeckCard}", Communicator.MessageType.Alert);
             currentPlayer.PlayerCards = currentPlayer.PlayerCards
                 .GroupBy(card => card.Color).ToList().SelectMany(x => x).ToList();
-            communicator.PrintMessage(currentPlayer);
-            communicator.PrintMessage($"Please choose on of your cards by index, -1 to draw a card", 
+            Communicator.PrintMessage(currentPlayer);
+            Communicator.PrintMessage($"Please choose on of your cards by index, -1 to draw a card", 
                 Communicator.MessageType.Alert);
             int index;
-            while (!int.TryParse(communicator.ReadMessage(), out index) || 
+            while (!int.TryParse(Communicator.ReadMessage(), out index) || 
                 !IsValidIndex(index, currentPlayer.PlayerCards.Count))
-                communicator.PrintMessage("please choose again the index of the card");
+                Communicator.PrintMessage("please choose again the index of the card");
             if (index == -1)
                 return topDeckCard;
             return currentPlayer.PlayerCards.ElementAt(index);
@@ -36,7 +36,7 @@ namespace Taki.Game.Algorithm
         public Color ChooseColor(Player currentPlayer)
         {
             Color changeColor = Utilities.GetColorFromUserEnum<CardColorsEnum>("of color");
-            communicator.PrintMessage($"Please choose a card with the new color: {changeColor}",
+            Communicator.PrintMessage($"Please choose a card with the new color: {changeColor}",
                 Communicator.MessageType.Alert);
             return changeColor;
         }

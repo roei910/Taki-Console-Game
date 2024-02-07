@@ -45,15 +45,15 @@ namespace Taki.Game.Managers
             for (int i = 0; i < NUMBER_OF_TOTAL_WINNERS; i++)
             {
                 winners.Add(ruleHandler.GetWinner());
-                communicator.PrintMessage($"Winner #{i + 1} is {winners.ElementAt(i).Name}");
+                Communicator.PrintMessage($"Winner #{i + 1} is {winners.ElementAt(i).Name}");
                 if (i < NUMBER_OF_TOTAL_WINNERS - 1)
                 {
-                    communicator.PrintMessage("Press any key to continue");
-                    communicator.ReadMessage();
+                    Communicator.PrintMessage("Press any key to continue");
+                    Communicator.ReadMessage();
                 }
             }
-            communicator.PrintMessage("The winners by order:");
-            winners.ForEach(p => communicator.PrintMessage($"{winners.IndexOf(p)}. {p.Name}"));
+            Communicator.PrintMessage("The winners by order:");
+            winners.ForEach(p => Communicator.PrintMessage($"{winners.IndexOf(p)}. {p.Name}"));
         }
         
         private void DealCards(LinkedList<Player> players, int numberOfPlayerCards)

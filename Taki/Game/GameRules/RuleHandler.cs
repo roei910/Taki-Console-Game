@@ -25,7 +25,7 @@ namespace Taki.Game.GameRules
                 return playerHandler.RemoveWinner(isDirectionNormal);
             while (!PlayerFinishedHand())
             {
-                communicator.PrintMessage("------------------------");
+                Communicator.PrintMessage("------------------------");
                 PlayTurn();
                 RequestNextPlayer();
             }
@@ -71,7 +71,7 @@ namespace Taki.Game.GameRules
                 return;
             if (CurrentTakiCard != null)
             {
-                communicator.PrintMessage($"Player[{first.Id}]: Taki closed!", Communicator.MessageType.Alert);
+                Communicator.PrintMessage($"Player[{first.Id}]: Taki closed!", Communicator.MessageType.Alert);
                 if (UniqueCard.IsUniqueCard(topDiscard) && topDiscard.Id != CurrentTakiCard.Id)
                 {
                     CurrentTakiCard = null;
@@ -95,7 +95,7 @@ namespace Taki.Game.GameRules
             cardDeck.AddCardToDiscardPile(card);
             if(CurrentTakiCard == null && UniqueCard.IsUniqueCard(card))
                 HandleUniqueCard(card);
-            communicator.PrintMessage(
+            Communicator.PrintMessage(
                 $"Player[{playerHandler.CurrentPlayer.Id}] played {card}", 
                 Communicator.MessageType.Alert);
             noPlayCounter = 0;
@@ -110,7 +110,7 @@ namespace Taki.Game.GameRules
                 countPlus2++;
             else if (UniqueCard.IsTaki(card))
             {
-                communicator.PrintMessage("TAKI open");
+                Communicator.PrintMessage("TAKI open");
                 CurrentTakiCard = card;
             }
             else if (UniqueCard.IsSuperTaki(card))
@@ -136,7 +136,7 @@ namespace Taki.Game.GameRules
             {
                 if (!card.CheckColorMatch(changeColor))
                 {
-                    communicator.PrintMessage($"Please choose a {changeColor} color card", 
+                    Communicator.PrintMessage($"Please choose a {changeColor} color card", 
                         Communicator.MessageType.Error);
                     return false;
                 }
@@ -147,14 +147,14 @@ namespace Taki.Game.GameRules
             {
                 if (!UniqueCard.IsPlus2(card) && countPlus2 > 0)
                 {
-                    communicator.PrintMessage($"you can only put plus2 cards", 
+                    Communicator.PrintMessage($"you can only put plus2 cards", 
                         Communicator.MessageType.Error);
                     return false;
                 }
             }
             else if (!card.SimilarTo(topDiscard))
             {
-                communicator.PrintMessage("Please follow the card stacking rules", 
+                Communicator.PrintMessage("Please follow the card stacking rules", 
                     Communicator.MessageType.Error);
                 return false;
             }

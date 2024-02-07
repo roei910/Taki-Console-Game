@@ -16,17 +16,17 @@ namespace Taki.Game.General
             if (Enum.GetValues(typeof(T)).Length <= 0)
                 throw new ArgumentException("Not an enum");
             T[] actions = (T[])Enum.GetValues(typeof(T));
-            communicator.PrintMessage("Please choose an action by index");
+            Communicator.PrintMessage("Please choose an action by index");
             for (int i = 0; i < actions.Length; i++)
-                communicator.PrintMessage($"{i}. {actions[i]}");
+                Communicator.PrintMessage($"{i}. {actions[i]}");
         }
 
         public static T GetUserEnum<T>()
         {
             object ?action;
-            while (!Enum.TryParse(typeof(T), communicator.ReadMessage(), out action) ||
+            while (!Enum.TryParse(typeof(T), Communicator.ReadMessage(), out action) ||
                 action == null || !Enum.IsDefined(typeof(T), action))
-                communicator.PrintMessage("please enum again");
+                Communicator.PrintMessage("please enum again");
             return (T)action;
         }
 
@@ -35,14 +35,14 @@ namespace Taki.Game.General
             T[] values = (T[])Enum.GetValues(typeof(T));
 
             if(message == "")
-                communicator.PrintMessage("Please choose the type by index:");
+                Communicator.PrintMessage("Please choose the type by index:");
             else
-                communicator.PrintMessage($"Please choose the type {message} by index:");
+                Communicator.PrintMessage($"Please choose the type {message} by index:");
 
             for (int i = 0; i < values.Length; i++)
-                communicator.PrintMessage($"{i}. {values[i]}");
+                Communicator.PrintMessage($"{i}. {values[i]}");
 
-            _ = int.TryParse(communicator.ReadMessage(), out int index);
+            _ = int.TryParse(Communicator.ReadMessage(), out int index);
 
             if (index >= values.Length || index < 0)
             {

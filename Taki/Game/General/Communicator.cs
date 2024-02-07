@@ -25,7 +25,7 @@ namespace Taki.Game.General
             return communicator;
         }
 
-        public void PrintMessage(string message = "", MessageType type = MessageType.Normal)
+        public static void PrintMessage(string message = "", MessageType type = MessageType.Normal)
         {
             switch (type)
             {
@@ -43,12 +43,12 @@ namespace Taki.Game.General
             }
         }
 
-        public void PrintMessage(object message, MessageType type = MessageType.Normal)
+        public static void PrintMessage(object message, MessageType type = MessageType.Normal)
         {
             PrintMessage(message.ToString() ?? "", type);
         }
 
-        public string? ReadMessage()
+        public static string? ReadMessage()
         {
             return Console.ReadLine();
         }

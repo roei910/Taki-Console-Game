@@ -32,7 +32,7 @@ namespace Taki.Game.GameRules
                 });
             if(cardsDraw == 0)
                 return false;
-            communicator.PrintMessage($"Player[{CurrentPlayer.Id}]: drew {cardsDraw} card(s)",
+            Communicator.PrintMessage($"Player[{CurrentPlayer.Id}]: drew {cardsDraw} card(s)",
                 Communicator.MessageType.Error);
             return true;
         }
@@ -61,7 +61,7 @@ namespace Taki.Game.GameRules
         public Color GetColorFromPlayer()
         {
             Color color = CurrentPlayer.ChooseColor();
-            communicator.PrintMessage($"Player chose color {color}", 
+            Communicator.PrintMessage($"Player chose color {color}", 
                 Communicator.MessageType.Alert);
             return color;
         }

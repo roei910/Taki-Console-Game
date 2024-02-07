@@ -22,7 +22,7 @@ namespace Taki.Game.GameRules
                 {
                     if (!playerHandler.DrawCards(player.CurrentNumberOfCards(), cardDeck))
                         throw new Exception("player cannot get more cards and is stuck!");
-                    communicator.PrintMessage($"Player[{player.Id}] finished his current hand," +
+                    Communicator.PrintMessage($"Player[{player.Id}] finished his current hand," +
                         $" currently on {player.CurrentNumberOfCards()} card(s)", Communicator.MessageType.Error);
                 }
                 if(CurrentTakiCard != null)

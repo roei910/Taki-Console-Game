@@ -22,7 +22,7 @@ namespace Taki.Game.Algorithm
                 .Where(card => card.SimilarTo(topDeckCard)).ToList();
             card = filter.FirstOrDefault(topDeckCard);
             if(currentPlayer.PlayerCards.Count != 0)
-                communicator.PrintMessage($"Player[{currentPlayer.Id}] has {currentPlayer.PlayerCards.Count} cards in hand", 
+                Communicator.PrintMessage($"Player[{currentPlayer.Id}] has {currentPlayer.PlayerCards.Count} cards in hand", 
                     Communicator.MessageType.Alert);
             return card;
         }
@@ -50,7 +50,7 @@ namespace Taki.Game.Algorithm
         {
             Card card = currentPlayer.PlayerCards
                 .Where(UniqueCard.IsPlus2).FirstOrDefault(topDeckCard);
-            communicator.PrintMessage($"Player[{currentPlayer.Id}] chose {card}", 
+            Communicator.PrintMessage($"Player[{currentPlayer.Id}] chose {card}", 
                 Communicator.MessageType.Alert);
             return card;
         }
