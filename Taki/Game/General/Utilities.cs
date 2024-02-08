@@ -1,47 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Taki.Game.Managers;
+using Taki.Game.Communicators;
 
 namespace Taki.Game.General
 {
     internal class Utilities
     {
-        public static void PrintEnumValues<T>()
+        private readonly IServiceProvider _serviceProvider;
+        private readonly IMessageHandler _messageHandler;
+
+        public Utilities(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+            _messageHandler = serviceProvider.GetRequiredService<IMessageHandler>();
+        }
+        public void PrintEnumValues<T>()
         {
             if (Enum.GetValues(typeof(T)).Length <= 0)
                 throw new ArgumentException("Not an enum");
             T[] actions = (T[])Enum.GetValues(typeof(T));
-            Communicator.PrintMessage("Please choose an action by index");
+            _messageHandler.SendMessageToUser("Please choose an action by index");
             for (int i = 0; i < actions.Length; i++)
-                Communicator.PrintMessage($"{i}. {actions[i]}");
+                _messageHandler.SendMessageToUser($"{i}. {actions[i]}");
         }
 
-        public static T GetUserEnum<T>()
-        {
-            object ?action;
-            while (!Enum.TryParse(typeof(T), Communicator.ReadMessage(), out action) ||
-                action == null || !Enum.IsDefined(typeof(T), action))
-                Communicator.PrintMessage("please enum again");
-            return (T)action;
-        }
+        //public T GetUserEnum<T>()
+        //{
+        //    object? action;
+        //    while (!Enum.TryParse(typeof(T), _messageHandler.GetMessageFromUser(), out action) ||
+        //        action == null || !Enum.IsDefined(typeof(T), action))
+        //        _messageHandler.SendMessageToUser("please enum again");
+        //    return (T)action;
+        //}
 
-        public static T GetEnumFromUser<T>(string message = "", int defaultIndex = -1)
+        public T GetEnumFromUser<T>(string message = "", int defaultIndex = -1)
         {
             T[] values = (T[])Enum.GetValues(typeof(T));
 
-            if(message == "")
-                Communicator.PrintMessage("Please choose the type by index:");
+            if (message == "")
+                _messageHandler.SendMessageToUser("Please choose the type by index:");
             else
-                Communicator.PrintMessage($"Please choose the type {message} by index:");
+                _messageHandler.SendMessageToUser($"Please choose the type {message} by index:");
 
             for (int i = 0; i < values.Length; i++)
-                Communicator.PrintMessage($"{i}. {values[i]}");
+                _messageHandler.SendMessageToUser($"{i}. {values[i]}");
 
-            _ = int.TryParse(Communicator.ReadMessage(), out int index);
+            _ = int.TryParse(_messageHandler.GetMessageFromUser(), out int index);
 
             if (index >= values.Length || index < 0)
             {
@@ -54,9 +58,9 @@ namespace Taki.Game.General
             return values[index];
         }
 
-        public static Color GetColorFromUserEnum<EnumType>(string message = "", int defaultIndex = -1)
+        public Color GetColorFromUserEnum<EnumType>(string message = "", int defaultIndex = -1)
         {
-            string? enumString = (GetEnumFromUser<EnumType>(message, defaultIndex)?.ToString()) ?? throw 
+            string? enumString = (GetEnumFromUser<EnumType>(message, defaultIndex)?.ToString()) ?? throw
                 new ArgumentNullException("error trying to get color");
             Color color = Color.FromName(enumString);
             return color;

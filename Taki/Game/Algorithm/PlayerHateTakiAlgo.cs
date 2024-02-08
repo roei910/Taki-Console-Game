@@ -12,18 +12,18 @@ namespace Taki.Game.Algorithm
 {
     internal class PlayerHateTakiAlgo : PlayerAlgorithm
     {
-        bool takiFlag = false;
-        public new Card ChooseCard(Card topDeckCard, Player currentPlayer)
-        {
-            if(takiFlag)
-            {
-                takiFlag = false;
-                return topDeckCard;
-            }
-            if (UniqueCard.IsTaki(topDeckCard) || UniqueCard.IsSuperTaki(topDeckCard))
-                takiFlag = true;
-            return base.ChooseCard(topDeckCard, currentPlayer);
-        }
+        //bool takiFlag = false;
+        //public new Card ChooseCard(Card topDeckCard, Player currentPlayer)
+        //{
+        //    if(takiFlag)
+        //    {
+        //        takiFlag = false;
+        //        return topDeckCard;
+        //    }
+        //    if (UniqueCard.IsTaki(topDeckCard) || UniqueCard.IsSuperTaki(topDeckCard))
+        //        takiFlag = true;
+        //    return base.ChooseCard(topDeckCard, currentPlayer);
+        //}
 
         public override string ToString()
         {

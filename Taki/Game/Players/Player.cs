@@ -1,20 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using Taki.Game.Algorithm;
+﻿using System.Drawing;
 using Taki.Game.Cards;
-using Taki.Game.General;
-using Taki.Game.Managers;
+using Taki.Game.Interfaces;
 
 namespace Taki.Game.Players
 {
-    internal class Player
+    internal class Player : IEquatable<Player>
     {
         private static int id = 0;
         private readonly IPlayerAlgorithm choosingAlgorithm;
@@ -38,15 +28,15 @@ namespace Taki.Game.Players
             Name = other.Name;
         }
 
-        public bool AskPlayerToPickCard(Card topDiscardPileCard, out Card chosenCard)
-        {
-            chosenCard = choosingAlgorithm.ChooseCard(topDiscardPileCard, this);
-            if (chosenCard.Id == topDiscardPileCard.Id)
-                return false;
-            if (!PlayerCards.Remove(chosenCard))
-                throw new Exception("card not found in player cards");
-            return true;
-        }
+        //public bool AskPlayerToPickCard(Card topDiscardPileCard, out Card chosenCard)
+        //{
+        //    chosenCard = choosingAlgorithm.ChooseCard(topDiscardPileCard, this);
+        //    if (chosenCard.Id == topDiscardPileCard.Id)
+        //        return false;
+        //    if (!PlayerCards.Remove(chosenCard))
+        //        throw new Exception("card not found in player cards");
+        //    return true;
+        //}
 
         public Color ChooseColor()
         {
@@ -64,15 +54,17 @@ namespace Taki.Game.Players
             return PlayerCards.Count == 0;
         }
 
-        public bool AskPlayerToPickCardPlus2(Card topDiscardPileCard, out Card chosenCard)
-        {
-            chosenCard = choosingAlgorithm.ChoosePlus2Card(topDiscardPileCard, this);
-            if (chosenCard.Id == topDiscardPileCard.Id)
-                return false;
-            if (!PlayerCards.Remove(chosenCard))
-                throw new Exception("card not found in player cards");
-            return true;
-        }
+        //public bool AskPlayerToPickCardPlus2(Card topDiscardPileCard, out Card chosenCard)
+        //{
+        //    chosenCard = choosingAlgorithm.ChoosePlus2Card(topDiscardPileCard, this);
+        //    //TODO: ifs need to go
+            
+        //    if (chosenCard.Id == topDiscardPileCard.Id)
+        //        return false;
+        //    if (!PlayerCards.Remove(chosenCard))
+        //        throw new Exception("card not found in player cards");
+        //    return true;
+        //}
 
         public override string ToString()
         {
@@ -81,16 +73,16 @@ namespace Taki.Game.Players
             return str;
         }
 
-        public override bool Equals(object? obj)
+        public bool Equals(Player? other)
         {
-            if (obj is not Player player)
+            if(other is null)
                 return false;
-            return Id == player.Id;
+            return Id == other.Id;
         }
 
-        public override int GetHashCode()
+        internal Card? PickCard(Func<Card, bool> isSimilarTo)
         {
-            return Id.GetHashCode();
+            return PlayerCards.FirstOrDefault(card => isSimilarTo(card), null);
         }
     }
 }

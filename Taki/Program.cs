@@ -1,25 +1,34 @@
-﻿using System.Drawing;
-using Taki.Game.Cards;
-using Taki.Game.Deck;
-using Taki.Game.General;
+﻿using Taki.Game.Communicators;
 using Taki.Game.Managers;
+using Microsoft.Extensions.DependencyInjection;
+using Taki.Game.Algorithm;
+using Taki.Game.Interfaces;
+using Taki.Game.Factories;
+using Taki.Game.GameRules;
+using Taki.Game.Handlers;
+using Taki.Game.General;
 
-GameManagerFactory factory = new();
-GameManager manager;
-GameTypeEnum typeOfGame = GameManagerFactory.GetGameType();
+var serviceProvider = new ServiceCollection()
+    .AddSingleton<IMessageHandler, ConsoleMessageHandler>()
+    .AddSingleton<Utilities>()
+    .BuildServiceProvider();
 
-switch (typeOfGame)
-{
-    case GameTypeEnum.Normal:
-        manager = factory.CreateNormal();
-        Communicator.PrintMessage("Starting a new game of TAKI!");
-        break;
-    case GameTypeEnum.Pyramid:
-        manager = factory.CreatePyramid();
-        Communicator.PrintMessage("Starting a new game of TAKI pyramid edition!");
-        break;
-    default:
-        throw new Exception("type enum was wrong");
-}
+//var messageHandler = serviceProvider.GetRequiredService<MessageHandler>();
 
-manager.StartGame();
+List<IPlayerAlgorithm> algorithms =
+[
+    new PlayerAlgorithm(),
+    new PlayerHateTakiAlgo()
+];
+
+TakiGameFactory gameFactory = new(serviceProvider);
+PlayersHandlerFactory playersHandlerFactory = new(serviceProvider, algorithms);
+CardsHandlerFactory cardsHandlerFactory = new();
+
+PlayersHandler playerHandler = playersHandlerFactory.GeneratePlayersHandler();
+CardsHandler cardsHandler = cardsHandlerFactory.GenerateCardsHandler();
+
+GameHandlers gameHandlers = new(playerHandler, cardsHandler, serviceProvider);
+
+TakiGameRunner takiGameRunner = gameFactory.ChooseTypeOfGame(gameHandlers);
+takiGameRunner.StartGame();

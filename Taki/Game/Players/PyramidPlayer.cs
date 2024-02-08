@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Taki.Game.Algorithm;
-using Taki.Game.Cards;
-using Taki.Game.General;
+﻿using System.Diagnostics;
 
 namespace Taki.Game.Players
 {
