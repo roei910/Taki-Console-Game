@@ -13,6 +13,7 @@ namespace Taki.Game.Players
 
         public int GetNextPlayerHand()
         {
+            //TODO: normal message
             Debug.WriteLine($"Player[{Id}]: finished hand {currentNumberOfCards}");
             return --currentNumberOfCards;
         }
