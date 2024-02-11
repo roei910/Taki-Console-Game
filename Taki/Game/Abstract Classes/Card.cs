@@ -1,11 +1,10 @@
-﻿using Taki.Game.GameRules;
-using Taki.Game.Handlers;
+﻿using Taki.Game.Handlers;
 using Taki.Game.Interfaces;
 
 namespace Taki.Game.Cards
 {
 
-    internal abstract class Card : ICard
+    internal abstract class Card : ICard, IEquatable<Card>
     {
         private static int idsCounter = 0;
         private readonly int _id;
@@ -21,8 +20,13 @@ namespace Taki.Game.Cards
         }
 
         public abstract bool IsSimilarTo(Card other);
-        public virtual void Play(Card topDiscard, GameHandlers gameHandlers) { }
+        public virtual void Play(GameHandlers gameHandlers) { }
         public virtual void FinishNoPlay() { }
         public virtual void FinishPlay() { }
+
+        public bool Equals(Card? other)
+        {
+            return _id == other?._id;
+        }
     }
 }

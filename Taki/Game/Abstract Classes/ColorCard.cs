@@ -21,10 +21,15 @@ namespace Taki.Game.Cards
             _color = color;
         }
 
+        public Color GetColor()
+        { 
+            return _color; 
+        }
+
         public override bool IsSimilarTo(Card other)
         {
             if (other is not ColorCard card)
-                return false;
+                return true;
             return _color.Equals(card._color);
         }
 
