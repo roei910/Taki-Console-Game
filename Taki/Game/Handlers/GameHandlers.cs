@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Taki.Game.Communicators;
 using Taki.Game.GameRules;
 using Taki.Game.General;
+using Taki.Game.Interfaces;
 
 namespace Taki.Game.Handlers
 {
