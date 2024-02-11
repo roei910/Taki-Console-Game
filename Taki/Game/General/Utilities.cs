@@ -1,37 +1,17 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Drawing;
-using Taki.Game.Communicators;
+using Taki.Game.Interfaces;
 
 namespace Taki.Game.General
 {
     internal class Utilities
     {
-        private readonly IServiceProvider _serviceProvider;
         private readonly IMessageHandler _messageHandler;
 
         public Utilities(IServiceProvider serviceProvider)
         {
-            _serviceProvider = serviceProvider;
             _messageHandler = serviceProvider.GetRequiredService<IMessageHandler>();
         }
-        public void PrintEnumValues<T>()
-        {
-            if (Enum.GetValues(typeof(T)).Length <= 0)
-                throw new ArgumentException("Not an enum");
-            T[] actions = (T[])Enum.GetValues(typeof(T));
-            _messageHandler.SendMessageToUser("Please choose an action by index");
-            for (int i = 0; i < actions.Length; i++)
-                _messageHandler.SendMessageToUser($"{i}. {actions[i]}");
-        }
-
-        //public T GetUserEnum<T>()
-        //{
-        //    object? action;
-        //    while (!Enum.TryParse(typeof(T), _messageHandler.GetMessageFromUser(), out action) ||
-        //        action == null || !Enum.IsDefined(typeof(T), action))
-        //        _messageHandler.SendMessageToUser("please enum again");
-        //    return (T)action;
-        //}
 
         public T GetEnumFromUser<T>(string message = "", int defaultIndex = -1)
         {
