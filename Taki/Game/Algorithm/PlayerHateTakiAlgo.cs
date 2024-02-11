@@ -6,20 +6,13 @@ namespace Taki.Game.Algorithm
 {
     internal class PlayerHateTakiAlgo : PlayerAlgorithm
     {
-        bool takiFlag = false;
-
         public override Card? ChooseCard(Func<Card, bool> isSimilarTo,
             Player player, GameHandlers gameHandlers)
         {
             Card topDiscard = gameHandlers.GetCardsHandler().GetTopDiscard();
-            if (takiFlag)
-            {
-                takiFlag = false;
-                return null;
-            }
 
             if (topDiscard is TakiCard)
-                takiFlag = true;
+                return null;
 
             return base.ChooseCard(isSimilarTo, player, gameHandlers);
         }
