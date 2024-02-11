@@ -8,17 +8,19 @@ using Taki.Game.GameRules;
 using Taki.Game.Handlers;
 using Taki.Game.General;
 
+//TODO: naming conventions and logics
+//TODO: check what happends when finishing hand with plus card
+
 var serviceProvider = new ServiceCollection()
     .AddSingleton<IMessageHandler, ConsoleMessageHandler>()
     .AddSingleton<Utilities>()
     .BuildServiceProvider();
 
-//var messageHandler = serviceProvider.GetRequiredService<MessageHandler>();
-
 List<IPlayerAlgorithm> algorithms =
 [
     new PlayerAlgorithm(),
-    new PlayerHateTakiAlgo()
+    new PlayerHateTakiAlgo(),
+    new ManualPlayerAlgorithm()
 ];
 
 TakiGameFactory gameFactory = new(serviceProvider);
