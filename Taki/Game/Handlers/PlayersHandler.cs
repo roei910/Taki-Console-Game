@@ -1,18 +1,16 @@
-﻿using System.Drawing;
-using Taki.Game.Cards;
-using Taki.Game.Communicators;
-using Taki.Game.Deck;
+﻿using Taki.Game.Cards;
 using Taki.Game.Handlers;
+using Taki.Game.Interfaces;
 using Taki.Game.Players;
 
 namespace Taki.Game.GameRules
 {
-    //TODO: separate drawing cards from player handler to card deck handler
     internal class PlayersHandler
     {
         private readonly LinkedList<Player> _players;
         private readonly Queue<Player> _winners;
         protected bool isDirectionNormal = true;
+
         public Player CurrentPlayer { get; private set; }
 
         public PlayersHandler(List<Player> players)
@@ -54,51 +52,18 @@ namespace Taki.Game.GameRules
             }
         }
 
-        //public void ReturnUnhandledCard(Card playerCard)
-        //{
-        //    CurrentPlayer.AddCard(playerCard);
-        //}
-
-        //public Color GetColorFromPlayer()
-        //{
-        //    Color color = CurrentPlayer.ChooseColor();
-        //    MessageHandler.SendMessageToUser($"Player chose color {color}", 
-        //        MessageHandler.MessageType.Alert);
-        //    return color;
-        //}
-
-        //public void SwitchCardsWithDirectionCard(bool isDirectionNormal)
-        //{
-        //    Player first = CurrentPlayer;
-        //    List<Card> savedCards = first.PlayerCards;
-        //    first.PlayerCards = [];
-        //    NextPlayer(isDirectionNormal);
-        //    while (CurrentPlayer.Id != first.Id)
-        //    {
-        //        (savedCards, CurrentPlayer.PlayerCards) = (CurrentPlayer.PlayerCards, savedCards);
-        //        NextPlayer(isDirectionNormal);
-        //    }
-        //    first.PlayerCards = savedCards;
-        //}
-
         public Player RemoveWinner()
         {
             Player savedPlayer = CurrentPlayer;
+
             NextPlayer();
+
             if(!_players.Remove(savedPlayer))
                 throw new Exception("error removing the player");
+
             _winners.Enqueue(savedPlayer);
+
             return savedPlayer;
-        }
-
-        public bool PlayerFinishedHand()
-        {
-            return CurrentPlayer.IsHandEmpty();
-        }
-
-        public int GetNumberOfPlayers()
-        {
-            return _players.Count;
         }
 
         public List<Player> GetAllPlayers()
@@ -110,25 +75,26 @@ namespace Taki.Game.GameRules
         {
             if (_players.Count == 1)
                 return false;
-            return true;
+            return !CurrentPlayer.IsHandEmpty();
         }
 
-        internal Card? GetCardFromCurrentPlayer(Func<Card, bool> isSimilarTo)
+        public virtual void CurrentPlayerPlay(GameHandlers gameHandlers)
         {
-            return CurrentPlayer.PlayerCards.FirstOrDefault(isSimilarTo);
-        }
+            IMessageHandler messageHandler = gameHandlers.GetMessageHandler();
 
-        internal void AddCardToCurrentPlayer(Card drawCard)
-        {
-            throw new NotImplementedException();
-        }
+            messageHandler.SendAlertMessage($"Player[{CurrentPlayer.Id}]" +
+                $" ({CurrentPlayer.Name}) is playing, " +
+                $"{CurrentPlayer.PlayerCards.Count} cards in hand");
 
-        internal void CurrentPlayerPlay(GameHandlers gameHandlers)
-        {
             Card topDiscard = gameHandlers.GetCardsHandler().GetTopDiscard();
-            Card? playerCard = CurrentPlayer.PickCard(topDiscard.IsSimilarTo);
+            messageHandler.SendAlertMessage($"Top discard: {topDiscard}");
 
-            if(playerCard == null)
+            Card? playerCard = CurrentPlayer.PickCard(topDiscard.IsSimilarTo, 
+                gameHandlers);
+            messageHandler.SendAlertMessage($"Player picked: {playerCard?.ToString() ?? "no card"}");
+            messageHandler.SendMessageToUser();
+
+            if (playerCard == null)
             {
                 DrawCards(topDiscard.CardsToDraw(), gameHandlers.GetCardsHandler());
                 topDiscard.FinishNoPlay();
@@ -140,12 +106,30 @@ namespace Taki.Game.GameRules
             gameHandlers.GetCardsHandler().AddDiscardCard(playerCard);
 
             topDiscard.FinishPlay();
-            playerCard.Play(topDiscard, gameHandlers);
+            playerCard.Play(gameHandlers);
         }
 
-        internal void ChangeDirection()
+        public void ChangeDirection()
         {
             isDirectionNormal = !isDirectionNormal;
+        }
+
+        public void ResetPlayers(CardsHandler cardsHandler)
+        {
+            List<Card> cards = [];
+
+            _ = _players.Select(player =>
+            {
+                cards.AddRange(player.PlayerCards);
+                player.PlayerCards.Clear();
+                return player;
+            }).ToList();
+
+            _ = cards.Select(card =>
+            {
+                cardsHandler.AddDiscardCard(card);
+                return card;
+            }).ToList();
         }
     }
 }
