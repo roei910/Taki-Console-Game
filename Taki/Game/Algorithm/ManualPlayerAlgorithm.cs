@@ -20,7 +20,7 @@ namespace Taki.Game.Algorithm
 
         public Color ChooseColor(GameHandlers gameHandlers)
         {
-            return gameHandlers.GetUtilities().GetColorFromUserEnum<CardColorsEnum>();
+            return gameHandlers.GetMessageHandler().GetColorFromUserEnum<CardColorsEnum>();
         }
 
         public Card? ChooseCard(Func<Card, bool> isSimilarTo, 
@@ -32,7 +32,7 @@ namespace Taki.Game.Algorithm
             Player currentPlayer = gameHandlers.GetPlayersHandler().CurrentPlayer;
 
             messageHandler.SendAlertMessage($"The top deck card is {topDiscard}");
-            OrderPlayerCardByColor(currentPlayer);
+            currentPlayer.PlayerCards = OrderPlayerCardByColor(currentPlayer);
             messageHandler.SendMessageToUser(currentPlayer.ToString());
             messageHandler.SendAlertMessage($"Please choose on of your cards by index, " +
                 $"-1 to draw a card");
@@ -63,9 +63,9 @@ namespace Taki.Game.Algorithm
             return playerCard;
         }
 
-        private static void OrderPlayerCardByColor(Player currentPlayer)
+        private static List<Card> OrderPlayerCardByColor(Player currentPlayer)
         {
-            currentPlayer.PlayerCards = currentPlayer.PlayerCards
+            return currentPlayer.PlayerCards
                 .GroupBy(card =>
                 {
                     if (card is ColorCard colorCard)
