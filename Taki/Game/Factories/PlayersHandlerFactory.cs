@@ -1,12 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Taki.Game.Algorithm;
-using Taki.Game.Communicators;
 using Taki.Game.GameRules;
 using Taki.Game.Interfaces;
 using Taki.Game.Players;
@@ -17,6 +9,7 @@ namespace Taki.Game.Factories
     {
         private readonly IMessageHandler _messageHandler;
         private readonly List<IPlayerAlgorithm> _playerAlgorithms;
+        //TODO: remove from here
         private static readonly int MIN_NUMBER_OF_PLAYERS = 2;
         private static readonly int MAX_NUMBER_OF_PLAYERS = 8;
 
@@ -38,6 +31,11 @@ namespace Taki.Game.Factories
                     int algoRandomIndex = random.Next(_playerAlgorithms.Count);
                     return new Player(name, _playerAlgorithms.ElementAt(algoRandomIndex));
                 }).ToList();
+
+            _messageHandler.SendMessageToUser("users created are:");
+            var playersInormation = players.Select(p => p.GetInformation())
+                .ToList();
+            _messageHandler.SendMessageToUser(string.Join("\n", playersInormation));
 
             return new PlayersHandler(players);
         }
