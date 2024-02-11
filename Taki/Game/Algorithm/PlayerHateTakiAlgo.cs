@@ -1,29 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Taki.Game.Cards;
-using Taki.Game.General;
+﻿using Taki.Game.Cards;
+using Taki.Game.Handlers;
 using Taki.Game.Players;
 
 namespace Taki.Game.Algorithm
 {
     internal class PlayerHateTakiAlgo : PlayerAlgorithm
     {
-        //bool takiFlag = false;
-        //public new Card ChooseCard(Card topDeckCard, Player currentPlayer)
-        //{
-        //    if(takiFlag)
-        //    {
-        //        takiFlag = false;
-        //        return topDeckCard;
-        //    }
-        //    if (UniqueCard.IsTaki(topDeckCard) || UniqueCard.IsSuperTaki(topDeckCard))
-        //        takiFlag = true;
-        //    return base.ChooseCard(topDeckCard, currentPlayer);
-        //}
+        bool takiFlag = false;
+
+        public override Card? ChooseCard(Func<Card, bool> isSimilarTo,
+            Player player, GameHandlers gameHandlers)
+        {
+            Card topDiscard = gameHandlers.GetCardsHandler().GetTopDiscard();
+            if (takiFlag)
+            {
+                takiFlag = false;
+                return null;
+            }
+
+            if (topDiscard is TakiCard)
+                takiFlag = true;
+
+            return base.ChooseCard(isSimilarTo, player, gameHandlers);
+        }
 
         public override string ToString()
         {

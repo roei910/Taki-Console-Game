@@ -1,79 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 using Taki.Game.Cards;
-using Taki.Game.General;
+using Taki.Game.Handlers;
 using Taki.Game.Interfaces;
-using Taki.Game.Managers;
 using Taki.Game.Players;
 
 namespace Taki.Game.Algorithm
 {
     internal class PlayerAlgorithm : IPlayerAlgorithm
     {
-        public Card ChooseCard(Card topDeckCard, Player currentPlayer)
+        public virtual Card? ChooseCard(Func<Card, bool> isSimilarTo, 
+            Player player, GameHandlers gameHandlers)
         {
-            throw new NotImplementedException();
+            if(player.PlayerCards.Count == 0) 
+                return null;
+
+            return player.PlayerCards.FirstOrDefault(card => isSimilarTo(card!), null);
         }
 
-        public Color ChooseColor(Player currentPlayer)
+        public Color ChooseColor(GameHandlers gameHandlers)
         {
-            throw new NotImplementedException();
+            Player currentPlayer = gameHandlers.GetPlayersHandler().CurrentPlayer;
+            var colors = currentPlayer.PlayerCards
+                .Where(card => card is ColorCard)
+                .Select(card => ((ColorCard)card).GetColor())
+                .GroupBy(c => c).ToList();
+
+            return colors.OrderByDescending(color => color.Count())
+                .ToList().First().FirstOrDefault(Color.Blue);
         }
-
-        public Card ChoosePlus2Card(Card topDiscardPileCard, Player player)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void PlayCard()
-        {
-            throw new NotImplementedException();
-        }
-
-        //public Card ChooseCard(Card topDeckCard, Player currentPlayer)
-        //{
-        //    Card card;
-        //    var filter = currentPlayer.PlayerCards
-        //        .Where(card => card.SimilarTo(topDeckCard)).ToList();
-        //    card = filter.FirstOrDefault(topDeckCard);
-        //    if(currentPlayer.PlayerCards.Count != 0)
-        //        Communicator.PrintMessage($"Player[{currentPlayer.Id}] has {currentPlayer.PlayerCards.Count} cards in hand", 
-        //            Communicator.MessageType.Alert);
-        //    return card;
-        //}
-
-        //public Color ChooseColor(Player currentPlayer)
-        //{
-        //    var count = currentPlayer.PlayerCards
-        //        .Where(p => p.Color != Color.Empty)
-        //        .GroupBy(p => p.Color).ToList();
-        //    try
-        //    {
-        //        Card card = count.OrderByDescending(v => v.Count()).ToList()
-        //        .First().First();
-        //        Color color = card == null ? Color.Blue : card.Color;
-        //        return color;
-        //    }
-        //    catch
-        //    {
-        //        return Color.Blue;
-        //    }
-
-        //}
-
-        //public Card ChoosePlus2Card(Card topDeckCard, Player currentPlayer)
-        //{
-        //    Card card = currentPlayer.PlayerCards
-        //        .Where(UniqueCard.IsPlus2).FirstOrDefault(topDeckCard);
-        //    Communicator.PrintMessage($"Player[{currentPlayer.Id}] chose {card}", 
-        //        Communicator.MessageType.Alert);
-        //    return card;
-        //}
 
         public override string ToString()
         {

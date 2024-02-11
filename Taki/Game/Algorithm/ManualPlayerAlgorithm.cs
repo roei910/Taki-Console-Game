@@ -1,50 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 using Taki.Game.Cards;
-using Taki.Game.General;
+using Taki.Game.Handlers;
 using Taki.Game.Interfaces;
-using Taki.Game.Managers;
 using Taki.Game.Players;
 
 namespace Taki.Game.Algorithm
 {
     internal class ManualPlayerAlgorithm : IPlayerAlgorithm
     {
-        //public Card ChooseCard(Card topDeckCard, Player currentPlayer)
-        //{
-        //    Communicator.PrintMessage($"The top deck card is {topDeckCard}", Communicator.MessageType.Alert);
-        //    currentPlayer.PlayerCards = currentPlayer.PlayerCards
-        //        .GroupBy(card => card.Color).ToList().SelectMany(x => x).ToList();
-        //    Communicator.PrintMessage(currentPlayer);
-        //    Communicator.PrintMessage($"Please choose on of your cards by index, -1 to draw a card", 
-        //        Communicator.MessageType.Alert);
-        //    int index;
-        //    while (!int.TryParse(Communicator.ReadMessage(), out index) || 
-        //        !IsValidIndex(index, currentPlayer.PlayerCards.Count))
-        //        Communicator.PrintMessage("please choose again the index of the card");
-        //    if (index == -1)
-        //        return topDeckCard;
-        //    return currentPlayer.PlayerCards.ElementAt(index);
-        //}
-
-        //public Color ChooseColor(Player currentPlayer)
-        //{
-        //    Color changeColor = Utilities.GetColorFromUserEnum<CardColorsEnum>("of color");
-        //    Communicator.PrintMessage($"Please choose a card with the new color: {changeColor}",
-        //        Communicator.MessageType.Alert);
-        //    return changeColor;
-        //}
-
-        //public Card ChoosePlus2Card(Card topDiscardPileCard, Player player)
-        //{
-        //    return ChooseCard(topDiscardPileCard, player);
-        //}
-
         public override string ToString()
         {
             return "Manual Player Algo";
@@ -55,24 +18,61 @@ namespace Taki.Game.Algorithm
             return index >= -1 && index < maxCards;
         }
 
-        public Card ChooseCard(Card topDeckCard, Player currentPlayer)
+        public Color ChooseColor(GameHandlers gameHandlers)
         {
-            throw new NotImplementedException();
+            return gameHandlers.GetUtilities().GetColorFromUserEnum<CardColorsEnum>();
         }
 
-        public Color ChooseColor(Player currentPlayer)
+        public Card? ChooseCard(Func<Card, bool> isSimilarTo, 
+            Player player, 
+            GameHandlers gameHandlers)
         {
-            throw new NotImplementedException();
+            IMessageHandler messageHandler = gameHandlers.GetMessageHandler();
+            Card topDiscard = gameHandlers.GetCardsHandler().GetTopDiscard();
+            Player currentPlayer = gameHandlers.GetPlayersHandler().CurrentPlayer;
+
+            messageHandler.SendAlertMessage($"The top deck card is {topDiscard}");
+            OrderPlayerCardByColor(currentPlayer);
+            messageHandler.SendMessageToUser(currentPlayer.ToString());
+            messageHandler.SendAlertMessage($"Please choose on of your cards by index, " +
+                $"-1 to draw a card");
+
+            return ChooseValidCard(messageHandler, currentPlayer, isSimilarTo);
         }
 
-        public Card ChoosePlus2Card(Card topDiscardPileCard, Player player)
+        private static Card? ChooseValidCard(IMessageHandler messageHandler, 
+            Player currentPlayer, Func<Card, bool> isSimilarTo)
         {
-            throw new NotImplementedException();
+            if (!int.TryParse(messageHandler.GetMessageFromUser(), out int index)
+                || !IsValidIndex(index, currentPlayer.PlayerCards.Count))
+            {
+                messageHandler.SendMessageToUser("please choose again the index of the card");
+                return ChooseValidCard(messageHandler, currentPlayer, isSimilarTo);
+            }
+
+            if (index == -1)
+                return null;
+
+            Card playerCard = currentPlayer.PlayerCards.ElementAt(index);
+            if (!isSimilarTo(playerCard))
+            {
+                messageHandler.SendMessageToUser("card does not meet the stacking rules");
+                return ChooseValidCard(messageHandler, currentPlayer, isSimilarTo);
+            }
+
+            return playerCard;
         }
 
-        public void PlayCard()
+        private static void OrderPlayerCardByColor(Player currentPlayer)
         {
-            throw new NotImplementedException();
+            currentPlayer.PlayerCards = currentPlayer.PlayerCards
+                .GroupBy(card =>
+                {
+                    if (card is ColorCard colorCard)
+                        return colorCard.GetColor();
+                    return Color.Empty;
+                })
+                .ToList().SelectMany(x => x).ToList();
         }
     }
 }
