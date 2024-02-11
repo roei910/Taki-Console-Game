@@ -1,8 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Taki.Game.Communicators;
-using Taki.Game.GameRules;
 using Taki.Game.General;
 using Taki.Game.Handlers;
+using Taki.Game.Interfaces;
 using Taki.Game.Managers;
 
 namespace Taki.Game.Factories
@@ -15,9 +14,9 @@ namespace Taki.Game.Factories
 
     internal class TakiGameFactory
     {
-        //TODO: move from here
-        private static readonly int MIN_NUMBER_OF_PLAYER_CARDS = 7;
-        private static readonly int MAX_NUMBER_OF_PLAYER_CARDS = 20;
+        //TODO: move all consts from code
+        private const int MIN_NUMBER_OF_PLAYER_CARDS = 7;
+        private const int MAX_NUMBER_OF_PLAYER_CARDS = 20;
 
         private readonly IMessageHandler _messageHandler;
         private readonly IServiceProvider _serviceProvider;
@@ -38,13 +37,13 @@ namespace Taki.Game.Factories
             switch (typeOfGame)
             {
                 case GameTypeEnum.Normal:
-                    int numberOfPlayerCards = GetNumberOfPlayerCards(gameHandlers.GetPlayersHandler().GetNumberOfPlayers());
+                    int numberOfPlayers = gameHandlers.GetPlayersHandler().GetAllPlayers().Count;
+                    int numberOfPlayerCards = GetNumberOfPlayerCards(numberOfPlayers);
                     return new TakiGameRunner(gameHandlers, _serviceProvider, numberOfPlayerCards);
-
-                //case GameTypeEnum.Pyramid:
-                    //PyramidRuleHandler pyramidRuleHandler = new(gameHandlers);
-                    //return new(pyramidRuleHandler);
-                    //break;
+                
+                case GameTypeEnum.Pyramid:
+                    return new(gameHandlers, _serviceProvider);
+                
                 default:
                     throw new Exception("type enum was wrong");
             }
@@ -77,15 +76,6 @@ namespace Taki.Game.Factories
             }
 
             return numberOfPlayerCards;
-        }
-
-        
-
-
-        private void WriteMessageToScreen(int numberOfPlayers, int numberOfPlayerCards)
-        {
-            _messageHandler.SendMessageToUser($"{numberOfPlayers} players, {numberOfPlayerCards} cards per player");
-            _messageHandler.SendMessageToUser();
         }
     }
 }
