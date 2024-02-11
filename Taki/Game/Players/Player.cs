@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using Taki.Game.Cards;
+using Taki.Game.Handlers;
 using Taki.Game.Interfaces;
 
 namespace Taki.Game.Players
@@ -28,19 +29,11 @@ namespace Taki.Game.Players
             Name = other.Name;
         }
 
-        //public bool AskPlayerToPickCard(Card topDiscardPileCard, out Card chosenCard)
-        //{
-        //    chosenCard = choosingAlgorithm.ChooseCard(topDiscardPileCard, this);
-        //    if (chosenCard.Id == topDiscardPileCard.Id)
-        //        return false;
-        //    if (!PlayerCards.Remove(chosenCard))
-        //        throw new Exception("card not found in player cards");
-        //    return true;
-        //}
-
-        public Color ChooseColor()
+        public Color ChooseColor(GameHandlers gameHandlers)
         {
-            Color color = choosingAlgorithm.ChooseColor(this);
+            Color color = choosingAlgorithm.ChooseColor(gameHandlers);
+            gameHandlers.GetMessageHandler()
+                .SendMessageToUser($"Player chose the color: {color}");
             return color;
         }
 
@@ -54,18 +47,6 @@ namespace Taki.Game.Players
             return PlayerCards.Count == 0;
         }
 
-        //public bool AskPlayerToPickCardPlus2(Card topDiscardPileCard, out Card chosenCard)
-        //{
-        //    chosenCard = choosingAlgorithm.ChoosePlus2Card(topDiscardPileCard, this);
-        //    //TODO: ifs need to go
-            
-        //    if (chosenCard.Id == topDiscardPileCard.Id)
-        //        return false;
-        //    if (!PlayerCards.Remove(chosenCard))
-        //        throw new Exception("card not found in player cards");
-        //    return true;
-        //}
-
         public override string ToString()
         {
             string cardsInHand = string.Join("\n", PlayerCards.Select((x, i) => $"{i}.{x}"));
@@ -75,14 +56,24 @@ namespace Taki.Game.Players
 
         public bool Equals(Player? other)
         {
-            if(other is null)
+            if (other is null)
                 return false;
             return Id == other.Id;
         }
 
-        internal Card? PickCard(Func<Card, bool> isSimilarTo)
+        public Card? PickCard(Func<Card, bool> isSimilarTo, GameHandlers gameHandlers)
         {
-            return PlayerCards.FirstOrDefault(card => isSimilarTo(card), null);
+            return choosingAlgorithm.ChooseCard(isSimilarTo, this, gameHandlers);
+        }
+
+        internal string GetInformation()
+        {
+            return $"Player[{Id}] ({Name}), {PlayerCards.Count} Algo: {choosingAlgorithm}";
+        }
+
+        public string GetName()
+        {
+            return $"Player[{Id}] ({Name})";
         }
     }
 }
