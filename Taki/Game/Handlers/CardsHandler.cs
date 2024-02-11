@@ -24,20 +24,20 @@ namespace Taki.Game.GameRules
             _discardPile.AddFirst(card);
         }
 
-        internal void ResetCards()
+        public void ResetCards()
         {
             _drawPile.CombineDeckToThis(_discardPile);
             _drawPile.ShuffleDeck();
         }
 
-        internal Card DrawCard()
+        public Card DrawCard()
         {
             Card top = _drawPile.GetFirst();
             _drawPile.RemoveFirst();
             return top;
         }
 
-        internal void DrawFirstCard()
+        public void DrawFirstCard()
         {
             Card drawCard = DrawCard();
             _discardPile.AddFirst(drawCard);
