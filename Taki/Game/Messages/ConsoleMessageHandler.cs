@@ -1,4 +1,6 @@
-﻿namespace Taki.Game.Communicators
+﻿using Taki.Game.Interfaces;
+
+namespace Taki.Game.Communicators
 {
     internal class ConsoleMessageHandler : IMessageHandler
     {
@@ -24,7 +26,7 @@
             PrintMessageColor(ConsoleColor.Yellow, message);
         }
 
-        public void SendMessageToUser(string message)
+        public void SendMessageToUser(object? message)
         {
             Console.WriteLine(message);
         }
@@ -41,7 +43,7 @@
 
         public void SendMessageToUser()
         {
-            SendMessageToUser();
+            SendMessageToUser("");
         }
     }
 }
