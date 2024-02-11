@@ -16,23 +16,24 @@ namespace Taki.Game.Cards
             return prevCard.IsSimilarTo(other);
         }
 
-        public override void Play(Card topDiscard, GameHandlers gameHandlers)
+        public override void Play(GameHandlers gameHandlers)
         {
+            Card topDiscard = gameHandlers.GetCardsHandler().GetTopDiscard();
             prevCard = (topDiscard is SwitchCardsWithDirection card) ? card.prevCard : topDiscard;
 
-            Player first = gameHandlers.GetPlayersHandler().CurrentPlayer;
-            List<Card> savedCards = first.PlayerCards;
-            first.PlayerCards = [];
+            Player currentPlayer = gameHandlers.GetPlayersHandler().CurrentPlayer;
+            List<Card> savedCards = currentPlayer.PlayerCards;
+            currentPlayer.PlayerCards = [];
 
             gameHandlers.GetPlayersHandler().NextPlayer();
 
-            while (gameHandlers.GetPlayersHandler().CurrentPlayer.Id != first.Id)
+            while (gameHandlers.GetPlayersHandler().CurrentPlayer.Id != currentPlayer.Id)
             {
                 (savedCards, gameHandlers.GetPlayersHandler().CurrentPlayer.PlayerCards) = (gameHandlers.GetPlayersHandler().CurrentPlayer.PlayerCards, savedCards);
                 gameHandlers.GetPlayersHandler().NextPlayer();
             }
 
-            first.PlayerCards = savedCards;
+            currentPlayer.PlayerCards = savedCards;
         }
 
         public override void FinishPlay()

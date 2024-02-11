@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using Taki.Game.Handlers;
+using Taki.Game.Players;
 
 namespace Taki.Game.Cards
 {
@@ -12,9 +13,16 @@ namespace Taki.Game.Cards
             return base.IsSimilarTo(other) || other is Stop;
         }
 
-        public override void Play(Card topDiscard, GameHandlers gameHandlers)
+        public override void Play(GameHandlers gameHandlers)
         {
+            Player currentPlayer = gameHandlers.GetPlayersHandler().CurrentPlayer;
             gameHandlers.GetPlayersHandler().NextPlayer();
+
+            Player nextPlayer = gameHandlers.GetPlayersHandler().CurrentPlayer;
+            gameHandlers.GetMessageHandler().SendErrorMessage(
+                $"{nextPlayer.GetName()} was stopped by " +
+                $"{currentPlayer.GetName()}\n");
+
             gameHandlers.GetPlayersHandler().NextPlayer();
         }
 

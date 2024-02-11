@@ -6,34 +6,32 @@ namespace Taki.Game.Cards
     internal class SuperTaki : Card
     {
         private TakiCard? takiInstance;
-        private ChangeColor? changeColorInstance;
 
         public override void FinishNoPlay()
         {
-            changeColorInstance?.FinishNoPlay();
             takiInstance?.FinishNoPlay();
         }
 
         public override void FinishPlay()
         {
-            changeColorInstance?.FinishPlay();
             takiInstance?.FinishPlay();
         }
 
-        public override void Play(Card topDiscard, GameHandlers gameHandlers)
+        public override void Play(GameHandlers gameHandlers)
         {
-            changeColorInstance = new ChangeColor();
-            changeColorInstance.Play(topDiscard, gameHandlers);
+            Color color = Color.Empty;
+            while (!ColorCard.Colors.Contains(color))
+                color = gameHandlers.GetPlayersHandler().CurrentPlayer.ChooseColor(gameHandlers);
 
-            takiInstance = new TakiCard(Color.Empty);
-            takiInstance.Play(topDiscard, gameHandlers);
+            takiInstance = new TakiCard(color);
+            takiInstance.Play(gameHandlers);
         }
 
         public override bool IsSimilarTo(Card other)
         {
-            if (changeColorInstance is null)
+            if (takiInstance is null)
                 return true;
-            return changeColorInstance.IsSimilarTo(other);
+            return takiInstance.IsSimilarTo(other);
         }
 
         public override string ToString()

@@ -12,7 +12,7 @@ namespace Taki.Game.Cards
             return base.IsSimilarTo(other) || other is ChangeDirection;
         }
 
-        public override void Play(Card topDiscard, GameHandlers gameHandlers)
+        public override void Play(GameHandlers gameHandlers)
         {
             gameHandlers.GetPlayersHandler().ChangeDirection();
             gameHandlers.GetPlayersHandler().NextPlayer();

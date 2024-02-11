@@ -1,5 +1,4 @@
 ﻿using System.Drawing;
-using Taki.Game.GameRules;
 using Taki.Game.Handlers;
 
 namespace Taki.Game.Cards
@@ -20,7 +19,7 @@ namespace Taki.Game.Cards
             return base.IsSimilarTo(other) || _number.Equals(card._number);
         }
 
-        public override void Play(Card topDiscard, GameHandlers gameHandlers)
+        public override void Play(GameHandlers gameHandlers)
         {
             gameHandlers.GetPlayersHandler().NextPlayer();
         }

@@ -1,5 +1,4 @@
 ﻿using Taki.Game.Cards;
-using Taki.Game.GameRules;
 using Taki.Game.Handlers;
 
 namespace Taki.Game.Interfaces
@@ -8,7 +7,7 @@ namespace Taki.Game.Interfaces
     {
         int CardsToDraw();
         bool IsSimilarTo(Card other);
-        void Play(Card topDiscard, GameHandlers gameHandlers);
+        void Play(GameHandlers gameHandlers);
         void FinishNoPlay();
         void FinishPlay();
     }

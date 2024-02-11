@@ -1,5 +1,4 @@
-﻿
-using System.Drawing;
+﻿using System.Drawing;
 using Taki.Game.Handlers;
 
 namespace Taki.Game.Cards
@@ -16,13 +15,11 @@ namespace Taki.Game.Cards
             return other.IsSimilarTo(new NumberCard(0, color));
         }
 
-        public override void Play(Card topDiscard, GameHandlers gameHandlers)
+        public override void Play(GameHandlers gameHandlers)
         {
-            color = gameHandlers.GetUtilities().GetColorFromUserEnum<CardColorsEnum>();
-
             while (!ColorCard.Colors.Contains(color))
-                color = gameHandlers.GetUtilities().GetColorFromUserEnum<CardColorsEnum>();
-
+                color = gameHandlers.GetPlayersHandler().CurrentPlayer.ChooseColor(gameHandlers);
+            
             gameHandlers.GetPlayersHandler().NextPlayer();
         }
 
