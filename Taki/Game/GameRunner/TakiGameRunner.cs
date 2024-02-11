@@ -1,11 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System.Diagnostics;
-using Taki.Game.Algorithm;
 using Taki.Game.Cards;
-using Taki.Game.Communicators;
-using Taki.Game.Deck;
 using Taki.Game.GameRules;
 using Taki.Game.Handlers;
+using Taki.Game.Interfaces;
 using Taki.Game.Players;
 
 //TODO: challenge: don't use any loops (except the main game while) in the code
@@ -23,6 +20,7 @@ namespace Taki.Game.Managers
     internal class TakiGameRunner
     {
         private const int NUMBER_OF_TOTAL_WINNERS = 2;
+        private const int NUMBER_OF_PYRAMID_PLAYER_CARDS = 10;
 
         protected GameHandlers _gameHandlers;
         protected IMessageHandler _messageHandler;
@@ -39,12 +37,25 @@ namespace Taki.Game.Managers
             _numberOfPlayerCards = numberOfPlayerCards;
         }
 
+        public TakiGameRunner(GameHandlers handlers, IServiceProvider serviceProvider)
+        {
+            var players = handlers.GetPlayersHandler().GetAllPlayers();
+            _gameHandlers = handlers;
+            _playersHandler = new PyramidPlayersHandler(players);
+            _cardsHandler = handlers.GetCardsHandler();
+            _messageHandler = serviceProvider.GetRequiredService<IMessageHandler>();
+            _numberOfPlayerCards = NUMBER_OF_PYRAMID_PLAYER_CARDS;
+        }
+
         public void StartGame()
         {
             ResetGame();
 
-            //TODO: handle what happends when number of winners is higher than number of players
-            var winners = Enumerable.Range(0, NUMBER_OF_TOTAL_WINNERS)
+            var numOfPlayers = _playersHandler.GetAllPlayers().Count;
+
+            var winners = Enumerable.Range(0, 
+                NUMBER_OF_TOTAL_WINNERS > numOfPlayers ? 
+                numOfPlayers : NUMBER_OF_TOTAL_WINNERS)
                 .Select(i =>
                 {
                     Player winner = GetWinner();
@@ -60,14 +71,12 @@ namespace Taki.Game.Managers
 
         private void ResetGame()
         {
-            //reset players after being removed
+            _playersHandler.ResetPlayers(_cardsHandler);
             _cardsHandler.ResetCards();
             DealCards();
         }
 
-        //from itzhaki - move to rule handler / pyramid rule handler - they need to control the first draw of cards
-        //try to make pyramid here
-        internal void DealCards()
+        private void DealCards()
         {
             Enumerable.Range(0, _numberOfPlayerCards).ToList()
                 .ForEach(i =>
@@ -83,7 +92,7 @@ namespace Taki.Game.Managers
             _cardsHandler.DrawFirstCard();
         }
 
-        public Player GetWinner()
+        private Player GetWinner()
         {
             while (_playersHandler.CanCurrentPlayerPlay())
                 _playersHandler.CurrentPlayerPlay(_gameHandlers);
