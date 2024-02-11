@@ -1,4 +1,6 @@
-﻿namespace Taki.Game.Interfaces
+﻿using System.Drawing;
+
+namespace Taki.Game.Interfaces
 {
     internal interface IMessageHandler
     {
@@ -8,5 +10,7 @@
         int GetNumberFromUser();
         string? GetMessageFromUser();
         void SendMessageToUser();
+        EnumType GetEnumFromUser<EnumType>();
+        Color GetColorFromUserEnum<EnumType>();
     }
 }

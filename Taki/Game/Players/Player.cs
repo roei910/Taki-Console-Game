@@ -66,7 +66,7 @@ namespace Taki.Game.Players
             return choosingAlgorithm.ChooseCard(isSimilarTo, this, gameHandlers);
         }
 
-        internal string GetInformation()
+        public string GetInformation()
         {
             return $"Player[{Id}] ({Name}), {PlayerCards.Count} Algo: {choosingAlgorithm}";
         }
