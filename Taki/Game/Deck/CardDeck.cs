@@ -26,24 +26,9 @@ namespace Taki.Game.Deck
             _cards.RemoveFirst();
         }
 
-        public Card GetLast()
-        {
-            return _cards.Last();
-        }
-
-        public void RemoveLast()
-        {
-            _cards.RemoveLast();
-        }
-
         public void AddFirst(Card card)
         {
             _cards.AddFirst(card);
-        }
-
-        public void AddLast(Card card)
-        {
-            _cards.AddLast(card);
         }
 
         public int Count()
@@ -60,7 +45,7 @@ namespace Taki.Game.Deck
                 Card card = _cards.ElementAt(random.Next(_cards.Count));
                 _cards.Remove(card);
                 return card;
-            }));
+            }).ToList());
         }
 
         public void CombineDeckToThis(CardDeck cardDeck)
