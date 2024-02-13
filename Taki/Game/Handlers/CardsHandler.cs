@@ -1,6 +1,5 @@
 ﻿using Taki.Game.Cards;
 using Taki.Game.Deck;
-using Taki.Game.Interfaces;
 
 namespace Taki.Game.GameRules
 {
