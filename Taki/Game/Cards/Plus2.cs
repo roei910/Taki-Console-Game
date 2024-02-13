@@ -19,6 +19,8 @@ namespace Taki.Game.Cards
 
         public override int CardsToDraw()
         {
+            if (countPlus2 == 0)
+                return base.CardsToDraw();
             return countPlus2 * 2;
         }
 
@@ -35,7 +37,7 @@ namespace Taki.Game.Cards
             IsOnlyPlus2Allowed = true;
             countPlus2++;
 
-            gameHandlers.GetPlayersHandler().NextPlayer();
+            base.Play(gameHandlers);
         }
 
         public override string ToString()
