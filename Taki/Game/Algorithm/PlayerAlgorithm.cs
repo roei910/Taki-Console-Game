@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Drawing;
+﻿using System.Drawing;
 using Taki.Game.Cards;
 using Taki.Game.Handlers;
 using Taki.Game.Interfaces;
@@ -26,16 +25,11 @@ namespace Taki.Game.Algorithm
                 .Select(card => ((ColorCard)card).GetColor())
                 .GroupBy(c => c).ToList();
 
-            try
-            {
-                return colors.OrderByDescending(color => color.Count())
-                .ToList().First().FirstOrDefault(Color.Blue);
-            }
-            catch (Exception)
-            {
-                Debug.WriteLine("error with colors??");
+            if (colors.Count == 0)
                 return Color.Blue;
-            }
+
+            return colors.OrderByDescending(color => color.Count())
+            .ToList().First().FirstOrDefault(Color.Blue);
         }
 
         public override string ToString()
