@@ -35,15 +35,15 @@ namespace Taki.Game.Cards
                 playerCard = currentPlayer.PickCard(topDiscard.IsSimilarTo, gameHandlers);
             }
 
+            messageHandler.SendAlertMessage("Taki Closed!\n");
+
             if (Equals(topDiscard))
             {
-                playersHandler.NextPlayer();
+                base.Play(gameHandlers);
                 return;
             }
 
-            messageHandler.SendAlertMessage("Taki Closed!");
             cardsHandler.GetTopDiscard().Play(gameHandlers);
-
         }
 
         public override string ToString()
