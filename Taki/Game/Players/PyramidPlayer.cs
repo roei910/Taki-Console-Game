@@ -23,6 +23,11 @@ namespace Taki.Game.Players
             return --_currentNumberOfCards;
         }
 
+        public void ResetPyramidPlayerCards(int numberOfPlyerCards)
+        {
+            _currentNumberOfCards = numberOfPlyerCards;
+        }
+
         public override string ToString()
         {
             return $"Pyramid player: current hand is {_currentNumberOfCards}\n" + base.ToString();
