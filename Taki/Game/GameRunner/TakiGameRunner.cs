@@ -58,6 +58,7 @@ namespace Taki.Game.Managers
 
         private void ResetGame()
         {
+            //TODO: change to get all cards and put them in the deck from here
             _playersHandler.ResetPlayers(_cardsHandler);
             _cardsHandler.ResetCards();
             _playersHandler.DealCards(_cardsHandler);
