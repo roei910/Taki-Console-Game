@@ -53,7 +53,11 @@ namespace Taki.Game.Managers
                 }).ToList();
 
             _messageHandler.SendMessageToUser("The winners by order:");
-            winners.ForEach(winner => _messageHandler.SendMessageToUser($"{winners.IndexOf(winner)}. {winner.Name}"));
+            winners.Select(winner =>
+            {
+                _messageHandler.SendMessageToUser($"{winners.IndexOf(winner)}. {winner.Name}");
+                return winner;
+            }).ToList();
         }
 
         private void ResetGame()
