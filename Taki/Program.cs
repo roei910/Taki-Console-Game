@@ -6,17 +6,16 @@ using Taki.Game.Interfaces;
 using Taki.Game.Factories;
 
 //TODO: maybe save instances of all handlers inside the code????
-//TODO: add number of manual players so i can choose to use manual players and how many + name them first
 
 var serviceProvider = new ServiceCollection()
     .AddSingleton<IMessageHandler, ConsoleMessageHandler>()
+    .AddSingleton<IPlayerAlgorithm, ManualPlayerAlgorithm>()
     .BuildServiceProvider();
 
 List<IPlayerAlgorithm> algorithms =
 [
     new PlayerAlgorithm(),
     new PlayerHateTakiAlgo(),
-    //new ManualPlayerAlgorithm()
 ];
 
 PlayersHandlerFactory playersHandlerFactory = new(serviceProvider, algorithms);

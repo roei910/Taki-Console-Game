@@ -10,23 +10,32 @@ namespace Taki.Game.Factories
     {
         private readonly IMessageHandler _messageHandler;
         private readonly List<IPlayerAlgorithm> _playerAlgorithms;
+        private readonly IPlayerAlgorithm _manualPlayerAlgorithm;
 
         public PlayersHandlerFactory(IServiceProvider serviceProvider, 
             List<IPlayerAlgorithm> playerAlgorithms)
         {
             _messageHandler = serviceProvider.GetRequiredService<IMessageHandler>();
             _playerAlgorithms = playerAlgorithms;
+            _manualPlayerAlgorithm = serviceProvider.GetRequiredService<IPlayerAlgorithm>();
         }
 
         private List<Player> GeneratePlayers(int numberOfPlayers)
         {
             Random random = new ();
+            int numberOfManualPlayers = GetNumberOfManualPlayer(numberOfPlayers);
+
             List<Player> players = Enumerable
                 .Range(0, numberOfPlayers)
                 .Select(i =>
                 {
                     string name = GetNameFromUser(i);
+
+                    if (numberOfManualPlayers-- > 0)
+                        return new Player(name, _manualPlayerAlgorithm);
+
                     int algoRandomIndex = random.Next(_playerAlgorithms.Count);
+
                     return new Player(name, _playerAlgorithms.ElementAt(algoRandomIndex));
                 }).ToList();
 
@@ -34,6 +43,7 @@ namespace Taki.Game.Factories
             var playersInormation = players.Select(p => p.GetInformation())
                 .ToList();
             _messageHandler.SendMessageToUser(string.Join("\n", playersInormation));
+
             return players;
         }
 
@@ -80,6 +90,20 @@ namespace Taki.Game.Factories
             return numberOfPlayers;
         }
 
+        private int GetNumberOfManualPlayer(int maxPlayers)
+        {
+            _messageHandler.SendMessageToUser($"Please enter number of manual players or 0 for none");
+            int numberOfPlayers = _messageHandler.GetNumberFromUser();
+
+            if (numberOfPlayers < 0)
+                return 0;
+
+            if (numberOfPlayers > maxPlayers)
+                return maxPlayers;
+
+            return numberOfPlayers;
+        }
+
         private string GetNameFromUser(int index)
         {
             _messageHandler.SendMessageToUser($"Please enter a name #{index + 1}");
@@ -120,7 +144,5 @@ namespace Taki.Game.Factories
 
             return numberOfPlayerCards;
         }
-
-        
     }
 }
