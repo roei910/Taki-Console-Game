@@ -25,11 +25,11 @@ namespace Taki.Game.Managers
         {
             ResetGame();
 
-            var numOfPlayers = _playersHandler.GetAllPlayers().Count;
+            int numOfPlayers = _playersHandler.GetAllPlayers().Count;
+            int totalWinners = Constants.NUMBER_OF_TOTAL_WINNERS;
 
-            var winners = Enumerable.Range(0, 
-                Constants.NUMBER_OF_TOTAL_WINNERS > numOfPlayers ? 
-                numOfPlayers : Constants.NUMBER_OF_TOTAL_WINNERS)
+            var winners = Enumerable.Range(0,
+                totalWinners > numOfPlayers ? numOfPlayers : totalWinners)
                 .Select(i =>
                 {
                     Player winner = GetWinner();
@@ -40,6 +40,7 @@ namespace Taki.Game.Managers
                 }).ToList();
 
             _messageHandler.SendMessageToUser("The winners by order:");
+
             winners.Select(winner =>
             {
                 _messageHandler.SendMessageToUser($"{winners.IndexOf(winner)}. {winner.Name}");
