@@ -1,4 +1,4 @@
-using Taki.Game.GameRules;
+﻿using Taki.Game.GameRules;
 using Taki.Game.Handlers;
 using Taki.Game.Interfaces;
 using Taki.Game.Players;
@@ -60,7 +60,7 @@ namespace Taki.Game.Managers
             _playersHandler.DealCards(_cardsHandler);
         }
 
-
+        
 
         private Player GetWinner()
         {

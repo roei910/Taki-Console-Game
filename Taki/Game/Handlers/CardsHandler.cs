@@ -32,8 +32,19 @@ namespace Taki.Game.GameRules
 
         public Card DrawCard()
         {
+            //TODO: check if the deck has no cards for reset
+            if(_drawPile.Count() == 0 && _discardPile.Count() > 1)
+            {
+                ResetCards();
+                DrawFirstCard();
+            }
+
+            if(_drawPile.Count() + _discardPile.Count() == 1)
+                return null;
+
             Card top = _drawPile.GetFirst();
             _drawPile.RemoveFirst();
+
             return top;
         }
 
