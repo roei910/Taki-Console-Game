@@ -20,7 +20,12 @@ namespace Taki.Game.Cards
         }
 
         public abstract bool IsSimilarTo(Card other);
-        public virtual void Play(GameHandlers gameHandlers) { }
+
+        public virtual void Play(GameHandlers gameHandlers) 
+        {
+            gameHandlers.GetPlayersHandler().NextPlayer();
+        }
+
         public virtual void FinishNoPlay() { }
         public virtual void FinishPlay() { }
 

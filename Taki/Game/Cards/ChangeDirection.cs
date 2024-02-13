@@ -15,7 +15,7 @@ namespace Taki.Game.Cards
         public override void Play(GameHandlers gameHandlers)
         {
             gameHandlers.GetPlayersHandler().ChangeDirection();
-            gameHandlers.GetPlayersHandler().NextPlayer();
+            base.Play(gameHandlers);
         }
 
         public override string ToString()

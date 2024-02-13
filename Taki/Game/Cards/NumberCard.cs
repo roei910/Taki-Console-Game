@@ -1,5 +1,4 @@
 ﻿using System.Drawing;
-using Taki.Game.Handlers;
 
 namespace Taki.Game.Cards
 {
@@ -17,11 +16,6 @@ namespace Taki.Game.Cards
             if(other is not NumberCard card)
                 return base.IsSimilarTo(other);
             return base.IsSimilarTo(other) || _number.Equals(card._number);
-        }
-
-        public override void Play(GameHandlers gameHandlers)
-        {
-            gameHandlers.GetPlayersHandler().NextPlayer();
         }
 
         public override string ToString()

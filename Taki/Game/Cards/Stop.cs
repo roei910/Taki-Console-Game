@@ -23,7 +23,7 @@ namespace Taki.Game.Cards
                 $"{nextPlayer.GetName()} was stopped by " +
                 $"{currentPlayer.GetName()}\n");
 
-            gameHandlers.GetPlayersHandler().NextPlayer();
+            base.Play(gameHandlers);
         }
 
         public override string ToString()

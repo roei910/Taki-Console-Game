@@ -34,6 +34,7 @@ namespace Taki.Game.Cards
             }
 
             currentPlayer.PlayerCards = savedCards;
+            base.Play(gameHandlers);
         }
 
         public override void FinishPlay()

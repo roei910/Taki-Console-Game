@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using Taki.Game.Handlers;
 
 namespace Taki.Game.Cards
 {
@@ -9,6 +10,11 @@ namespace Taki.Game.Cards
         public override bool IsSimilarTo(Card other)
         {
             return base.IsSimilarTo(other) || other is Plus;
+        }
+
+        public override void Play(GameHandlers gameHandlers)
+        {
+            ;
         }
 
         public override string ToString()

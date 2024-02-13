@@ -20,7 +20,7 @@ namespace Taki.Game.Cards
             while (!ColorCard.Colors.Contains(color))
                 color = gameHandlers.GetPlayersHandler().CurrentPlayer.ChooseColor(gameHandlers);
             
-            gameHandlers.GetPlayersHandler().NextPlayer();
+            base.Play(gameHandlers);
         }
 
         public override void FinishPlay()
@@ -30,7 +30,7 @@ namespace Taki.Game.Cards
 
         public override string ToString()
         {
-            return "ChangeColor";
+            return $"ChangeColor {color}";
         }
     }
 }
