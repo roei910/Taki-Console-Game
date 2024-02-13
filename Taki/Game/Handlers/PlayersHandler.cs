@@ -5,12 +5,15 @@ using Taki.Game.Players;
 
 namespace Taki.Game.GameRules
 {
+    //TODO: add no play counter to see if we are stuck
+
     internal class PlayersHandler
     {
-        private readonly LinkedList<Player> _players;
         private readonly Queue<Player> _winners;
-        protected bool isDirectionNormal = true;
-        private readonly int _numberOfPlayerCards;
+        private bool isDirectionNormal = true;
+        
+        protected readonly LinkedList<Player> _players;
+        protected readonly int _numberOfPlayerCards;
 
         public Player CurrentPlayer { get; private set; }
 
@@ -27,7 +30,12 @@ namespace Taki.Game.GameRules
             int cardsDraw = Enumerable.Range(0, numberOfCards).ToList()
                 .Count(index =>
                 {
-                    CurrentPlayer.AddCard(gameHandlers.GetCardsHandler().DrawCard());
+                    Card? card = gameHandlers.GetCardsHandler().DrawCard();
+
+                    if(card == null)
+                        return false;
+                    CurrentPlayer.AddCard(card);
+
                     return true;
                 });
 
@@ -118,7 +126,7 @@ namespace Taki.Game.GameRules
             isDirectionNormal = !isDirectionNormal;
         }
 
-        public void ResetPlayers(CardsHandler cardsHandler)
+        public virtual void ResetPlayers(CardsHandler cardsHandler)
         {
             List<Card> cards = [];
 
@@ -143,8 +151,9 @@ namespace Taki.Game.GameRules
                 {
                     GetAllPlayers().Select(p =>
                     {
-                        Card drawCard = cardsHandler.DrawCard();
-                        p.AddCard(drawCard);
+                        Card? drawCard = cardsHandler.DrawCard();
+                        if(drawCard != null)
+                            p.AddCard(drawCard);
 
                         return p;
                     }).ToList();

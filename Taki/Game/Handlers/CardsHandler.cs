@@ -30,9 +30,8 @@ namespace Taki.Game.GameRules
             _drawPile.ShuffleDeck();
         }
 
-        public Card DrawCard()
+        public Card? DrawCard()
         {
-            //TODO: check if the deck has no cards for reset
             if(_drawPile.Count() == 0 && _discardPile.Count() > 1)
             {
                 ResetCards();
@@ -50,8 +49,9 @@ namespace Taki.Game.GameRules
 
         public void DrawFirstCard()
         {
-            Card drawCard = DrawCard();
-            _discardPile.AddFirst(drawCard);
+            Card? drawCard = DrawCard();
+            if(drawCard != null)
+                _discardPile.AddFirst(drawCard);
         }
     }
 }
