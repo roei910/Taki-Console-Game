@@ -20,31 +20,18 @@ namespace Taki.Game.Managers
     internal class TakiGameRunner
     {
         private const int NUMBER_OF_TOTAL_WINNERS = 2;
-        private const int NUMBER_OF_PYRAMID_PLAYER_CARDS = 10;
 
         protected GameHandlers _gameHandlers;
         protected IMessageHandler _messageHandler;
         protected readonly PlayersHandler _playersHandler;
         protected readonly CardsHandler _cardsHandler;
-        protected int _numberOfPlayerCards;
 
-        public TakiGameRunner(GameHandlers handlers, IServiceProvider serviceProvider, int numberOfPlayerCards)
+        public TakiGameRunner(GameHandlers handlers)
         {
             _gameHandlers = handlers;
             _playersHandler = handlers.GetPlayersHandler();
             _cardsHandler = handlers.GetCardsHandler();
-            _messageHandler = serviceProvider.GetRequiredService<IMessageHandler>();
-            _numberOfPlayerCards = numberOfPlayerCards;
-        }
-
-        public TakiGameRunner(GameHandlers handlers, IServiceProvider serviceProvider)
-        {
-            var players = handlers.GetPlayersHandler().GetAllPlayers();
-            _gameHandlers = handlers;
-            _playersHandler = new PyramidPlayersHandler(players);
-            _cardsHandler = handlers.GetCardsHandler();
-            _messageHandler = serviceProvider.GetRequiredService<IMessageHandler>();
-            _numberOfPlayerCards = NUMBER_OF_PYRAMID_PLAYER_CARDS;
+            _messageHandler = handlers.GetMessageHandler();
         }
 
         public void StartGame()
