@@ -4,33 +4,26 @@ using Microsoft.Extensions.DependencyInjection;
 using Taki.Game.Algorithm;
 using Taki.Game.Interfaces;
 using Taki.Game.Factories;
-using Taki.Game.GameRules;
-using Taki.Game.Handlers;
-using Taki.Game.General;
 
 //TODO: naming conventions and logics
-//TODO: check what happends when finishing hand with plus card
+//TODO: maybe save instances of all handlers inside the code????
+//TODO: add number of manual players so i can choose to use manual players and how many + name them first
 
 var serviceProvider = new ServiceCollection()
     .AddSingleton<IMessageHandler, ConsoleMessageHandler>()
-    .AddSingleton<Utilities>()
     .BuildServiceProvider();
 
 List<IPlayerAlgorithm> algorithms =
 [
     new PlayerAlgorithm(),
     new PlayerHateTakiAlgo(),
-    new ManualPlayerAlgorithm()
+    //new ManualPlayerAlgorithm()
 ];
 
-TakiGameFactory gameFactory = new(serviceProvider);
 PlayersHandlerFactory playersHandlerFactory = new(serviceProvider, algorithms);
 CardsHandlerFactory cardsHandlerFactory = new();
 
-PlayersHandler playerHandler = playersHandlerFactory.GeneratePlayersHandler();
-CardsHandler cardsHandler = cardsHandlerFactory.GenerateCardsHandler();
+TakiGameFactory gameFactory = new(serviceProvider);
+TakiGameRunner gameRunner = gameFactory.ChooseTypeOfGame(playersHandlerFactory, cardsHandlerFactory, serviceProvider);
 
-GameHandlers gameHandlers = new(playerHandler, cardsHandler, serviceProvider);
-
-TakiGameRunner takiGameRunner = gameFactory.ChooseTypeOfGame(gameHandlers);
-takiGameRunner.StartGame();
+gameRunner.StartGame();
