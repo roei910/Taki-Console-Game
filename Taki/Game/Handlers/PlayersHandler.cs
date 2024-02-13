@@ -1,17 +1,17 @@
-﻿using Taki.Game.Cards;
+﻿using System.Diagnostics;
+using Taki.Game.Cards;
 using Taki.Game.Handlers;
 using Taki.Game.Interfaces;
 using Taki.Game.Players;
 
 namespace Taki.Game.GameRules
 {
-    //TODO: add no play counter to see if we are stuck
-
     internal class PlayersHandler
     {
         private readonly Queue<Player> _winners;
         private bool isDirectionNormal = true;
-        
+        private int noPlayCounter = 0;
+
         protected readonly LinkedList<Player> _players;
         protected readonly int _numberOfPlayerCards;
 
@@ -111,8 +111,19 @@ namespace Taki.Game.GameRules
                 DrawCards(topDiscard.CardsToDraw(), gameHandlers);
                 topDiscard.FinishNoPlay();
                 NextPlayer();
+                noPlayCounter++;
+
+                if (noPlayCounter >= 10 && noPlayCounter%10 == 0)
+                {
+                    messageHandler.SendErrorMessage("Too many rounds without play, consider calling a tie ;)");
+                    messageHandler.SendErrorMessage("press any key to continue");
+                    messageHandler.GetMessageFromUser();
+                }
+
                 return;
             }
+
+            noPlayCounter = 0;
 
             CurrentPlayer.PlayerCards.Remove(playerCard);
             gameHandlers.GetCardsHandler().AddDiscardCard(playerCard);
