@@ -5,7 +5,6 @@ using Taki.Game.Algorithm;
 using Taki.Game.Interfaces;
 using Taki.Game.Factories;
 
-//TODO: naming conventions and logics
 //TODO: maybe save instances of all handlers inside the code????
 //TODO: add number of manual players so i can choose to use manual players and how many + name them first
 
