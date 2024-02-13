@@ -126,7 +126,7 @@ namespace Taki.Game.GameRules
             isDirectionNormal = !isDirectionNormal;
         }
 
-        public virtual void ResetPlayers(CardsHandler cardsHandler)
+        public virtual List<Card> GetAllCardsFromPlayers(CardsHandler cardsHandler)
         {
             List<Card> cards = [];
 
@@ -137,11 +137,8 @@ namespace Taki.Game.GameRules
                 return player;
             }).ToList();
 
-            _ = cards.Select(card =>
-            {
-                cardsHandler.AddDiscardCard(card);
-                return card;
-            }).ToList();
+            return cards;
+
         }
 
         public void DealCards(CardsHandler cardsHandler)

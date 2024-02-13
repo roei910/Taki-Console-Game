@@ -1,4 +1,5 @@
-﻿using Taki.Game.GameRules;
+﻿using Taki.Game.Cards;
+using Taki.Game.GameRules;
 using Taki.Game.Players;
 
 namespace Taki.Game.Handlers
@@ -25,9 +26,9 @@ namespace Taki.Game.Handlers
             }
         }
 
-        public override void ResetPlayers(CardsHandler cardsHandler)
+        public override List<Card> GetAllCardsFromPlayers(CardsHandler cardsHandler)
         {
-            base.ResetPlayers(cardsHandler);
+            var cards = base.GetAllCardsFromPlayers(cardsHandler);
 
             _players.Select(player =>
             {
@@ -35,6 +36,8 @@ namespace Taki.Game.Handlers
                 pyramidPlayer.ResetPyramidPlayerCards(_numberOfPlayerCards);
                 return player;
             }).ToList();
+
+            return cards;
         }
     }
 }

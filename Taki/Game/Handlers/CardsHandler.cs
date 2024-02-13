@@ -1,5 +1,6 @@
 ﻿using Taki.Game.Cards;
 using Taki.Game.Deck;
+using Taki.Game.Interfaces;
 
 namespace Taki.Game.GameRules
 {
@@ -28,6 +29,12 @@ namespace Taki.Game.GameRules
         {
             _drawPile.CombineDeckToThis(_discardPile);
             _drawPile.ShuffleDeck();
+        }
+
+        public void ResetCards(List<Card> playerCards)
+        {
+            _discardPile.AddMany(playerCards);
+            ResetCards();
         }
 
         public Card? DrawCard()

@@ -1,4 +1,5 @@
-﻿using Taki.Game.GameRules;
+﻿using Taki.Game.Cards;
+using Taki.Game.GameRules;
 using Taki.Game.Handlers;
 using Taki.Game.Interfaces;
 using Taki.Game.Players;
@@ -48,9 +49,8 @@ namespace Taki.Game.Managers
 
         private void ResetGame()
         {
-            //TODO: change to get all cards and put them in the deck from here
-            _playersHandler.ResetPlayers(_cardsHandler);
-            _cardsHandler.ResetCards();
+            var cards = _playersHandler.GetAllCardsFromPlayers(_cardsHandler);
+            _cardsHandler.ResetCards(cards);
             _playersHandler.DealCards(_cardsHandler);
         }
 

@@ -59,5 +59,11 @@ namespace Taki.Game.Deck
         {
             return $"CardDeck: {_cards.Count} no of cards";
         }
+
+        public void AddMany(List<Card> playerCards)
+        {
+            if(playerCards.Count > 0)
+                _cards.AddLast(playerCards.First());
+        }
     }
 }
