@@ -44,22 +44,32 @@ namespace Taki.Game.Factories
         private static List<Card> GenerateUniqueCards()
         {
             List<Card> cards = [];
-            foreach (var _ in Enumerable.Range(0, 2))
+
+            Enumerable.Range(0, 2).Select(i =>
             {
                 cards.Add(new SuperTaki());
                 cards.Add(new SwitchCardsWithDirection());
-                Enumerable.Range(0, 2).ToList()
-                    .ForEach(_ => cards.Add(new ChangeColor()));
 
-                ColorCard.Colors.ForEach(color =>
+                Enumerable.Range(0, 2).Select(j =>
+                {
+                    cards.Add(new ChangeColor());
+                    return j;
+                }).ToList();
+
+                ColorCard.Colors.Select(color =>
                 {
                     cards.Add(new ChangeDirection(color));
                     cards.Add(new Plus(color));
                     cards.Add(new Plus2(color));
                     cards.Add(new TakiCard(color));
                     cards.Add(new Stop(color));
-                });
-            }
+
+                    return color;
+                }).ToList();
+
+                return i;
+            }).ToList();
+
             return cards;
         }
     }

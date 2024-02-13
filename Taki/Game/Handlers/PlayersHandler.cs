@@ -10,29 +10,33 @@ namespace Taki.Game.GameRules
         private readonly LinkedList<Player> _players;
         private readonly Queue<Player> _winners;
         protected bool isDirectionNormal = true;
+        private readonly int _numberOfPlayerCards;
 
         public Player CurrentPlayer { get; private set; }
 
-        public PlayersHandler(List<Player> players)
+        public PlayersHandler(List<Player> players, int numberOfPlayerCards)
         {
             _players = new(players);
             CurrentPlayer = players.First();
             _winners = new Queue<Player>();
+            _numberOfPlayerCards = numberOfPlayerCards;
         }
 
-        public bool DrawCards(int numberOfCards, CardsHandler _cardsHandler)
+        public bool DrawCards(int numberOfCards, GameHandlers gameHandlers)
         {
-            int cardsDraw = 0;
-            Enumerable.Range(0, numberOfCards).ToList()
-                .ForEach(x =>
+            int cardsDraw = Enumerable.Range(0, numberOfCards).ToList()
+                .Count(index =>
                 {
-                    CurrentPlayer.AddCard(_cardsHandler.DrawCard());
-                    cardsDraw++;
+                    CurrentPlayer.AddCard(gameHandlers.GetCardsHandler().DrawCard());
+                    return true;
                 });
+
             if (cardsDraw == 0)
                 return false;
-            //Communicator.PrintMessage($"Player[{CurrentPlayer.Id}]: drew {cardsDraw} card(s)",
-            //    Communicator.MessageType.Error);
+
+            gameHandlers.GetMessageHandler().SendErrorMessage(
+                $"Player[{CurrentPlayer.Id}]: drew {cardsDraw} card(s)\n");
+
             return true;
         }
 
@@ -96,7 +100,7 @@ namespace Taki.Game.GameRules
 
             if (playerCard == null)
             {
-                DrawCards(topDiscard.CardsToDraw(), gameHandlers.GetCardsHandler());
+                DrawCards(topDiscard.CardsToDraw(), gameHandlers);
                 topDiscard.FinishNoPlay();
                 NextPlayer();
                 return;
@@ -130,6 +134,25 @@ namespace Taki.Game.GameRules
                 cardsHandler.AddDiscardCard(card);
                 return card;
             }).ToList();
+        }
+
+        public void DealCards(CardsHandler cardsHandler)
+        {
+            Enumerable.Range(0, _numberOfPlayerCards).ToList()
+                .Select(i =>
+                {
+                    GetAllPlayers().Select(p =>
+                    {
+                        Card drawCard = cardsHandler.DrawCard();
+                        p.AddCard(drawCard);
+
+                        return p;
+                    }).ToList();
+
+                    return i;
+                }).ToList();
+
+            cardsHandler.DrawFirstCard();
         }
     }
 }

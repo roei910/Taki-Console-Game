@@ -53,12 +53,15 @@ namespace Taki.Game.Communicators
 
             SendMessageToUser("Please choose the type by index:");
 
-            for (int i = 0; i < values.Length; i++)
-                SendMessageToUser($"{i}. {values[i]}");
+            Enumerable.Range(0, values.Length)
+                .Select(i =>
+                {
+                    SendMessageToUser($"{i}. {values[i]}");
+                    return i;
+                }).ToList();
 
-            _ = int.TryParse(GetMessageFromUser(), out int index);
-
-            if (index >= values.Length || index < 0)
+            if(!int.TryParse(GetMessageFromUser(), out int index) || 
+                index >= values.Length || index < 0)
                 return GetEnumFromUser<T>();
 
             return values[index];
