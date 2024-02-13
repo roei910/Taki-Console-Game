@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Taki.Game.GameRules;
+using Taki.Game.Handlers;
 using Taki.Game.Interfaces;
 using Taki.Game.Players;
 
@@ -9,9 +10,14 @@ namespace Taki.Game.Factories
     {
         private readonly IMessageHandler _messageHandler;
         private readonly List<IPlayerAlgorithm> _playerAlgorithms;
+
         //TODO: remove from here
         private static readonly int MIN_NUMBER_OF_PLAYERS = 2;
         private static readonly int MAX_NUMBER_OF_PLAYERS = 8;
+        //TODO: move all consts from code
+        private const int MIN_NUMBER_OF_PLAYER_CARDS = 7;
+        private const int MAX_NUMBER_OF_PLAYER_CARDS = 20;
+        private const int NUMBER_OF_PYRAMID_PLAYER_CARDS = 10;
 
         public PlayersHandlerFactory(IServiceProvider serviceProvider, 
             List<IPlayerAlgorithm> playerAlgorithms)
@@ -20,12 +26,12 @@ namespace Taki.Game.Factories
             _playerAlgorithms = playerAlgorithms;
         }
 
-        public PlayersHandler GeneratePlayersHandler(int numberOfPlayers)
+        private List<Player> GeneratePlayers(int numberOfPlayers)
         {
             Random random = new ();
             List<Player> players = Enumerable
                 .Range(0, numberOfPlayers)
-                .Select(i => 
+                .Select(i =>
                 {
                     string name = GetNameFromUser(i);
                     int algoRandomIndex = random.Next(_playerAlgorithms.Count);
@@ -36,14 +42,27 @@ namespace Taki.Game.Factories
             var playersInormation = players.Select(p => p.GetInformation())
                 .ToList();
             _messageHandler.SendMessageToUser(string.Join("\n", playersInormation));
-
-            return new PlayersHandler(players);
+            return players;
         }
 
         public PlayersHandler GeneratePlayersHandler()
         {
             int numberOfPlayers = GetNumberOfPlayers();
-            return GeneratePlayersHandler(numberOfPlayers);
+            int numberOfPlayerCards = GetNumberOfPlayerCards(numberOfPlayers);
+            List<Player> players = GeneratePlayers(numberOfPlayers);
+
+            return new PlayersHandler(players, numberOfPlayerCards);
+        }
+
+        public PlayersHandler GeneratePyramidPlayersHandler()
+        {
+            int numberOfPlayers = GetNumberOfPlayers();
+
+            List<Player> pyramidPlayers = GeneratePlayers(numberOfPlayers)
+                .Select(player => 
+                (Player)new PyramidPlayer(player, NUMBER_OF_PYRAMID_PLAYER_CARDS)).ToList();
+
+            return new PyramidPlayersHandler(pyramidPlayers, NUMBER_OF_PYRAMID_PLAYER_CARDS);
         }
 
         private int GetNumberOfPlayers()
@@ -80,5 +99,36 @@ namespace Taki.Game.Factories
             }
             return name.Split(" ").ElementAt(0);
         }
+
+        private int GetNumberOfPlayerCards(int numberOfPlayers)
+        {
+            int maxNumberOfPlayerCards = CardsHandlerFactory.MaxNumberOfCards() / numberOfPlayers - 1;
+
+            if (maxNumberOfPlayerCards > MAX_NUMBER_OF_PLAYER_CARDS)
+                maxNumberOfPlayerCards = MAX_NUMBER_OF_PLAYER_CARDS;
+
+            _messageHandler.SendMessageToUser("please enter a number of player cards");
+            int numberOfPlayerCards = _messageHandler.GetNumberFromUser();
+
+            if (numberOfPlayerCards > maxNumberOfPlayerCards)
+            {
+                _messageHandler.SendMessageToUser($"Too many cards per player, max is {maxNumberOfPlayerCards}." +
+                    $" setting as the max value");
+
+                return maxNumberOfPlayerCards;
+            }
+
+            if (numberOfPlayerCards < MIN_NUMBER_OF_PLAYER_CARDS)
+            {
+                _messageHandler.SendMessageToUser($"Not enough cards per player, " +
+                    $"min is {MIN_NUMBER_OF_PLAYER_CARDS} setting as min value");
+
+                return MIN_NUMBER_OF_PLAYER_CARDS;
+            }
+
+            return numberOfPlayerCards;
+        }
+
+        
     }
 }
