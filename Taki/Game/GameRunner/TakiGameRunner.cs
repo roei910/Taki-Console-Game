@@ -73,24 +73,10 @@ namespace Taki.Game.Managers
         {
             _playersHandler.ResetPlayers(_cardsHandler);
             _cardsHandler.ResetCards();
-            DealCards();
+            _playersHandler.DealCards(_cardsHandler);
         }
 
-        private void DealCards()
-        {
-            Enumerable.Range(0, _numberOfPlayerCards).ToList()
-                .ForEach(i =>
-                {
-                    _playersHandler.GetAllPlayers()
-                    .ForEach(p =>
-                    {
-                        Card drawCard = _cardsHandler.DrawCard();
-                        p.AddCard(drawCard);
-                    });
-                });
 
-            _cardsHandler.DrawFirstCard();
-        }
 
         private Player GetWinner()
         {
