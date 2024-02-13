@@ -18,7 +18,7 @@ namespace Taki.Game.Handlers
                 PyramidPlayer player = (PyramidPlayer)CurrentPlayer;
                 if(player.CurrentNumberOfCards() != 0)
                 {
-                    DrawCards(player.GetNextPlayerHand(), gameHandlers);
+                    DrawCards(player.GetNextPlayerHand(gameHandlers), gameHandlers);
                     gameHandlers.GetMessageHandler().SendErrorMessage(
                         $"Player[{player.Id}] finished his current hand," +
                         $" currently on {player.CurrentNumberOfCards()} card(s)");
