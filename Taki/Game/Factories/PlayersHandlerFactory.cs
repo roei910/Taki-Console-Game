@@ -11,14 +11,6 @@ namespace Taki.Game.Factories
         private readonly IMessageHandler _messageHandler;
         private readonly List<IPlayerAlgorithm> _playerAlgorithms;
 
-        //TODO: remove from here
-        private static readonly int MIN_NUMBER_OF_PLAYERS = 2;
-        private static readonly int MAX_NUMBER_OF_PLAYERS = 8;
-        //TODO: move all consts from code
-        private const int MIN_NUMBER_OF_PLAYER_CARDS = 7;
-        private const int MAX_NUMBER_OF_PLAYER_CARDS = 20;
-        private const int NUMBER_OF_PYRAMID_PLAYER_CARDS = 10;
-
         public PlayersHandlerFactory(IServiceProvider serviceProvider, 
             List<IPlayerAlgorithm> playerAlgorithms)
         {
@@ -60,29 +52,29 @@ namespace Taki.Game.Factories
 
             List<Player> pyramidPlayers = GeneratePlayers(numberOfPlayers)
                 .Select(player => 
-                (Player)new PyramidPlayer(player, NUMBER_OF_PYRAMID_PLAYER_CARDS)).ToList();
+                (Player)new PyramidPlayer(player, Constants.NUMBER_OF_PYRAMID_PLAYER_CARDS)).ToList();
 
-            return new PyramidPlayersHandler(pyramidPlayers, NUMBER_OF_PYRAMID_PLAYER_CARDS);
+            return new PyramidPlayersHandler(pyramidPlayers, Constants.NUMBER_OF_PYRAMID_PLAYER_CARDS);
         }
 
         private int GetNumberOfPlayers()
         {
             _messageHandler.SendMessageToUser($"Please enter number of players," +
-                $" a number between {MIN_NUMBER_OF_PLAYERS} and {MAX_NUMBER_OF_PLAYERS}");
+                $" a number between {Constants.MIN_NUMBER_OF_PLAYERS} and {Constants.MAX_NUMBER_OF_PLAYERS}");
 
             int numberOfPlayers = _messageHandler.GetNumberFromUser();
 
-            if (numberOfPlayers < MIN_NUMBER_OF_PLAYERS)
+            if (numberOfPlayers < Constants.MIN_NUMBER_OF_PLAYERS)
             {
-                _messageHandler.SendMessageToUser($"Not enough players, setting as min value {MIN_NUMBER_OF_PLAYERS}");
+                _messageHandler.SendMessageToUser($"Not enough players, setting as min value {Constants.MIN_NUMBER_OF_PLAYERS}");
 
-                numberOfPlayers = MIN_NUMBER_OF_PLAYERS;
+                numberOfPlayers = Constants.MIN_NUMBER_OF_PLAYERS;
             }
-            else if (numberOfPlayers > MAX_NUMBER_OF_PLAYERS)
+            else if (numberOfPlayers > Constants.MAX_NUMBER_OF_PLAYERS)
             {
-                _messageHandler.SendMessageToUser($"Too many players for the game, setting as max value {MAX_NUMBER_OF_PLAYERS}");
+                _messageHandler.SendMessageToUser($"Too many players for the game, setting as max value {Constants.MAX_NUMBER_OF_PLAYERS}");
 
-                numberOfPlayers = MAX_NUMBER_OF_PLAYERS;
+                numberOfPlayers = Constants.MAX_NUMBER_OF_PLAYERS;
             }
 
             return numberOfPlayers;
@@ -104,8 +96,8 @@ namespace Taki.Game.Factories
         {
             int maxNumberOfPlayerCards = CardsHandlerFactory.MaxNumberOfCards() / numberOfPlayers - 1;
 
-            if (maxNumberOfPlayerCards > MAX_NUMBER_OF_PLAYER_CARDS)
-                maxNumberOfPlayerCards = MAX_NUMBER_OF_PLAYER_CARDS;
+            if (maxNumberOfPlayerCards > Constants.MAX_NUMBER_OF_PLAYER_CARDS)
+                maxNumberOfPlayerCards = Constants.MAX_NUMBER_OF_PLAYER_CARDS;
 
             _messageHandler.SendMessageToUser("please enter a number of player cards");
             int numberOfPlayerCards = _messageHandler.GetNumberFromUser();
@@ -118,12 +110,12 @@ namespace Taki.Game.Factories
                 return maxNumberOfPlayerCards;
             }
 
-            if (numberOfPlayerCards < MIN_NUMBER_OF_PLAYER_CARDS)
+            if (numberOfPlayerCards < Constants.MIN_NUMBER_OF_PLAYER_CARDS)
             {
                 _messageHandler.SendMessageToUser($"Not enough cards per player, " +
-                    $"min is {MIN_NUMBER_OF_PLAYER_CARDS} setting as min value");
+                    $"min is {Constants.MIN_NUMBER_OF_PLAYER_CARDS} setting as min value");
 
-                return MIN_NUMBER_OF_PLAYER_CARDS;
+                return Constants.MIN_NUMBER_OF_PLAYER_CARDS;
             }
 
             return numberOfPlayerCards;

@@ -14,17 +14,11 @@ namespace Taki.Game.Factories
 
     internal class TakiGameFactory
     {
-        //TODO: move all consts from code
-        private const int MIN_NUMBER_OF_PLAYER_CARDS = 7;
-        private const int MAX_NUMBER_OF_PLAYER_CARDS = 20;
-
         private readonly IMessageHandler _messageHandler;
-        private readonly IServiceProvider _serviceProvider;
 
         public TakiGameFactory(IServiceProvider serviceProvider)
         {
             _messageHandler = serviceProvider.GetRequiredService<IMessageHandler>();
-            _serviceProvider = serviceProvider;
         }
 
         internal TakiGameRunner ChooseTypeOfGame(PlayersHandlerFactory playersHandlerFactory, CardsHandlerFactory cardsHandlerFactory, ServiceProvider serviceProvider)

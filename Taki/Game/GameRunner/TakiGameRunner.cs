@@ -3,16 +3,10 @@ using Taki.Game.Handlers;
 using Taki.Game.Interfaces;
 using Taki.Game.Players;
 
-//TODO: challenge: don't use any loops (except the main game while) in the code
-//TODO: const variables to configurations and keep consistency of readonlies/consts 
-//TODO: get objects from dependency injection
-
 namespace Taki.Game.Managers
 {
     internal class TakiGameRunner
     {
-        private const int NUMBER_OF_TOTAL_WINNERS = 2;
-
         protected GameHandlers _gameHandlers;
         protected IMessageHandler _messageHandler;
         protected readonly PlayersHandler _playersHandler;
@@ -33,8 +27,8 @@ namespace Taki.Game.Managers
             var numOfPlayers = _playersHandler.GetAllPlayers().Count;
 
             var winners = Enumerable.Range(0, 
-                NUMBER_OF_TOTAL_WINNERS > numOfPlayers ? 
-                numOfPlayers : NUMBER_OF_TOTAL_WINNERS)
+                Constants.NUMBER_OF_TOTAL_WINNERS > numOfPlayers ? 
+                numOfPlayers : Constants.NUMBER_OF_TOTAL_WINNERS)
                 .Select(i =>
                 {
                     Player winner = GetWinner();
@@ -59,8 +53,6 @@ namespace Taki.Game.Managers
             _cardsHandler.ResetCards();
             _playersHandler.DealCards(_cardsHandler);
         }
-
-        
 
         private Player GetWinner()
         {
