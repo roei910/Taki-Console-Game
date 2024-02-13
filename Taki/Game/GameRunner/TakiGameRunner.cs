@@ -1,19 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Taki.Game.Cards;
 using Taki.Game.GameRules;
 using Taki.Game.Handlers;
 using Taki.Game.Interfaces;
 using Taki.Game.Players;
 
 //TODO: challenge: don't use any loops (except the main game while) in the code
-//TODO: rebalance factory and manager
 //TODO: const variables to configurations and keep consistency of readonlies/consts 
 //TODO: get objects from dependency injection
-//TODO: remove pyramidGameManager, just get the right rule as a parameter from the factory/runner/DI/program
-//TODO: folders hierarchy
-//TODO: No comments
-//TODO: Don't leave unreachable code
-
 
 namespace Taki.Game.Managers
 {
