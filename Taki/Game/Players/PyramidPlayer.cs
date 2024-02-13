@@ -2,25 +2,30 @@
 
 namespace Taki.Game.Players
 {
-    internal class PyramidPlayer(Player player) : Player(player)
+    internal class PyramidPlayer : Player
     {
-        private int currentNumberOfCards = player.PlayerCards.Count;
+        private int _currentNumberOfCards;
+
+        public PyramidPlayer(Player player, int numberOfPlayerCards) : base(player)
+        {
+            _currentNumberOfCards = numberOfPlayerCards;
+        }
 
         public int CurrentNumberOfCards()
         {
-            return currentNumberOfCards;
+            return _currentNumberOfCards;
         }
 
         public int GetNextPlayerHand()
         {
             //TODO: normal message
-            Debug.WriteLine($"Player[{Id}]: finished hand {currentNumberOfCards}");
-            return --currentNumberOfCards;
+            Debug.WriteLine($"Player[{Id}]: finished hand {_currentNumberOfCards}");
+            return --_currentNumberOfCards;
         }
 
         public override string ToString()
         {
-            return $"Pyramid player: current hand is {currentNumberOfCards}\n" + base.ToString();
+            return $"Pyramid player: current hand is {_currentNumberOfCards}\n" + base.ToString();
         }
     }
 }

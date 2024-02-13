@@ -33,7 +33,7 @@ namespace Taki.Game.Players
         {
             Color color = choosingAlgorithm.ChooseColor(gameHandlers);
             gameHandlers.GetMessageHandler()
-                .SendMessageToUser($"Player chose the color: {color}");
+                .SendErrorMessage($"Player chose the color: {color}\n");
             return color;
         }
 
@@ -49,7 +49,7 @@ namespace Taki.Game.Players
 
         public override string ToString()
         {
-            string cardsInHand = string.Join("\n", PlayerCards.Select((x, i) => $"{i}.{x}"));
+            string cardsInHand = string.Join("\n", PlayerCards.Select((x, i) => $"{i}.{x}").ToList());
             string str = $"Player[{Id}] {Name}, {PlayerCards.Count} Cards:\n{cardsInHand}";
             return str;
         }
