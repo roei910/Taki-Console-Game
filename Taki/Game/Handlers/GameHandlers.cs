@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Taki.Game.GameRules;
-using Taki.Game.General;
 using Taki.Game.Interfaces;
 
 namespace Taki.Game.Handlers
@@ -34,11 +33,6 @@ namespace Taki.Game.Handlers
         public IMessageHandler GetMessageHandler()
         {
             return _serviceProvider.GetRequiredService<IMessageHandler>();
-        }
-
-        public Utilities GetUtilities()
-        {
-            return _serviceProvider.GetRequiredService<Utilities>();
         }
 
         public IServiceProvider GetServiceProvider()
