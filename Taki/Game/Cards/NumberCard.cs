@@ -11,11 +11,11 @@ namespace Taki.Game.Cards
             _number = number;
         }
 
-        public override bool IsSimilarTo(Card other)
+        public override bool IsStackableWith(Card other)
         {
             if(other is not NumberCard card)
-                return base.IsSimilarTo(other);
-            return base.IsSimilarTo(other) || _number.Equals(card._number);
+                return base.IsStackableWith(other);
+            return base.IsStackableWith(other) || _number.Equals(card._number);
         }
 
         public override string ToString()

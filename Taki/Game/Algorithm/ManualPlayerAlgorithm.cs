@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using Taki.Game.Cards;
 using Taki.Game.Handlers;
-using Taki.Game.Interfaces;
+using Taki.Game.Messages;
 using Taki.Game.Players;
 
 namespace Taki.Game.Algorithm
@@ -13,41 +13,41 @@ namespace Taki.Game.Algorithm
             return "Manual Player Algo";
         }
 
-        private static bool IsValidIndex(int index, int maxCards)
+        private bool IsValidIndex(int index, int maxCards)
         {
             return index >= -1 && index < maxCards;
         }
 
-        public Color ChooseColor(GameHandlers gameHandlers)
+        public Color ChooseColor(IPlayersHandler playersHandler, IUserCommunicator userCommunicator)
         {
-            return gameHandlers.GetMessageHandler().GetColorFromUserEnum<CardColorsEnum>();
+            return userCommunicator.GetColorFromUserEnum<CardColorsEnum>();
         }
 
         public Card? ChooseCard(Func<Card, bool> isSimilarTo, 
-            Player player, 
-            GameHandlers gameHandlers)
+            Player player,
+            IPlayersHandler playersHandler,
+            ICardsHandler cardsHandler, IUserCommunicator userCommunicator)
         {
-            IMessageHandler messageHandler = gameHandlers.GetMessageHandler();
-            Card topDiscard = gameHandlers.GetCardsHandler().GetTopDiscard();
-            Player currentPlayer = gameHandlers.GetPlayersHandler().CurrentPlayer;
+            Card topDiscard = cardsHandler.GetTopDiscard();
+            Player currentPlayer = playersHandler.GetCurrentPlayer();
 
-            messageHandler.SendAlertMessage($"The top deck card is {topDiscard}");
+            userCommunicator.SendAlertMessage($"The top deck card is {topDiscard}");
             currentPlayer.PlayerCards = OrderPlayerCardByColor(currentPlayer);
-            messageHandler.SendMessageToUser(currentPlayer.ToString());
-            messageHandler.SendAlertMessage($"Please choose on of your cards by index, " +
+            userCommunicator.SendMessageToUser(currentPlayer.ToString());
+            userCommunicator.SendAlertMessage($"Please choose on of your cards by index, " +
                 $"-1 to draw a card");
 
-            return ChooseValidCard(messageHandler, currentPlayer, isSimilarTo);
+            return ChooseValidCard(userCommunicator, currentPlayer, isSimilarTo);
         }
 
-        private static Card? ChooseValidCard(IMessageHandler messageHandler, 
+        private Card? ChooseValidCard(IUserCommunicator userCommunicator, 
             Player currentPlayer, Func<Card, bool> isSimilarTo)
         {
-            if (!int.TryParse(messageHandler.GetMessageFromUser(), out int index)
+            if (!int.TryParse(userCommunicator.GetMessageFromUser(), out int index)
                 || !IsValidIndex(index, currentPlayer.PlayerCards.Count))
             {
-                messageHandler.SendMessageToUser("please choose again the index of the card");
-                return ChooseValidCard(messageHandler, currentPlayer, isSimilarTo);
+                userCommunicator.SendMessageToUser("please choose again the index of the card");
+                return ChooseValidCard(userCommunicator, currentPlayer, isSimilarTo);
             }
 
             if (index == -1)
@@ -56,23 +56,21 @@ namespace Taki.Game.Algorithm
             Card playerCard = currentPlayer.PlayerCards.ElementAt(index);
             if (!isSimilarTo(playerCard))
             {
-                messageHandler.SendMessageToUser("card does not meet the stacking rules");
-                return ChooseValidCard(messageHandler, currentPlayer, isSimilarTo);
+                userCommunicator.SendMessageToUser("card does not meet the stacking rules");
+                return ChooseValidCard(userCommunicator, currentPlayer, isSimilarTo);
             }
 
             return playerCard;
         }
 
-        private static List<Card> OrderPlayerCardByColor(Player currentPlayer)
+        private List<Card> OrderPlayerCardByColor(Player currentPlayer)
         {
-            return currentPlayer.PlayerCards
-                .GroupBy(card =>
-                {
-                    if (card is ColorCard colorCard)
-                        return colorCard.GetColor();
-                    return Color.Empty;
-                })
-                .ToList().SelectMany(x => x).ToList();
+            return currentPlayer.PlayerCards.OrderBy(card =>
+            {
+                if (card is ColorCard colorCard)
+                    return colorCard.GetColor().ToString();
+                return Color.Empty.ToString();
+            }).ToList();
         }
     }
 }

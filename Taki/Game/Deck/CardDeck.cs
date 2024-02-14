@@ -1,19 +1,23 @@
-﻿using Taki.Game.Cards;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Taki.Game.Cards;
 
 namespace Taki.Game.Deck
 {
-    internal class CardDeck
+    internal class CardDeck : ICardDeck
     {
+        private readonly IServiceProvider _serviceProvider;
         private LinkedList<Card> _cards;
 
-        public CardDeck(List<Card> cards)
+        public CardDeck(List<Card> cards, IServiceProvider serviceProvider)
         {
+            _serviceProvider = serviceProvider;
             _cards = new(cards);
         }
 
-        public CardDeck() : this(new List<Card>()) { }
-
-        public CardDeck(CardDeck other) : this(other._cards.ToList()){ }
+        public CardDeck(IServiceProvider serviceProvider) : this(new List<Card>(), serviceProvider) { }
+        
+        //TODO check if needed
+        public CardDeck(CardDeck other) : this(other._cards.ToList(), other._serviceProvider){ }
 
 
         public Card GetFirst()
@@ -38,14 +42,17 @@ namespace Taki.Game.Deck
 
         public void ShuffleDeck()
         {
-            Random random = new();
-            var cards = _cards.ToList();
-            _cards = new(cards.Select(_ =>
-            {
-                Card card = _cards.ElementAt(random.Next(_cards.Count));
-                _cards.Remove(card);
-                return card;
-            }).ToList());
+            var random = _serviceProvider.GetRequiredService<Random>();
+
+            //TODO: refactor
+            //var cards = _cards.ToList();
+            //_cards = new(cards.Select(_ =>
+            //{
+            //    Card card = _cards.ElementAt(random.Next(_cards.Count));
+            //    _cards.Remove(card);
+            //    return card;
+            //}).ToList());
+            _cards = new(_cards.OrderBy(val => Guid.NewGuid().ToString()).ToList());
         }
 
         public void CombineDeckToThis(CardDeck cardDeck)

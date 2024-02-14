@@ -1,54 +1,56 @@
-﻿using Taki.Game.GameRules;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Taki.Game.GameRules;
+using Taki.Game.GameRunner;
 using Taki.Game.Handlers;
-using Taki.Game.Interfaces;
+using Taki.Game.Messages;
 using Taki.Game.Players;
 
 namespace Taki.Game.Managers
 {
-    internal class TakiGameRunner
+    internal class TakiGameRunner : ITakiGameRunner
     {
-        protected GameHandlers _gameHandlers;
-        protected IMessageHandler _messageHandler;
+        protected IUserCommunicator _userCommunicator;
         protected readonly PlayersHandler _playersHandler;
         protected readonly CardsHandler _cardsHandler;
+        protected readonly ProgramVariables _programVariables;
 
-        public TakiGameRunner(GameHandlers handlers)
+        public TakiGameRunner(PlayersHandler playersHandler, CardsHandler cardsHandler, IServiceProvider serviceProvider)
         {
-            _gameHandlers = handlers;
-            _playersHandler = handlers.GetPlayersHandler();
-            _cardsHandler = handlers.GetCardsHandler();
-            _messageHandler = handlers.GetMessageHandler();
+            _playersHandler = playersHandler;
+            _cardsHandler = cardsHandler;
+            _userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
+            _programVariables = serviceProvider.GetRequiredService<ProgramVariables>();
         }
 
         public void StartGame()
         {
             ResetGame();
 
-            int numOfPlayers = _playersHandler.GetAllPlayers().Count;
-            int totalWinners = Constants.NUMBER_OF_TOTAL_WINNERS;
+            int numOfPlayers = _playersHandler._players.Count;
+            int totalWinners = _programVariables.NUMBER_OF_TOTAL_WINNERS;
 
             var winners = Enumerable.Range(0,
                 totalWinners > numOfPlayers ? numOfPlayers : totalWinners)
                 .Select(i =>
                 {
                     Player winner = GetWinner();
-                    _messageHandler.SendMessageToUser($"Winner #{i + 1} is {winner.Name}");
-                    _messageHandler.SendMessageToUser("Press any key to continue");
-                    _messageHandler.GetMessageFromUser();
+                    _userCommunicator.GetCharFromUser($"Winner #{i + 1} is {winner.Name}\n" +
+                        $"Press any key to continue");
                     return winner;
                 }).ToList();
 
-            _messageHandler.SendMessageToUser("The winners by order:");
+            _userCommunicator.SendMessageToUser("The winners by order:");
 
             winners.Select(winner =>
             {
-                _messageHandler.SendMessageToUser($"{winners.IndexOf(winner)}. {winner.Name}");
+                _userCommunicator.SendMessageToUser($"{winners.IndexOf(winner)}. {winner.Name}");
                 return winner;
             }).ToList();
         }
 
-        private void ResetGame()
+        public void ResetGame()
         {
+            //TODO: no need for cardsHandler
             var cards = _playersHandler.GetAllCardsFromPlayers(_cardsHandler);
             _cardsHandler.ResetCards(cards);
             _playersHandler.DealCards(_cardsHandler);
@@ -57,7 +59,7 @@ namespace Taki.Game.Managers
         private Player GetWinner()
         {
             while (_playersHandler.CanCurrentPlayerPlay())
-                _playersHandler.CurrentPlayerPlay(_gameHandlers);
+                _playersHandler.CurrentPlayerPlay(_cardsHandler, _userCommunicator);
 
             return _playersHandler.RemoveWinner();
         }

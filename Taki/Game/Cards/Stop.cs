@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using Taki.Game.Handlers;
+using Taki.Game.Messages;
 using Taki.Game.Players;
 
 namespace Taki.Game.Cards
@@ -8,22 +9,23 @@ namespace Taki.Game.Cards
     {
         public Stop(Color color) : base(color) { }
 
-        public override bool IsSimilarTo(Card other)
+        public override bool IsStackableWith(Card other)
         {
-            return base.IsSimilarTo(other) || other is Stop;
+            return base.IsStackableWith(other) || other is Stop;
         }
 
-        public override void Play(GameHandlers gameHandlers)
+        public override void Play(IPlayersHandler playersHandler, 
+            ICardsHandler cardsHandler, IUserCommunicator userCommunicator)
         {
-            Player currentPlayer = gameHandlers.GetPlayersHandler().CurrentPlayer;
-            gameHandlers.GetPlayersHandler().NextPlayer();
+            Player currentPlayer = playersHandler.GetCurrentPlayer();
+            playersHandler.NextPlayer();
 
-            Player nextPlayer = gameHandlers.GetPlayersHandler().CurrentPlayer;
-            gameHandlers.GetMessageHandler().SendErrorMessage(
+            Player nextPlayer = playersHandler.GetCurrentPlayer();
+            userCommunicator.SendErrorMessage(
                 $"{nextPlayer.GetName()} was stopped by " +
                 $"{currentPlayer.GetName()}\n");
 
-            base.Play(gameHandlers);
+            base.Play(playersHandler, cardsHandler, userCommunicator);
         }
 
         public override string ToString()

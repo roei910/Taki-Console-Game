@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using Taki.Game.Handlers;
+using Taki.Game.Messages;
 
 namespace Taki.Game.Cards
 {
@@ -7,15 +8,15 @@ namespace Taki.Game.Cards
     {
         public ChangeDirection(Color color) : base(color) { }
 
-        public override bool IsSimilarTo(Card other)
+        public override bool IsStackableWith(Card other)
         {
-            return base.IsSimilarTo(other) || other is ChangeDirection;
+            return base.IsStackableWith(other) || other is ChangeDirection;
         }
 
-        public override void Play(GameHandlers gameHandlers)
+        public override void Play(IPlayersHandler playersHandler, ICardsHandler cardsHandler, IUserCommunicator userCommunicator)
         {
-            gameHandlers.GetPlayersHandler().ChangeDirection();
-            base.Play(gameHandlers);
+            playersHandler.ChangeDirection();
+            base.Play(playersHandler, cardsHandler, userCommunicator);
         }
 
         public override string ToString()

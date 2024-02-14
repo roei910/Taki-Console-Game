@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Taki.Game.Handlers;
+using Taki.Game.Messages;
 
 namespace Taki.Game.Players
 {
@@ -17,9 +18,10 @@ namespace Taki.Game.Players
             return _currentNumberOfCards;
         }
 
-        public int GetNextPlayerHand(GameHandlers gameHandlers)
+        public int GetNextPlayerHand(IUserCommunicator userCommunicator)
         {
-            gameHandlers.GetMessageHandler().SendErrorMessage($"Player[{Id}]: finished hand {_currentNumberOfCards}");
+            //TODO: dont make me scared
+            userCommunicator.SendErrorMessage($"Player[{Id}]: finished hand {_currentNumberOfCards}");
             return --_currentNumberOfCards;
         }
 

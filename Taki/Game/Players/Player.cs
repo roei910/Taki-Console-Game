@@ -1,11 +1,12 @@
 ﻿using System.Drawing;
+using Taki.Game.Algorithm;
 using Taki.Game.Cards;
 using Taki.Game.Handlers;
-using Taki.Game.Interfaces;
+using Taki.Game.Messages;
 
 namespace Taki.Game.Players
 {
-    internal class Player : IEquatable<Player>
+    internal class Player : IPlayer, IEquatable<Player>
     {
         private static int id = 0;
         private readonly IPlayerAlgorithm choosingAlgorithm;
@@ -29,11 +30,11 @@ namespace Taki.Game.Players
             Name = other.Name;
         }
 
-        public Color ChooseColor(GameHandlers gameHandlers)
+        public Color ChooseColor(IPlayersHandler playersHandler, IUserCommunicator userCommunicator)
         {
-            Color color = choosingAlgorithm.ChooseColor(gameHandlers);
-            gameHandlers.GetMessageHandler()
-                .SendErrorMessage($"Player chose the color: {color}\n");
+            Color color = choosingAlgorithm.ChooseColor(playersHandler, userCommunicator);
+            userCommunicator.SendErrorMessage($"Player chose the color: {color}\n");
+
             return color;
         }
 
@@ -61,9 +62,10 @@ namespace Taki.Game.Players
             return Id == other.Id;
         }
 
-        public Card? PickCard(Func<Card, bool> isSimilarTo, GameHandlers gameHandlers)
+        public Card? PickCard(Func<Card, bool> isSimilarTo, IPlayersHandler playersHandler, ICardsHandler cardsHandler, IUserCommunicator userCommunicator)
         {
-            return choosingAlgorithm.ChooseCard(isSimilarTo, this, gameHandlers);
+            //TODO: not good
+            return choosingAlgorithm.ChooseCard(isSimilarTo, this, playersHandler, cardsHandler, userCommunicator);
         }
 
         public string GetInformation()

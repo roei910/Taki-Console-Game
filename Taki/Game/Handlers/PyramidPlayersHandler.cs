@@ -1,5 +1,6 @@
 ﻿using Taki.Game.Cards;
 using Taki.Game.GameRules;
+using Taki.Game.Messages;
 using Taki.Game.Players;
 
 namespace Taki.Game.Handlers
@@ -9,17 +10,17 @@ namespace Taki.Game.Handlers
         public PyramidPlayersHandler(List<Player> players, int numberOfPlayerCards) : 
             base(players, numberOfPlayerCards) { }
 
-        public override void CurrentPlayerPlay(GameHandlers gameHandlers)
+        public override void CurrentPlayerPlay(ICardsHandler cardsHandler, IUserCommunicator userCommunicator)
         {
-            base.CurrentPlayerPlay(gameHandlers);
+            base.CurrentPlayerPlay(cardsHandler, userCommunicator);
 
             if (CurrentPlayer.IsHandEmpty())
             {
                 PyramidPlayer player = (PyramidPlayer)CurrentPlayer;
                 if(player.CurrentNumberOfCards() != 0)
                 {
-                    DrawCards(player.GetNextPlayerHand(gameHandlers), gameHandlers);
-                    gameHandlers.GetMessageHandler().SendErrorMessage(
+                    DrawCards(player.GetNextPlayerHand(userCommunicator), cardsHandler, userCommunicator);
+                    userCommunicator.SendErrorMessage(
                         $"Player[{player.Id}] finished his current hand," +
                         $" currently on {player.CurrentNumberOfCards()} card(s)");
                 }

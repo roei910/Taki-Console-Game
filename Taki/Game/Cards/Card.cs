@@ -1,5 +1,5 @@
 ﻿using Taki.Game.Handlers;
-using Taki.Game.Interfaces;
+using Taki.Game.Messages;
 
 namespace Taki.Game.Cards
 {
@@ -19,11 +19,11 @@ namespace Taki.Game.Cards
             return 1;
         }
 
-        public abstract bool IsSimilarTo(Card other);
+        public abstract bool IsStackableWith(Card other);
 
-        public virtual void Play(GameHandlers gameHandlers) 
+        public virtual void Play(IPlayersHandler playersHandler, ICardsHandler cardsHandler, IUserCommunicator userCommunicator) 
         {
-            gameHandlers.GetPlayersHandler().NextPlayer();
+            playersHandler.NextPlayer();
         }
 
         public virtual void FinishNoPlay() { }

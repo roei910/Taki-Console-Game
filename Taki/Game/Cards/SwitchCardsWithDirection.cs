@@ -1,4 +1,5 @@
 ﻿using Taki.Game.Handlers;
+using Taki.Game.Messages;
 using Taki.Game.Players;
 
 namespace Taki.Game.Cards
@@ -9,32 +10,34 @@ namespace Taki.Game.Cards
 
         public SwitchCardsWithDirection() { }
 
-        public override bool IsSimilarTo(Card other)
+        public override bool IsStackableWith(Card other)
         {
             if(prevCard == null)
                 return true;
-            return prevCard.IsSimilarTo(other);
+            return prevCard.IsStackableWith(other);
         }
 
-        public override void Play(GameHandlers gameHandlers)
+        public override void Play(IPlayersHandler playersHandler, ICardsHandler cardsHandler, IUserCommunicator userCommunicator)
         {
-            Card topDiscard = gameHandlers.GetCardsHandler().GetTopDiscard();
+            Card topDiscard = cardsHandler.GetTopDiscard();
             prevCard = (topDiscard is SwitchCardsWithDirection card) ? card.prevCard : topDiscard;
 
-            Player currentPlayer = gameHandlers.GetPlayersHandler().CurrentPlayer;
+            Player currentPlayer = playersHandler.GetCurrentPlayer();
             List<Card> savedCards = currentPlayer.PlayerCards;
             currentPlayer.PlayerCards = [];
 
-            gameHandlers.GetPlayersHandler().NextPlayer();
+            playersHandler.NextPlayer();
 
-            while (gameHandlers.GetPlayersHandler().CurrentPlayer.Id != currentPlayer.Id)
+            //TODO: work on players
+            while (playersHandler.GetCurrentPlayer().Id != currentPlayer.Id)
             {
-                (savedCards, gameHandlers.GetPlayersHandler().CurrentPlayer.PlayerCards) = (gameHandlers.GetPlayersHandler().CurrentPlayer.PlayerCards, savedCards);
-                gameHandlers.GetPlayersHandler().NextPlayer();
+                //TODO: recheck
+                (savedCards, playersHandler.GetCurrentPlayer().PlayerCards) = (playersHandler.GetCurrentPlayer().PlayerCards, savedCards);
+                playersHandler.NextPlayer();
             }
 
             currentPlayer.PlayerCards = savedCards;
-            base.Play(gameHandlers);
+            base.Play(playersHandler, cardsHandler, userCommunicator);
         }
 
         public override void FinishPlay()

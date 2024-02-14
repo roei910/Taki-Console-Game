@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using Taki.Game.Handlers;
+using Taki.Game.Messages;
 
 namespace Taki.Game.Cards
 {
@@ -10,11 +11,11 @@ namespace Taki.Game.Cards
 
         public Plus2(Color color) : base(color) { }
 
-        public override bool IsSimilarTo(Card other)
+        public override bool IsStackableWith(Card other)
         {
             if(IsOnlyPlus2Allowed)
                 return other is Plus2;
-            return base.IsSimilarTo(other) || other is Plus2;
+            return base.IsStackableWith(other) || other is Plus2;
         }
 
         public override int CardsToDraw()
@@ -24,9 +25,9 @@ namespace Taki.Game.Cards
             return countPlus2 * 2;
         }
 
-        public override void Play(GameHandlers gameHandlers)
+        public override void Play(IPlayersHandler playersHandler, ICardsHandler cardsHandler, IUserCommunicator userCommunicator)
         {
-            Card topDiscard = gameHandlers.GetCardsHandler().GetTopDiscard();
+            Card topDiscard = cardsHandler.GetTopDiscard();
 
             if (topDiscard is Plus2 card)
             {
@@ -37,7 +38,7 @@ namespace Taki.Game.Cards
             IsOnlyPlus2Allowed = true;
             countPlus2++;
 
-            base.Play(gameHandlers);
+            base.Play(playersHandler, cardsHandler, userCommunicator);
         }
 
         public override string ToString()
