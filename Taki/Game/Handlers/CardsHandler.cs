@@ -6,6 +6,7 @@ using Taki.Game.Handlers;
 
 namespace Taki.Game.GameRules
 {
+    //TODO: naming => maybe card decks holder???
     internal class CardsHandler : ICardsHandler
     {
         private readonly CardDeck _drawPile;

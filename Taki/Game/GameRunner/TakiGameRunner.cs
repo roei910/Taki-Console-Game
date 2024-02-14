@@ -6,6 +6,7 @@ using Taki.Game.Players;
 
 namespace Taki.Game.Managers
 {
+    //TODO: try remove players handler, move all here
     internal class TakiGameRunner : ITakiGameRunner
     {
         protected readonly IUserCommunicator _userCommunicator;

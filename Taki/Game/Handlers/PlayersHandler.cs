@@ -6,6 +6,7 @@ using Taki.Game.Players;
 
 namespace Taki.Game.GameRules
 {
+    //TODO: naming => players holder? or change to move maker or something similar to only make player moves
     internal class PlayersHandler : IPlayersHandler
     {
         private readonly Queue<Player> _winners;
