@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Taki.Game.Cards;
+using Taki.Game.Deck;
 using Taki.Game.Handlers;
 using Taki.Game.Messages;
 using Taki.Game.Players;
@@ -27,7 +28,7 @@ namespace Taki.Game.GameRules
             _numberOfPlayerCards = numberOfPlayerCards;
         }
 
-        public bool DrawCards(int numberOfCards, ICardsHandler cardsHandler, IUserCommunicator userCommunicator)
+        public bool DrawCards(int numberOfCards, ICardDecksHolder cardsHandler, IUserCommunicator userCommunicator)
         {
             int cardsDraw = Enumerable.Range(0, numberOfCards).ToList()
                 .Count(index =>
@@ -95,7 +96,7 @@ namespace Taki.Game.GameRules
         public virtual void CurrentPlayerPlay(IServiceProvider serviceProvider)
         {
             IUserCommunicator userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
-            ICardsHandler cardsHandler = serviceProvider.GetRequiredService<ICardsHandler>();
+            ICardDecksHolder cardsHandler = serviceProvider.GetRequiredService<ICardDecksHolder>();
 
             userCommunicator.SendAlertMessage($"Player[{CurrentPlayer.Id}]" +
                 $" ({CurrentPlayer.Name}) is playing, " +
@@ -153,7 +154,7 @@ namespace Taki.Game.GameRules
             return cards;
         }
 
-        public void DealCards(ICardsHandler cardsHandler)
+        public void DealCards(ICardDecksHolder cardsHandler)
         {
             Enumerable.Range(0, _numberOfPlayerCards).ToList()
                 .Select(i =>

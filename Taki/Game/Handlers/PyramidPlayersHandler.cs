@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Taki.Game.Cards;
+using Taki.Game.Deck;
 using Taki.Game.GameRules;
 using Taki.Game.Messages;
 using Taki.Game.Players;
@@ -15,7 +16,7 @@ namespace Taki.Game.Handlers
         {
             base.CurrentPlayerPlay(serviceProvider);
             IUserCommunicator userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
-            ICardsHandler cardsHandler = serviceProvider.GetRequiredService<ICardsHandler>();
+            ICardDecksHolder cardsHandler = serviceProvider.GetRequiredService<ICardDecksHolder>();
 
             if (CurrentPlayer.IsHandEmpty())
             {

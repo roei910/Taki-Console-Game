@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Taki.Game.Deck;
 using Taki.Game.GameRules;
-using Taki.Game.Handlers;
 using Taki.Game.Managers;
 using Taki.Game.Messages;
 
@@ -27,7 +27,7 @@ namespace Taki.Game.Factories
 
         internal TakiGameRunner ChooseTypeOfGame()
         {
-            ICardsHandler cardsHandler = _serviceProvider.GetRequiredService<ICardsHandler>();
+            ICardDecksHolder cardsHandler = _serviceProvider.GetRequiredService<ICardDecksHolder>();
             int numberOfCards = cardsHandler.CountAllCards();
 
             GameTypeEnum typeOfGame = _userCommunicator

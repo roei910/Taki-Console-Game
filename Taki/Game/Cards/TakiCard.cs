@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Drawing;
+using Taki.Game.Deck;
 using Taki.Game.Handlers;
 using Taki.Game.Messages;
 using Taki.Game.Players;
@@ -20,7 +21,7 @@ namespace Taki.Game.Cards
             Player currentPlayer = playersHandler.GetCurrentPlayer();
             Card? playerCard = currentPlayer.PickCard(IsStackableWith);
             IUserCommunicator userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
-            ICardsHandler cardsHandler = serviceProvider.GetRequiredService<ICardsHandler>();
+            ICardDecksHolder cardsHandler = serviceProvider.GetRequiredService<ICardDecksHolder>();
             
             while (playerCard is not null)
             {
