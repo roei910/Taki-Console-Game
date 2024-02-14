@@ -27,7 +27,7 @@ namespace Taki.Game.Handlers
             }
         }
 
-        public override List<Card> GetAllCardsFromPlayers(CardsHandler cardsHandler)
+        public override List<Card> GetAllCardsFromPlayers(ICardsHandler cardsHandler)
         {
             var cards = base.GetAllCardsFromPlayers(cardsHandler);
 

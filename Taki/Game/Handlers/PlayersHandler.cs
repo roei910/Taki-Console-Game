@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Taki.Game.Cards;
+﻿using Taki.Game.Cards;
 using Taki.Game.Handlers;
 using Taki.Game.Messages;
 using Taki.Game.Players;
@@ -84,8 +83,7 @@ namespace Taki.Game.GameRules
             return _players.ToList();
         }
 
-        //TODO: has player won
-        public bool CanCurrentPlayerPlay()
+        public bool HasPlayerWon()
         {
             if (_players.Count == 1)
                 return false;
@@ -94,9 +92,6 @@ namespace Taki.Game.GameRules
 
         public virtual void CurrentPlayerPlay(ICardsHandler cardsHandler, IUserCommunicator userCommunicator)
         {
-            //TODO: from IOC
-            //IUserCommunicator userCommunicator = gameHandlers.GetUserCommunicator();
-
             userCommunicator.SendAlertMessage($"Player[{CurrentPlayer.Id}]" +
                 $" ({CurrentPlayer.Name}) is playing, " +
                 $"{CurrentPlayer.PlayerCards.Count} cards in hand");
@@ -115,8 +110,7 @@ namespace Taki.Game.GameRules
                 NextPlayer();
                 _noPlayCounter++;
 
-                //TODO: after a round of all the players
-                if (_noPlayCounter >= 10 && _noPlayCounter%10 == 0)
+                if (_noPlayCounter >= _players.Count && _noPlayCounter%_players.Count == 0)
                 {
                     string message = "Too many rounds without play, consider calling a tie ;)\n" +
                         "press any key to continue";
@@ -140,7 +134,7 @@ namespace Taki.Game.GameRules
             _isDirectionNormal = !_isDirectionNormal;
         }
 
-        public virtual List<Card> GetAllCardsFromPlayers(CardsHandler cardsHandler)
+        public virtual List<Card> GetAllCardsFromPlayers(ICardsHandler cardsHandler)
         {
             List<Card> cards = [];
 
@@ -155,7 +149,7 @@ namespace Taki.Game.GameRules
             return cards;
         }
 
-        public void DealCards(CardsHandler cardsHandler)
+        public void DealCards(ICardsHandler cardsHandler)
         {
             Enumerable.Range(0, _numberOfPlayerCards).ToList()
                 .Select(i =>
