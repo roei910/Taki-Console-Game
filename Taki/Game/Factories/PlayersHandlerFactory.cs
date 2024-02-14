@@ -48,7 +48,7 @@ namespace Taki.Game.Factories
 
         public PlayersHandler GeneratePlayersHandler(IServiceProvider serviceProvider, int maxCards)
         {
-            //TODO: better
+            //TODO: combine with the pyramid somehow
             var userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
             int numberOfPlayers = GetNumberOfPlayers(userCommunicator);
             int numberOfPlayerCards = GetNumberOfPlayerCards(numberOfPlayers, maxCards, userCommunicator);
