@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Drawing;
-using Taki.Game.GameRules;
 using Taki.Game.Handlers;
 using Taki.Game.Messages;
 using Taki.Game.Players;

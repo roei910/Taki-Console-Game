@@ -1,5 +1,4 @@
 ﻿using Taki.Game.Cards;
-using Taki.Game.GameRules;
 using Taki.Game.Messages;
 using Taki.Game.Players;
 
