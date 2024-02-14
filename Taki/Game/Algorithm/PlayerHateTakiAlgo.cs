@@ -10,7 +10,7 @@ namespace Taki.Game.Algorithm
         bool IsTaki = false;
 
         public override Card? ChooseCard(Func<Card, bool> isSimilarTo,
-            Player player, IPlayersHandler playersHandler, ICardsHandler cardsHandler, IUserCommunicator userCommunicator)
+            Player player, IPlayersHandler playersHandler, IServiceProvider serviceProvider)
         {
             if (IsTaki)
             {
@@ -18,7 +18,7 @@ namespace Taki.Game.Algorithm
                 return null;
             }
 
-            Card? playerCard = base.ChooseCard(isSimilarTo, player, playersHandler, cardsHandler, userCommunicator);
+            Card? playerCard = base.ChooseCard(isSimilarTo, player, playersHandler, serviceProvider);
             if (playerCard is TakiCard)
                 IsTaki = true;
 

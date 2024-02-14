@@ -10,5 +10,6 @@ namespace Taki.Game.Handlers
         void ResetCards(List<Card> playerCards);
         Card? DrawCard();
         void DrawFirstCard();
+        int CountAllCards();
     }
 }

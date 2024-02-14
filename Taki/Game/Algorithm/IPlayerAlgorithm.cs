@@ -10,7 +10,7 @@ namespace Taki.Game.Algorithm
     {
         Card? ChooseCard(Func<Card, bool> isSimilarTo,
             Player player, IPlayersHandler playersHandler, 
-            ICardsHandler cardsHandler, IUserCommunicator userCommunicator);
+            IServiceProvider serviceProvider);
         Color ChooseColor(IPlayersHandler playersHandler, IUserCommunicator userCommunicator);
     }
 }

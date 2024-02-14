@@ -13,10 +13,10 @@ namespace Taki.Game.Cards
             return base.IsStackableWith(other) || other is ChangeDirection;
         }
 
-        public override void Play(IPlayersHandler playersHandler, ICardsHandler cardsHandler, IUserCommunicator userCommunicator)
+        public override void Play(Card topDiscard, IPlayersHandler playersHandler, IServiceProvider serviceProvider)
         {
             playersHandler.ChangeDirection();
-            base.Play(playersHandler, cardsHandler, userCommunicator);
+            base.Play(topDiscard, playersHandler, serviceProvider);
         }
 
         public override string ToString()

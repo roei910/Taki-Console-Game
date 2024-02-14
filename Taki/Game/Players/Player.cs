@@ -62,10 +62,9 @@ namespace Taki.Game.Players
             return Id == other.Id;
         }
 
-        public Card? PickCard(Func<Card, bool> isSimilarTo, IPlayersHandler playersHandler, ICardsHandler cardsHandler, IUserCommunicator userCommunicator)
+        public Card? PickCard(Func<Card, bool> isSimilarTo, IPlayersHandler playersHandler, IServiceProvider serviceProvider)
         {
-            //TODO: not good
-            return choosingAlgorithm.ChooseCard(isSimilarTo, this, playersHandler, cardsHandler, userCommunicator);
+            return choosingAlgorithm.ChooseCard(isSimilarTo, this, playersHandler, serviceProvider);
         }
 
         public string GetInformation()

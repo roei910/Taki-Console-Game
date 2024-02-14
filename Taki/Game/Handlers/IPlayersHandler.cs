@@ -12,10 +12,11 @@ namespace Taki.Game.Handlers
         Player RemoveWinner();
         List<Player> GetAllPlayers();
         bool HasPlayerWon();
-        void CurrentPlayerPlay(ICardsHandler cardsHandler, IUserCommunicator userCommunicator);
+        void CurrentPlayerPlay(IServiceProvider serviceProvider);
         void ChangeDirection();
-        List<Card> GetAllCardsFromPlayers(ICardsHandler cardsHandler);
+        List<Card> GetAllCardsFromPlayers();
         void DealCards(ICardsHandler cardsHandler);
         Player GetCurrentPlayer();
+        int CountPlayers();
     }
 }

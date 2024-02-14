@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Taki.Game.GameRules;
+using Taki.Game.Handlers;
 using Taki.Game.Managers;
 using Taki.Game.Messages;
 
@@ -16,19 +17,17 @@ namespace Taki.Game.Factories
         private readonly IUserCommunicator _userCommunicator;
         private readonly IServiceProvider _serviceProvider;
         private readonly PlayersHandlerFactory _playersHandlerFactory;
-        private readonly CardsHandlerFactory _cardsHandlerFactory;
 
         public TakiGameGenerator(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
             _userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
             _playersHandlerFactory = serviceProvider.GetRequiredService<PlayersHandlerFactory>();
-            _cardsHandlerFactory = serviceProvider.GetRequiredService<CardsHandlerFactory>();
         }
 
         internal TakiGameRunner ChooseTypeOfGame()
         {
-            CardsHandler cardsHandler = _cardsHandlerFactory.GenerateCardsHandler(_serviceProvider);
+            ICardsHandler cardsHandler = _serviceProvider.GetRequiredService<ICardsHandler>();
             int numberOfCards = cardsHandler.CountAllCards();
 
             GameTypeEnum typeOfGame = _userCommunicator
@@ -40,13 +39,13 @@ namespace Taki.Game.Factories
                     PlayersHandler playerHandler = _playersHandlerFactory
                         .GeneratePlayersHandler(_serviceProvider, numberOfCards);
 
-                    return new TakiGameRunner(playerHandler, cardsHandler, _serviceProvider);
+                    return new TakiGameRunner(playerHandler, _serviceProvider);
 
                 case GameTypeEnum.Pyramid:
                     PlayersHandler pyramidPlayersHandler = _playersHandlerFactory
                         .GeneratePyramidPlayersHandler(_serviceProvider);
 
-                    return new TakiGameRunner(pyramidPlayersHandler, cardsHandler, _serviceProvider);
+                    return new TakiGameRunner(pyramidPlayersHandler, _serviceProvider);
 
                 default:
                     throw new Exception("type enum was wrong");

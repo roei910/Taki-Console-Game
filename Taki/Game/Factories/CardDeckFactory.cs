@@ -1,17 +1,14 @@
 ﻿using Taki.Game.Cards;
 using Taki.Game.Deck;
-using Taki.Game.GameRules;
 
 namespace Taki.Game.Factories
 {
     //TODO: Split into deck factory to handler factory (if the handler factory is necessary at all)
-    internal class CardsHandlerFactory
+    internal class CardDeckFactory
     {
-        public CardsHandler GenerateCardsHandler(IServiceProvider serviceProvider)
+        public CardDeck GenerateCardDeck(IServiceProvider serviceProvider)
         {
-            CardDeck drawPile = new(GetCardsList(), serviceProvider);
-            CardDeck discardPile = new(serviceProvider);
-            return new CardsHandler(drawPile, discardPile);
+            return new(GetCardsList(), serviceProvider);
         }
 
         public int MaxNumberOfCards()

@@ -1,5 +1,7 @@
-﻿using Taki.Game.Cards;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Taki.Game.Cards;
 using Taki.Game.Deck;
+using Taki.Game.Factories;
 using Taki.Game.Handlers;
 
 namespace Taki.Game.GameRules
@@ -9,10 +11,11 @@ namespace Taki.Game.GameRules
         private readonly CardDeck _drawPile;
         private readonly CardDeck _discardPile;
 
-        public CardsHandler(CardDeck drawPile, CardDeck discardPile) 
+        public CardsHandler(IServiceProvider serviceProvider)
         {
-            _drawPile = drawPile;
-            _discardPile = discardPile;
+            CardDeckFactory factory = serviceProvider.GetRequiredService<CardDeckFactory>();
+            _drawPile = factory.GenerateCardDeck(serviceProvider);
+            _discardPile = new(serviceProvider);
         }
 
         public Card GetTopDiscard()
@@ -65,7 +68,7 @@ namespace Taki.Game.GameRules
                 _discardPile.AddFirst(drawCard);
         }
 
-        internal int CountAllCards()
+        public int CountAllCards()
         {
             return _drawPile.Count() + _discardPile.Count();
         }

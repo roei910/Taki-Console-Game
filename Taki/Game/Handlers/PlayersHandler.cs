@@ -1,4 +1,5 @@
-﻿using Taki.Game.Cards;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Taki.Game.Cards;
 using Taki.Game.Handlers;
 using Taki.Game.Messages;
 using Taki.Game.Players;
@@ -90,8 +91,11 @@ namespace Taki.Game.GameRules
             return !CurrentPlayer.IsHandEmpty();
         }
 
-        public virtual void CurrentPlayerPlay(ICardsHandler cardsHandler, IUserCommunicator userCommunicator)
+        public virtual void CurrentPlayerPlay(IServiceProvider serviceProvider)
         {
+            IUserCommunicator userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
+            ICardsHandler cardsHandler = serviceProvider.GetRequiredService<ICardsHandler>();
+
             userCommunicator.SendAlertMessage($"Player[{CurrentPlayer.Id}]" +
                 $" ({CurrentPlayer.Name}) is playing, " +
                 $"{CurrentPlayer.PlayerCards.Count} cards in hand");
@@ -100,8 +104,8 @@ namespace Taki.Game.GameRules
             userCommunicator.SendAlertMessage($"Top discard: {topDiscard}");
 
             Card? playerCard = CurrentPlayer.PickCard(topDiscard.IsStackableWith, 
-                this, cardsHandler, userCommunicator);
-            userCommunicator.SendAlertMessage($"Player picked: {playerCard?.ToString() ?? "no card"}");
+                this, serviceProvider);
+            userCommunicator.SendAlertMessage($"Player picked: {playerCard?.ToString() ?? "no card"}\n");
 
             if (playerCard == null)
             {
@@ -126,7 +130,7 @@ namespace Taki.Game.GameRules
             cardsHandler.AddDiscardCard(playerCard);
 
             topDiscard.FinishPlay();
-            playerCard.Play(this, cardsHandler, userCommunicator);
+            playerCard.Play(topDiscard, this, serviceProvider);
         }
 
         public void ChangeDirection()
@@ -134,7 +138,7 @@ namespace Taki.Game.GameRules
             _isDirectionNormal = !_isDirectionNormal;
         }
 
-        public virtual List<Card> GetAllCardsFromPlayers(ICardsHandler cardsHandler)
+        public virtual List<Card> GetAllCardsFromPlayers()
         {
             List<Card> cards = [];
 
@@ -172,6 +176,11 @@ namespace Taki.Game.GameRules
         public Player GetCurrentPlayer()
         {
             return CurrentPlayer;
+        }
+
+        public int CountPlayers()
+        {
+            return _players.Count;
         }
     }
 }

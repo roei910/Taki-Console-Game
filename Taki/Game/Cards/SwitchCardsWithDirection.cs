@@ -1,4 +1,5 @@
-﻿using Taki.Game.Handlers;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Taki.Game.Handlers;
 using Taki.Game.Messages;
 using Taki.Game.Players;
 
@@ -17,8 +18,9 @@ namespace Taki.Game.Cards
             return prevCard.IsStackableWith(other);
         }
 
-        public override void Play(IPlayersHandler playersHandler, ICardsHandler cardsHandler, IUserCommunicator userCommunicator)
+        public override void Play(Card topDisacrd, IPlayersHandler playersHandler, IServiceProvider serviceProvider)
         {
+            ICardsHandler cardsHandler = serviceProvider.GetRequiredService<ICardsHandler>();
             Card topDiscard = cardsHandler.GetTopDiscard();
             prevCard = (topDiscard is SwitchCardsWithDirection card) ? card.prevCard : topDiscard;
 
@@ -37,7 +39,7 @@ namespace Taki.Game.Cards
             }
 
             currentPlayer.PlayerCards = savedCards;
-            base.Play(playersHandler, cardsHandler, userCommunicator);
+            base.Play(topDiscard, playersHandler, serviceProvider);
         }
 
         public override void FinishPlay()

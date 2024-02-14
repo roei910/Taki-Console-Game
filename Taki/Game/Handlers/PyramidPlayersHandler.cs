@@ -1,4 +1,5 @@
-﻿using Taki.Game.Cards;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Taki.Game.Cards;
 using Taki.Game.GameRules;
 using Taki.Game.Messages;
 using Taki.Game.Players;
@@ -10,9 +11,11 @@ namespace Taki.Game.Handlers
         public PyramidPlayersHandler(List<Player> players, int numberOfPlayerCards) : 
             base(players, numberOfPlayerCards) { }
 
-        public override void CurrentPlayerPlay(ICardsHandler cardsHandler, IUserCommunicator userCommunicator)
+        public override void CurrentPlayerPlay(IServiceProvider serviceProvider)
         {
-            base.CurrentPlayerPlay(cardsHandler, userCommunicator);
+            base.CurrentPlayerPlay(serviceProvider);
+            IUserCommunicator userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
+            ICardsHandler cardsHandler = serviceProvider.GetRequiredService<ICardsHandler>();
 
             if (CurrentPlayer.IsHandEmpty())
             {
@@ -27,9 +30,9 @@ namespace Taki.Game.Handlers
             }
         }
 
-        public override List<Card> GetAllCardsFromPlayers(ICardsHandler cardsHandler)
+        public override List<Card> GetAllCardsFromPlayers()
         {
-            var cards = base.GetAllCardsFromPlayers(cardsHandler);
+            var cards = base.GetAllCardsFromPlayers();
 
             _players.Select(player =>
             {

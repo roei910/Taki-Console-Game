@@ -57,7 +57,8 @@ namespace Taki.Game.Communicators
 
         public string? GetMessageFromUser(object? message)
         {
-            SendMessageToUser(message);
+            if(message != null)
+                SendMessageToUser(message);
             return Console.ReadLine();
         }
 

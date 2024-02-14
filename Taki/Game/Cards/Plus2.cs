@@ -25,10 +25,8 @@ namespace Taki.Game.Cards
             return countPlus2 * 2;
         }
 
-        public override void Play(IPlayersHandler playersHandler, ICardsHandler cardsHandler, IUserCommunicator userCommunicator)
+        public override void Play(Card topDiscard, IPlayersHandler playersHandler, IServiceProvider serviceProvider)
         {
-            Card topDiscard = cardsHandler.GetTopDiscard();
-
             if (topDiscard is Plus2 card)
             {
                 countPlus2 = card.countPlus2;
@@ -38,7 +36,7 @@ namespace Taki.Game.Cards
             IsOnlyPlus2Allowed = true;
             countPlus2++;
 
-            base.Play(playersHandler, cardsHandler, userCommunicator);
+            base.Play(topDiscard, playersHandler, serviceProvider);
         }
 
         public override string ToString()

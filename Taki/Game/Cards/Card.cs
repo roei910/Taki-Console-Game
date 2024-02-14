@@ -21,7 +21,7 @@ namespace Taki.Game.Cards
 
         public abstract bool IsStackableWith(Card other);
 
-        public virtual void Play(IPlayersHandler playersHandler, ICardsHandler cardsHandler, IUserCommunicator userCommunicator) 
+        public virtual void Play(Card topDiscard, IPlayersHandler playersHandler, IServiceProvider serviceProvider) 
         {
             playersHandler.NextPlayer();
         }

@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.Drawing;
 using Taki.Game.Cards;
 using Taki.Game.Handlers;
 using Taki.Game.Messages;
@@ -26,15 +27,17 @@ namespace Taki.Game.Algorithm
         public Card? ChooseCard(Func<Card, bool> isSimilarTo, 
             Player player,
             IPlayersHandler playersHandler,
-            ICardsHandler cardsHandler, IUserCommunicator userCommunicator)
+            IServiceProvider serviceProvider)
         {
+            ICardsHandler cardsHandler = serviceProvider.GetRequiredService<ICardsHandler>();
+            IUserCommunicator userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
             Card topDiscard = cardsHandler.GetTopDiscard();
             Player currentPlayer = playersHandler.GetCurrentPlayer();
 
             userCommunicator.SendAlertMessage($"The top deck card is {topDiscard}");
             currentPlayer.PlayerCards = OrderPlayerCardByColor(currentPlayer);
             userCommunicator.SendMessageToUser(currentPlayer.ToString());
-            userCommunicator.SendAlertMessage($"Please choose on of your cards by index, " +
+            userCommunicator.SendAlertMessage($"Please choose one of your cards by index, " +
                 $"-1 to draw a card");
 
             return ChooseValidCard(userCommunicator, currentPlayer, isSimilarTo);

@@ -9,7 +9,7 @@ namespace Taki.Game.Algorithm
     internal class PlayerAlgorithm : IPlayerAlgorithm
     {
         public virtual Card? ChooseCard(Func<Card, bool> isSimilarTo, 
-            Player player, IPlayersHandler playersHandler, ICardsHandler cardsHandler, IUserCommunicator userCommunicator)
+            Player player, IPlayersHandler playersHandler, IServiceProvider serviceProvider)
         {
             if(player.PlayerCards.Count == 0) 
                 return null;

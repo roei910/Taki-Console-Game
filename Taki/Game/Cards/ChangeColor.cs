@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.Drawing;
 using Taki.Game.Handlers;
 using Taki.Game.Messages;
 
@@ -16,12 +17,14 @@ namespace Taki.Game.Cards
             return other.IsStackableWith(new NumberCard(0, color));
         }
 
-        public override void Play(IPlayersHandler playersHandler, ICardsHandler cardsHandler, IUserCommunicator userCommunicator)
+        public override void Play(Card topDiscard, IPlayersHandler playersHandler, IServiceProvider serviceProvider)
         {
+            IUserCommunicator userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
+
             while (!ColorCard.Colors.Contains(color))
                 color = playersHandler.GetCurrentPlayer().ChooseColor(playersHandler, userCommunicator);
             
-            base.Play(playersHandler, cardsHandler, userCommunicator);
+            base.Play(topDiscard, playersHandler, serviceProvider);
         }
 
         public override void FinishPlay()

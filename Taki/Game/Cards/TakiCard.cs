@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.Drawing;
 using Taki.Game.GameRules;
 using Taki.Game.Handlers;
 using Taki.Game.Messages;
@@ -15,12 +16,12 @@ namespace Taki.Game.Cards
             return base.IsStackableWith(other) || other is TakiCard;
         }
 
-        public override void Play(IPlayersHandler playersHandler, ICardsHandler cardsHandler, IUserCommunicator userCommunicator)
+        public override void Play(Card topDiscard, IPlayersHandler playersHandler, IServiceProvider serviceProvider)
         {
             Player currentPlayer = playersHandler.GetCurrentPlayer();
-            Card topDiscard = this;
-            Card? playerCard = currentPlayer.PickCard(IsStackableWith, playersHandler,
-                cardsHandler, userCommunicator);
+            Card? playerCard = currentPlayer.PickCard(IsStackableWith, playersHandler, serviceProvider);
+            IUserCommunicator userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
+            ICardsHandler cardsHandler = serviceProvider.GetRequiredService<ICardsHandler>();
             
             while (playerCard is not null)
             {
@@ -30,19 +31,18 @@ namespace Taki.Game.Cards
                 topDiscard = playerCard;
                 currentPlayer.PlayerCards.Remove(playerCard);
                 cardsHandler.AddDiscardCard(playerCard);
-                playerCard = currentPlayer.PickCard(topDiscard.IsStackableWith, playersHandler,
-                    cardsHandler, userCommunicator);
+                playerCard = currentPlayer.PickCard(topDiscard.IsStackableWith, playersHandler, serviceProvider);
             }
 
             userCommunicator.SendAlertMessage("Taki Closed!\n");
 
             if (Equals(topDiscard))
             {
-                base.Play(playersHandler, cardsHandler, userCommunicator);
+                base.Play(topDiscard, playersHandler, serviceProvider);
                 return;
             }
 
-            cardsHandler.GetTopDiscard().Play(playersHandler, cardsHandler, userCommunicator);
+            cardsHandler.GetTopDiscard().Play(topDiscard, playersHandler, serviceProvider);
         }
 
         public override string ToString()

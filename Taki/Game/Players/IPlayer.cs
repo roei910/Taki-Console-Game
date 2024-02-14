@@ -10,7 +10,7 @@ namespace Taki.Game.Players
         Color ChooseColor(IPlayersHandler playersHandler, IUserCommunicator userCommunicator);
         void AddCard(Card card);
         bool IsHandEmpty();
-        Card? PickCard(Func<Card, bool> isSimilarTo, IPlayersHandler playersHandler, ICardsHandler cardsHandler, IUserCommunicator userCommunicator);
+        Card? PickCard(Func<Card, bool> isSimilarTo, IPlayersHandler playersHandler, IServiceProvider serviceProvider);
         string GetInformation();
         string GetName();
     }
