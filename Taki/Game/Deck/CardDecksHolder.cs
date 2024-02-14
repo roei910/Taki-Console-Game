@@ -1,18 +1,16 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Taki.Game.Cards;
-using Taki.Game.Deck;
 using Taki.Game.Factories;
-using Taki.Game.Handlers;
 
-namespace Taki.Game.GameRules
+namespace Taki.Game.Deck
 {
     //TODO: naming => maybe card decks holder???
-    internal class CardsHandler : ICardsHandler
+    internal class CardDecksHolder : ICardDecksHolder
     {
         private readonly CardDeck _drawPile;
         private readonly CardDeck _discardPile;
 
-        public CardsHandler(IServiceProvider serviceProvider)
+        public CardDecksHolder(IServiceProvider serviceProvider)
         {
             CardDeckFactory factory = serviceProvider.GetRequiredService<CardDeckFactory>();
             _drawPile = factory.GenerateCardDeck(serviceProvider);
@@ -31,8 +29,7 @@ namespace Taki.Game.GameRules
 
         public void ResetCards()
         {
-            //TODO: naming
-            _drawPile.CombineDeckToThis(_discardPile);
+            _drawPile.CombineFromDeck(_discardPile);
             _drawPile.ShuffleDeck();
         }
 
@@ -53,9 +50,7 @@ namespace Taki.Game.GameRules
                 DrawFirstCard();
             }
 
-            //TODO: PopFirst
-            Card top = _drawPile.GetFirst();
-            _drawPile.RemoveFirst();
+            Card top = _drawPile.PopFirst();
 
             return top;
         }
@@ -63,10 +58,7 @@ namespace Taki.Game.GameRules
         public void DrawFirstCard()
         {
             Card? drawCard = DrawCard();
-            
-            //TODO: is needed?
-            if(drawCard != null)
-                _discardPile.AddFirst(drawCard);
+            _discardPile.AddFirst(drawCard!);
         }
 
         public int CountAllCards()

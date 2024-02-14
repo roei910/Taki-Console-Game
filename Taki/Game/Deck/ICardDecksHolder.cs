@@ -1,8 +1,8 @@
 ﻿using Taki.Game.Cards;
 
-namespace Taki.Game.Handlers
+namespace Taki.Game.Deck
 {
-    internal interface ICardsHandler
+    internal interface ICardDecksHolder
     {
         Card GetTopDiscard();
         void AddDiscardCard(Card card);
