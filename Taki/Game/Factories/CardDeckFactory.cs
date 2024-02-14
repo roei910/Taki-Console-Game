@@ -3,7 +3,6 @@ using Taki.Game.Deck;
 
 namespace Taki.Game.Factories
 {
-    //TODO: Split into deck factory to handler factory (if the handler factory is necessary at all)
     internal class CardDeckFactory
     {
         public CardDeck GenerateCardDeck(IServiceProvider serviceProvider)
@@ -42,7 +41,7 @@ namespace Taki.Game.Factories
             return cards;
         }
 
-        private IEnumerable<Card> GenerateSpecialWithColor()
+        private List<Card> GenerateSpecialWithColor()
         {
             return ColorCard.Colors.SelectMany(color =>
             {
@@ -58,7 +57,7 @@ namespace Taki.Game.Factories
             }).ToList();
         }
 
-        private IEnumerable<Card> GenerateSpecialNoColor()
+        private List<Card> GenerateSpecialNoColor()
         {
             var cards = new List<Card>() {
                 new SuperTaki(),
