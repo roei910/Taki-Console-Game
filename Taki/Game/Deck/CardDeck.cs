@@ -21,11 +21,6 @@ namespace Taki.Game.Deck
             return _cards.First();
         }
 
-        public void RemoveFirst()
-        {
-            _cards.RemoveFirst();
-        }
-
         public void AddFirst(Card card)
         {
             _cards.AddFirst(card);
@@ -40,21 +35,13 @@ namespace Taki.Game.Deck
         {
             var random = _serviceProvider.GetRequiredService<Random>();
 
-            //TODO: refactor
-            //var cards = _cards.ToList();
-            //_cards = new(cards.Select(_ =>
-            //{
-            //    Card card = _cards.ElementAt(random.Next(_cards.Count));
-            //    _cards.Remove(card);
-            //    return card;
-            //}).ToList());
-            _cards = new(_cards.OrderBy(val => Guid.NewGuid().ToString()).ToList());
+            _cards = new(_cards.OrderBy(val => random.Next(_cards.Count)));
         }
 
-        public void CombineDeckToThis(CardDeck cardDeck)
+        public void CombineFromDeck(CardDeck other)
         {
-            List<Card> cards = [.. _cards.ToList(), .. cardDeck._cards.ToList()];
-            cardDeck._cards = [];
+            List<Card> cards = [.. _cards.ToList(), .. other._cards.ToList()];
+            other._cards = [];
             _cards = new(cards);
         }
 
@@ -67,6 +54,13 @@ namespace Taki.Game.Deck
         {
             if(playerCards.Count > 0)
                 _cards.AddLast(playerCards.First());
+        }
+
+        public Card PopFirst()
+        {
+            Card card = _cards.First();
+            _cards.RemoveFirst();
+            return card;
         }
     }
 }
