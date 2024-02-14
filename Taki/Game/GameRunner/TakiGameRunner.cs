@@ -58,7 +58,7 @@ namespace Taki.Game.Managers
 
         private Player GetWinner()
         {
-            while (_playersHandler.CanCurrentPlayerPlay())
+            while (_playersHandler.HasPlayerWon())
                 _playersHandler.CurrentPlayerPlay(_cardsHandler, _userCommunicator);
 
             return _playersHandler.RemoveWinner();
