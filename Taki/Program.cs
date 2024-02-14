@@ -6,8 +6,7 @@ using Taki.Game.Factories;
 using Taki.Game.Messages;
 using Microsoft.Extensions.Configuration;
 using Taki;
-using Taki.Game.Handlers;
-using Taki.Game.GameRules;
+using Taki.Game.Deck;
 
 //TODO: organizine blanks and general code 
 
@@ -33,7 +32,7 @@ var serviceProvider = new ServiceCollection()
         .Build())
     .AddScoped<ProgramVariables>()
     .AddScoped<TakiGameGenerator>()
-    .AddScoped<ICardsHandler, CardsHandler>()
+    .AddScoped<ICardDecksHolder, CardDecksHolder>()
     .BuildServiceProvider();
 
 TakiGameGenerator gameFactory = new(serviceProvider);
