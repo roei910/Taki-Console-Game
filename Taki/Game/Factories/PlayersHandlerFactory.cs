@@ -31,11 +31,11 @@ namespace Taki.Game.Factories
                     string name = GetNameFromUser(i, userCommunicator);
 
                     if (numberOfManualPlayers-- > 0)
-                        return new Player(name, manualPlayerAlgorithm);
+                        return new Player(name, manualPlayerAlgorithm, userCommunicator);
 
                     int algoRandomIndex = random.Next(playerAlgorithms.Count);
 
-                    return new Player(name, playerAlgorithms[algoRandomIndex]);
+                    return new Player(name, playerAlgorithms[algoRandomIndex], userCommunicator);
                 }).ToList();
 
             userCommunicator.SendMessageToUser("users created are:");

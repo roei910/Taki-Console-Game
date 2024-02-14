@@ -9,17 +9,20 @@ namespace Taki.Game.Players
     internal class Player : IPlayer, IEquatable<Player>
     {
         private static int id = 0;
+
         private readonly IPlayerAlgorithm choosingAlgorithm;
+        private readonly IUserCommunicator _userCommunicator;
         public string Name { get; }
         public int Id { get; }
         public List<Card> PlayerCards { get; set; }
 
-        public Player(string personName, IPlayerAlgorithm playerAlgorithm)
+        public Player(string personName, IPlayerAlgorithm playerAlgorithm, IUserCommunicator userCommunicator)
         {
             PlayerCards = [];
             Id = id++;
             choosingAlgorithm = playerAlgorithm ?? throw new ArgumentNullException(nameof(playerAlgorithm));
             Name = personName;
+            _userCommunicator = userCommunicator;
         }
 
         public Player(Player other)
@@ -28,12 +31,13 @@ namespace Taki.Game.Players
             Id = other.Id;
             choosingAlgorithm = other.choosingAlgorithm;
             Name = other.Name;
+            _userCommunicator = other._userCommunicator;
         }
 
-        public Color ChooseColor(IPlayersHandler playersHandler, IUserCommunicator userCommunicator)
+        public Color ChooseColor()
         {
-            Color color = choosingAlgorithm.ChooseColor(playersHandler, userCommunicator);
-            userCommunicator.SendErrorMessage($"Player chose the color: {color}\n");
+            Color color = choosingAlgorithm.ChooseColor(PlayerCards, _userCommunicator);
+            _userCommunicator.SendErrorMessage($"Player chose the color: {color}\n");
 
             return color;
         }
@@ -62,9 +66,9 @@ namespace Taki.Game.Players
             return Id == other.Id;
         }
 
-        public Card? PickCard(Func<Card, bool> isSimilarTo, IPlayersHandler playersHandler, IServiceProvider serviceProvider)
+        public Card? PickCard(Func<Card, bool> IsStackableWith)
         {
-            return choosingAlgorithm.ChooseCard(isSimilarTo, this, playersHandler, serviceProvider);
+            return choosingAlgorithm.ChooseCard(IsStackableWith, PlayerCards, _userCommunicator);
         }
 
         public string GetInformation()

@@ -104,8 +104,7 @@ namespace Taki.Game.GameRules
             Card topDiscard = cardsHandler.GetTopDiscard();
             userCommunicator.SendAlertMessage($"Top discard: {topDiscard}");
 
-            Card? playerCard = CurrentPlayer.PickCard(topDiscard.IsStackableWith, 
-                this, serviceProvider);
+            Card? playerCard = CurrentPlayer.PickCard(topDiscard.IsStackableWith);
             userCommunicator.SendAlertMessage($"Player picked: {playerCard?.ToString() ?? "no card"}\n");
 
             if (playerCard == null)

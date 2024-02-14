@@ -19,10 +19,8 @@ namespace Taki.Game.Cards
 
         public override void Play(Card topDiscard, IPlayersHandler playersHandler, IServiceProvider serviceProvider)
         {
-            IUserCommunicator userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
-
             while (!ColorCard.Colors.Contains(color))
-                color = playersHandler.GetCurrentPlayer().ChooseColor(playersHandler, userCommunicator);
+                color = playersHandler.GetCurrentPlayer().ChooseColor();
             
             base.Play(topDiscard, playersHandler, serviceProvider);
         }

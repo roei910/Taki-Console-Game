@@ -1,9 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System.Drawing;
+﻿using System.Drawing;
 using Taki.Game.Cards;
-using Taki.Game.Handlers;
 using Taki.Game.Messages;
-using Taki.Game.Players;
 
 namespace Taki.Game.Algorithm
 {
@@ -14,66 +11,58 @@ namespace Taki.Game.Algorithm
             return "Manual Player Algo";
         }
 
-        private bool IsValidIndex(int index, int maxCards)
+        public Card? ChooseCard(Func<Card, bool> isSimilarTo, List<Card> playerCards, IUserCommunicator userCommunicator)
         {
-            return index >= -1 && index < maxCards;
+            playerCards = OrderPlayerCardByColor(playerCards);
+            var playerCardsString = playerCards.Select((card, i) => $"{i}. {card}").ToList();
+            userCommunicator.SendMessageToUser(string.Join("\n", playerCardsString));
+            userCommunicator.SendAlertMessage($"Please choose one of your cards by index, " +
+                $"-1 to draw a card");
+
+            return ChooseValidCard(userCommunicator, playerCards, isSimilarTo);
         }
 
-        public Color ChooseColor(IPlayersHandler playersHandler, IUserCommunicator userCommunicator)
+        public Color ChooseColor(List<Card> playerCards, IUserCommunicator userCommunicator)
         {
             return userCommunicator.GetColorFromUserEnum<CardColorsEnum>();
         }
 
-        public Card? ChooseCard(Func<Card, bool> isSimilarTo, 
-            Player player,
-            IPlayersHandler playersHandler,
-            IServiceProvider serviceProvider)
-        {
-            ICardsHandler cardsHandler = serviceProvider.GetRequiredService<ICardsHandler>();
-            IUserCommunicator userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
-            Card topDiscard = cardsHandler.GetTopDiscard();
-            Player currentPlayer = playersHandler.GetCurrentPlayer();
-
-            userCommunicator.SendAlertMessage($"The top deck card is {topDiscard}");
-            currentPlayer.PlayerCards = OrderPlayerCardByColor(currentPlayer);
-            userCommunicator.SendMessageToUser(currentPlayer.ToString());
-            userCommunicator.SendAlertMessage($"Please choose one of your cards by index, " +
-                $"-1 to draw a card");
-
-            return ChooseValidCard(userCommunicator, currentPlayer, isSimilarTo);
-        }
-
         private Card? ChooseValidCard(IUserCommunicator userCommunicator, 
-            Player currentPlayer, Func<Card, bool> isSimilarTo)
+            List<Card> playerCards, Func<Card, bool> isSimilarTo)
         {
             if (!int.TryParse(userCommunicator.GetMessageFromUser(), out int index)
-                || !IsValidIndex(index, currentPlayer.PlayerCards.Count))
+                || !IsValidIndex(index, playerCards.Count))
             {
                 userCommunicator.SendMessageToUser("please choose again the index of the card");
-                return ChooseValidCard(userCommunicator, currentPlayer, isSimilarTo);
+                return ChooseValidCard(userCommunicator, playerCards, isSimilarTo);
             }
 
             if (index == -1)
                 return null;
 
-            Card playerCard = currentPlayer.PlayerCards.ElementAt(index);
+            Card playerCard = playerCards.ElementAt(index);
             if (!isSimilarTo(playerCard))
             {
                 userCommunicator.SendMessageToUser("card does not meet the stacking rules");
-                return ChooseValidCard(userCommunicator, currentPlayer, isSimilarTo);
+                return ChooseValidCard(userCommunicator, playerCards, isSimilarTo);
             }
 
             return playerCard;
         }
 
-        private List<Card> OrderPlayerCardByColor(Player currentPlayer)
+        private List<Card> OrderPlayerCardByColor(List<Card> playerCards)
         {
-            return currentPlayer.PlayerCards.OrderBy(card =>
+            return playerCards.OrderBy(card =>
             {
                 if (card is ColorCard colorCard)
                     return colorCard.GetColor().ToString();
                 return Color.Empty.ToString();
             }).ToList();
         }
+
+        private bool IsValidIndex(int index, int maxCards)
+        {
+            return index >= -1 && index < maxCards;
+        }       
     }
 }

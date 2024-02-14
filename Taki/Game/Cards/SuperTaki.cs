@@ -26,7 +26,7 @@ namespace Taki.Game.Cards
             Color color = Color.Empty;
 
             while (!ColorCard.Colors.Contains(color))
-                color = playersHandler.GetCurrentPlayer().ChooseColor(playersHandler, userCommunicator);
+                color = playersHandler.GetCurrentPlayer().ChooseColor();
 
             takiInstance = new TakiCard(color);
             takiInstance.Play(topDiscard, playersHandler, serviceProvider);

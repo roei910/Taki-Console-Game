@@ -32,7 +32,6 @@ namespace Taki.Game.Cards
             //TODO: work on players
             while (playersHandler.GetCurrentPlayer().Id != currentPlayer.Id)
             {
-                //TODO: recheck
                 (savedCards, playersHandler.GetCurrentPlayer().PlayerCards) = (playersHandler.GetCurrentPlayer().PlayerCards, savedCards);
                 playersHandler.NextPlayer();
             }

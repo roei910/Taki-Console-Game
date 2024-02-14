@@ -18,7 +18,7 @@ namespace Taki.Game.Cards
         public override void Play(Card topDiscard, IPlayersHandler playersHandler, IServiceProvider serviceProvider)
         {
             Player currentPlayer = playersHandler.GetCurrentPlayer();
-            Card? playerCard = currentPlayer.PickCard(IsStackableWith, playersHandler, serviceProvider);
+            Card? playerCard = currentPlayer.PickCard(IsStackableWith);
             IUserCommunicator userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
             ICardsHandler cardsHandler = serviceProvider.GetRequiredService<ICardsHandler>();
             
@@ -30,7 +30,7 @@ namespace Taki.Game.Cards
                 topDiscard = playerCard;
                 currentPlayer.PlayerCards.Remove(playerCard);
                 cardsHandler.AddDiscardCard(playerCard);
-                playerCard = currentPlayer.PickCard(topDiscard.IsStackableWith, playersHandler, serviceProvider);
+                playerCard = currentPlayer.PickCard(topDiscard.IsStackableWith);
             }
 
             userCommunicator.SendAlertMessage("Taki Closed!\n");
