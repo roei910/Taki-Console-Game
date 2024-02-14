@@ -5,7 +5,6 @@ using Taki.Game.Algorithm;
 using Taki.Game.Factories;
 using Taki.Game.Messages;
 using Microsoft.Extensions.Configuration;
-using Microsoft.VisualBasic;
 using Taki;
 
 //TODO: organizine blanks and general code 
