@@ -16,10 +16,6 @@ namespace Taki.Game.Deck
 
         public CardDeck(IServiceProvider serviceProvider) : this(new List<Card>(), serviceProvider) { }
         
-        //TODO check if needed
-        public CardDeck(CardDeck other) : this(other._cards.ToList(), other._serviceProvider){ }
-
-
         public Card GetFirst()
         {
             return _cards.First();
