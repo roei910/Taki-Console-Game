@@ -40,6 +40,7 @@ namespace Taki.Game.Factories
             var playersInormation = players.Select(p => p.GetInformation())
                 .ToList();
             userCommunicator.SendMessageToUser(string.Join("\n", playersInormation));
+            userCommunicator.SendMessageToUser();
 
             return players;
         }
@@ -52,7 +53,7 @@ namespace Taki.Game.Factories
             int numberOfPlayerCards = GetNumberOfPlayerCards(numberOfPlayers, maxCards, userCommunicator);
             List<Player> players = GeneratePlayers(numberOfPlayers, serviceProvider);
 
-            return new PlayersHolder(players, numberOfPlayerCards);
+            return new PlayersHolder(players, numberOfPlayerCards, serviceProvider);
         }
 
         public PlayersHolder GeneratePyramidPlayersHandler(IServiceProvider serviceProvider)
@@ -66,7 +67,7 @@ namespace Taki.Game.Factories
                 .Select(player => 
                 (Player)new PyramidPlayer(player, _programVariables.NUMBER_OF_PYRAMID_PLAYER_CARDS)).ToList();
 
-            return new PyramidPlayersHolder(pyramidPlayers, _programVariables.NUMBER_OF_PYRAMID_PLAYER_CARDS);
+            return new PyramidPlayersHolder(pyramidPlayers, _programVariables.NUMBER_OF_PYRAMID_PLAYER_CARDS, serviceProvider);
         }
 
         private int GetNumberOfPlayers(IUserCommunicator userCommunicator)
