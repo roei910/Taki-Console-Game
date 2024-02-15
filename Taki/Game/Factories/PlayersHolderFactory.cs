@@ -1,17 +1,15 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Taki.Game.Algorithm;
-using Taki.Game.GameRunner;
-using Taki.Game.Handlers;
 using Taki.Game.Messages;
 using Taki.Game.Players;
 
 namespace Taki.Game.Factories
 {
-    internal class PlayersHandlerFactory
+    internal class PlayersHolderFactory
     {
         private readonly ProgramVariables _programVariables;
 
-        public PlayersHandlerFactory(ProgramVariables programVariables)
+        public PlayersHolderFactory(ProgramVariables programVariables)
         {
             _programVariables = programVariables;
         }

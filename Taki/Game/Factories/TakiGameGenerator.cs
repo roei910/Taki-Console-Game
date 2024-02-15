@@ -16,13 +16,13 @@ namespace Taki.Game.Factories
     {
         private readonly IUserCommunicator _userCommunicator;
         private readonly IServiceProvider _serviceProvider;
-        private readonly PlayersHandlerFactory _playersHandlerFactory;
+        private readonly PlayersHolderFactory _playersHolderFactory;
 
         public TakiGameGenerator(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
             _userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
-            _playersHandlerFactory = serviceProvider.GetRequiredService<PlayersHandlerFactory>();
+            _playersHolderFactory = serviceProvider.GetRequiredService<PlayersHolderFactory>();
         }
 
         internal TakiGameRunner ChooseTypeOfGame()
@@ -36,13 +36,13 @@ namespace Taki.Game.Factories
             switch (typeOfGame)
             {
                 case GameTypeEnum.Normal:
-                    PlayersHolder playerHandler = _playersHandlerFactory
+                    PlayersHolder playerHandler = _playersHolderFactory
                         .GeneratePlayersHandler(_serviceProvider, numberOfCards);
 
                     return new TakiGameRunner(playerHandler, _serviceProvider);
 
                 case GameTypeEnum.Pyramid:
-                    PlayersHolder pyramidPlayersHandler = _playersHandlerFactory
+                    PlayersHolder pyramidPlayersHandler = _playersHolderFactory
                         .GeneratePyramidPlayersHandler(_serviceProvider);
 
                     return new TakiGameRunner(pyramidPlayersHandler, _serviceProvider);
