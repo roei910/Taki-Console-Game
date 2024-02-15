@@ -43,7 +43,7 @@ namespace Taki.Game.Algorithm
             Card playerCard = playerCards.ElementAt(index);
             if (!isSimilarTo(playerCard))
             {
-                userCommunicator.SendMessageToUser("card does not meet the stacking rules");
+                userCommunicator.SendErrorMessage("card does not meet the stacking rules");
                 return ChooseValidCard(userCommunicator, playerCards, isSimilarTo);
             }
 
