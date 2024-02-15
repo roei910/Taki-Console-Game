@@ -6,6 +6,7 @@ using Taki.Game.Players;
 
 namespace Taki.Game.Cards
 {
+    //TODO: fix error finishing hand while playing taki not finishing turn and winning or going to next hand in pyramid
     internal class TakiCard : ColorCard
     {
         public TakiCard(Color color) : base(color) { }
@@ -17,31 +18,36 @@ namespace Taki.Game.Cards
 
         public override void Play(Card topDiscard, IPlayersHolder playersHolder, IServiceProvider serviceProvider)
         {
-            Player currentPlayer = playersHolder.CurrentPlayer;
-            Card? playerCard = currentPlayer.PickCard(IsStackableWith);
             IUserCommunicator userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
             ICardDecksHolder cardsHolder = serviceProvider.GetRequiredService<ICardDecksHolder>();
-            
+
+            Player currentPlayer = playersHolder.CurrentPlayer;
+            Func<Card, bool> isStackable = card => card is ColorCard && base.IsStackableWith(card);
+            Card previous = topDiscard;
+            topDiscard = this;
+            Card? playerCard = currentPlayer.PickCard(isStackable);
+
             while (playerCard is not null)
             {
                 userCommunicator.SendAlertMessage($"{currentPlayer.GetName()} chose " +
                     $"{playerCard}");
 
+                previous = topDiscard;
                 topDiscard = playerCard;
                 currentPlayer.PlayerCards.Remove(playerCard);
                 cardsHolder.AddDiscardCard(playerCard);
-                playerCard = currentPlayer.PickCard(topDiscard.IsStackableWith);
+                playerCard = currentPlayer.PickCard(isStackable);
             }
 
             userCommunicator.SendAlertMessage("Taki Closed!\n");
 
-            if (Equals(topDiscard))
+            if (!Equals(topDiscard))
             {
-                base.Play(topDiscard, playersHolder, serviceProvider);
+                topDiscard.Play(previous, playersHolder, serviceProvider);
                 return;
             }
 
-            cardsHolder.GetTopDiscard().Play(topDiscard, playersHolder, serviceProvider);
+            base.Play(topDiscard, playersHolder, serviceProvider);
         }
 
         public override string ToString()

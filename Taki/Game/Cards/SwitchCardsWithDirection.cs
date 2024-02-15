@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Taki.Game.Deck;
-using Taki.Game.Players;
+﻿using Taki.Game.Players;
 
 namespace Taki.Game.Cards
 {
@@ -12,31 +10,23 @@ namespace Taki.Game.Cards
 
         public override bool IsStackableWith(Card other)
         {
-            if(prevCard == null)
+            if (prevCard == null)
                 return true;
             return prevCard.IsStackableWith(other);
         }
 
-        public override void Play(Card topDisacrd, IPlayersHolder playersHolder, IServiceProvider serviceProvider)
+        public override void Play(Card topDiscard, IPlayersHolder playersHolder, IServiceProvider serviceProvider)
         {
-            ICardDecksHolder cardsHolder = serviceProvider.GetRequiredService<ICardDecksHolder>();
-            Card topDiscard = cardsHolder.GetTopDiscard();
             prevCard = (topDiscard is SwitchCardsWithDirection card) ? card.prevCard : topDiscard;
 
-            Player currentPlayer = playersHolder.CurrentPlayer;
-            List<Card> savedCards = currentPlayer.PlayerCards;
-            currentPlayer.PlayerCards = [];
+            var players = playersHolder.Players;
+            List<Card> savedCards = players[0].PlayerCards;
+            players[0].PlayerCards = [];
 
-            playersHolder.NextPlayer();
+            for (int i = 1; i < players.Count; i++)
+                (savedCards, players[i].PlayerCards) = (players[i].PlayerCards, savedCards);
 
-            //TODO: work on players
-            while (playersHolder.CurrentPlayer.Id != currentPlayer.Id)
-            {
-                (savedCards, playersHolder.CurrentPlayer.PlayerCards) = (playersHolder.CurrentPlayer.PlayerCards, savedCards);
-                playersHolder.NextPlayer();
-            }
-
-            currentPlayer.PlayerCards = savedCards;
+            players[0].PlayerCards = savedCards;
             base.Play(topDiscard, playersHolder, serviceProvider);
         }
 
@@ -47,7 +37,7 @@ namespace Taki.Game.Cards
 
         public override string ToString()
         {
-            return $"SwitchCardsWithDirection";
+            return $"SwitchCardsWithDirection" + prevCard ?? "";
         }
     }
 }
