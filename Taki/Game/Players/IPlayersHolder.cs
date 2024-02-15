@@ -1,6 +1,5 @@
 ﻿using Taki.Game.Cards;
 using Taki.Game.Deck;
-using Taki.Game.Messages;
 
 namespace Taki.Game.Players
 {
@@ -9,11 +8,11 @@ namespace Taki.Game.Players
         Player CurrentPlayer { get; }
         List<Player> Players { get; }
         void NextPlayer();
-        void CurrentPlayerPlay(IServiceProvider serviceProvider);
+        void CurrentPlayerPlay();
         void ChangeDirection();
         void DealCards(ICardDecksHolder cardsHolder);
-        bool DrawCards(int numberOfCards, ICardDecksHolder cardsHolder, IUserCommunicator userCommunicator);
-        Player GetWinner(IServiceProvider serviceProvider);
+        bool DrawCards(int numberOfCards, Player playerToDraw);
+        Player GetWinner();
         List<Card> ReturnCardsFromPlayers();
     }
 }

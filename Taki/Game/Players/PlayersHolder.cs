@@ -5,28 +5,33 @@ using Taki.Game.Messages;
 
 namespace Taki.Game.Players
 {
-    //TODO: naming => players holder? or change to move maker or something similar to only make player moves
+    //TODO: check finish hand in pyramid taki => pyramid not working
     internal class PlayersHolder : IPlayersHolder
     {
         private readonly Queue<Player> _winners;
         private bool _isDirectionNormal = true;
         private int _noPlayCounter = 0;
         protected readonly int _numberOfPlayerCards;
+        protected readonly IServiceProvider _serviceProvider;
         public readonly LinkedList<Player> _players;
 
         public List<Player> Players { get => _players.ToList(); }
 
         public Player CurrentPlayer { get => _players.First(); }
 
-        public PlayersHolder(List<Player> players, int numberOfPlayerCards)
+        public PlayersHolder(List<Player> players, int numberOfPlayerCards, IServiceProvider serviceProvider)
         {
             _players = new(players);
             _winners = new Queue<Player>();
             _numberOfPlayerCards = numberOfPlayerCards;
+            _serviceProvider = serviceProvider;
         }
 
-        public bool DrawCards(int numberOfCards, ICardDecksHolder cardsHolder, IUserCommunicator userCommunicator)
+        public bool DrawCards(int numberOfCards, Player playerToDraw)
         {
+            ICardDecksHolder cardsHolder = _serviceProvider.GetRequiredService<ICardDecksHolder>();
+            IUserCommunicator userCommunicator = _serviceProvider.GetRequiredService<IUserCommunicator>();
+
             int cardsDraw = Enumerable.Range(0, numberOfCards).ToList()
                 .Count(index =>
                 {
@@ -34,7 +39,7 @@ namespace Taki.Game.Players
 
                     if (card == null)
                         return false;
-                    CurrentPlayer.AddCard(card);
+                    playerToDraw.AddCard(card);
 
                     return true;
                 });
@@ -43,7 +48,7 @@ namespace Taki.Game.Players
                 return false;
 
             userCommunicator.SendErrorMessage(
-                $"Player[{CurrentPlayer.Id}]: drew {cardsDraw} card(s)\n");
+                $"Player[{playerToDraw.Id}]: drew {cardsDraw} card(s)\n");
 
             return true;
         }
@@ -64,34 +69,33 @@ namespace Taki.Game.Players
             }
         }
 
-        public Player GetWinner(IServiceProvider serviceProvider)
+        public Player GetWinner()
         {
-            while (HasPlayerWon())
-                CurrentPlayerPlay(serviceProvider);
+            while (!HasPlayerFinishedHand())
+                CurrentPlayerPlay();
 
-            Player savedPlayer = CurrentPlayer;
+            Player playerWon = _players.First(player => player.IsHandEmpty());
 
-            NextPlayer();
-
-            if (!_players.Remove(savedPlayer))
+            if (!_players.Remove(playerWon))
                 throw new Exception("error removing the player");
 
-            _winners.Enqueue(savedPlayer);
+            _winners.Enqueue(playerWon);
 
-            return savedPlayer;
+            return playerWon;
         }
 
-        private bool HasPlayerWon()
+        protected virtual bool HasPlayerFinishedHand()
         {
             if (_players.Count == 1)
                 return false;
-            return !CurrentPlayer.IsHandEmpty();
+
+            return _players.Any(player => player.IsHandEmpty());
         }
 
-        public virtual void CurrentPlayerPlay(IServiceProvider serviceProvider)
+        public void CurrentPlayerPlay()
         {
-            IUserCommunicator userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
-            ICardDecksHolder cardsHolder = serviceProvider.GetRequiredService<ICardDecksHolder>();
+            IUserCommunicator userCommunicator = _serviceProvider.GetRequiredService<IUserCommunicator>();
+            ICardDecksHolder cardsHolder = _serviceProvider.GetRequiredService<ICardDecksHolder>();
 
             userCommunicator.SendAlertMessage($"Player[{CurrentPlayer.Id}]" +
                 $" ({CurrentPlayer.Name}) is playing, " +
@@ -105,12 +109,12 @@ namespace Taki.Game.Players
 
             if (playerCard == null)
             {
-                DrawCards(topDiscard.CardsToDraw(), cardsHolder, userCommunicator);
+                DrawCards(topDiscard.CardsToDraw(), CurrentPlayer);
                 topDiscard.FinishNoPlay();
                 NextPlayer();
                 _noPlayCounter++;
 
-                if (_noPlayCounter >= _players.Count && _noPlayCounter % _players.Count == 0)
+                if (_noPlayCounter >= 2*_players.Count && _noPlayCounter % _players.Count == 0)
                 {
                     string message = "Too many rounds without play, consider calling a tie ;)\n" +
                         "press any enter to continue";
@@ -126,7 +130,7 @@ namespace Taki.Game.Players
             cardsHolder.AddDiscardCard(playerCard);
 
             topDiscard.FinishPlay();
-            playerCard.Play(topDiscard, this, serviceProvider);
+            playerCard.Play(topDiscard, this, _serviceProvider);
         }
 
         public void ChangeDirection()
