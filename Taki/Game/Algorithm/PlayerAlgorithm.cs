@@ -14,7 +14,6 @@ namespace Taki.Game.Algorithm
             return playerCards.FirstOrDefault(card => isSimilarTo(card!));
         }
 
-
         public Color ChooseColor(List<Card> playerCards, IUserCommunicator userCommunicator)
         {
             var colors = playerCards
