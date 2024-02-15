@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System.Drawing;
-using Taki.Game.Messages;
+﻿using System.Drawing;
 using Taki.Game.Players;
 
 namespace Taki.Game.Cards
@@ -22,7 +20,6 @@ namespace Taki.Game.Cards
         public override void Play(Card topDiscard, IPlayersHolder playersHolder, 
             IServiceProvider serviceProvider)
         {
-            IUserCommunicator userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
             Color color = Color.Empty;
 
             while (!ColorCard.Colors.Contains(color))
