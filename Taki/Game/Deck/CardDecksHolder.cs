@@ -4,7 +4,6 @@ using Taki.Game.Factories;
 
 namespace Taki.Game.Deck
 {
-    //TODO: naming => maybe card decks holder???
     internal class CardDecksHolder : ICardDecksHolder
     {
         private readonly CardDeck _drawPile;

@@ -28,12 +28,12 @@ namespace Taki.Game.GameRules
             _numberOfPlayerCards = numberOfPlayerCards;
         }
 
-        public bool DrawCards(int numberOfCards, ICardDecksHolder cardsHandler, IUserCommunicator userCommunicator)
+        public bool DrawCards(int numberOfCards, ICardDecksHolder cardsHolder, IUserCommunicator userCommunicator)
         {
             int cardsDraw = Enumerable.Range(0, numberOfCards).ToList()
                 .Count(index =>
                 {
-                    Card? card = cardsHandler.DrawCard();
+                    Card? card = cardsHolder.DrawCard();
 
                     if(card == null)
                         return false;
@@ -96,13 +96,13 @@ namespace Taki.Game.GameRules
         public virtual void CurrentPlayerPlay(IServiceProvider serviceProvider)
         {
             IUserCommunicator userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
-            ICardDecksHolder cardsHandler = serviceProvider.GetRequiredService<ICardDecksHolder>();
+            ICardDecksHolder cardsHolder = serviceProvider.GetRequiredService<ICardDecksHolder>();
 
             userCommunicator.SendAlertMessage($"Player[{CurrentPlayer.Id}]" +
                 $" ({CurrentPlayer.Name}) is playing, " +
                 $"{CurrentPlayer.PlayerCards.Count} cards in hand");
 
-            Card topDiscard = cardsHandler.GetTopDiscard();
+            Card topDiscard = cardsHolder.GetTopDiscard();
             userCommunicator.SendAlertMessage($"Top discard: {topDiscard}");
 
             Card? playerCard = CurrentPlayer.PickCard(topDiscard.IsStackableWith);
@@ -110,7 +110,7 @@ namespace Taki.Game.GameRules
 
             if (playerCard == null)
             {
-                DrawCards(topDiscard.CardsToDraw(), cardsHandler, userCommunicator);
+                DrawCards(topDiscard.CardsToDraw(), cardsHolder, userCommunicator);
                 topDiscard.FinishNoPlay();
                 NextPlayer();
                 _noPlayCounter++;
@@ -128,7 +128,7 @@ namespace Taki.Game.GameRules
             _noPlayCounter = 0;
 
             CurrentPlayer.PlayerCards.Remove(playerCard);
-            cardsHandler.AddDiscardCard(playerCard);
+            cardsHolder.AddDiscardCard(playerCard);
 
             topDiscard.FinishPlay();
             playerCard.Play(topDiscard, this, serviceProvider);
@@ -154,14 +154,14 @@ namespace Taki.Game.GameRules
             return cards;
         }
 
-        public void DealCards(ICardDecksHolder cardsHandler)
+        public void DealCards(ICardDecksHolder cardsHolder)
         {
             Enumerable.Range(0, _numberOfPlayerCards).ToList()
                 .Select(i =>
                 {
                     _players.Select(p =>
                     {
-                        Card? drawCard = cardsHandler.DrawCard();
+                        Card? drawCard = cardsHolder.DrawCard();
                         if(drawCard != null)
                             p.AddCard(drawCard);
 
@@ -171,7 +171,7 @@ namespace Taki.Game.GameRules
                     return i;
                 }).ToList();
 
-            cardsHandler.DrawFirstCard();
+            cardsHolder.DrawFirstCard();
         }
 
         public Player GetCurrentPlayer()

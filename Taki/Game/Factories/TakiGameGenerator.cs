@@ -27,8 +27,8 @@ namespace Taki.Game.Factories
 
         internal TakiGameRunner ChooseTypeOfGame()
         {
-            ICardDecksHolder cardsHandler = _serviceProvider.GetRequiredService<ICardDecksHolder>();
-            int numberOfCards = cardsHandler.CountAllCards();
+            ICardDecksHolder cardsHolder = _serviceProvider.GetRequiredService<ICardDecksHolder>();
+            int numberOfCards = cardsHolder.CountAllCards();
 
             GameTypeEnum typeOfGame = _userCommunicator
                 .GetEnumFromUser<GameTypeEnum>();

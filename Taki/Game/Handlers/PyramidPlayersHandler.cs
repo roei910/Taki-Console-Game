@@ -16,14 +16,14 @@ namespace Taki.Game.Handlers
         {
             base.CurrentPlayerPlay(serviceProvider);
             IUserCommunicator userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
-            ICardDecksHolder cardsHandler = serviceProvider.GetRequiredService<ICardDecksHolder>();
+            ICardDecksHolder cardsHolder = serviceProvider.GetRequiredService<ICardDecksHolder>();
 
             if (CurrentPlayer.IsHandEmpty())
             {
                 PyramidPlayer player = (PyramidPlayer)CurrentPlayer;
                 if(player.CurrentNumberOfCards() != 0)
                 {
-                    DrawCards(player.GetNextPlayerHand(userCommunicator), cardsHandler, userCommunicator);
+                    DrawCards(player.GetNextPlayerHand(userCommunicator), cardsHolder, userCommunicator);
                     userCommunicator.SendErrorMessage(
                         $"Player[{player.Id}] finished his current hand," +
                         $" currently on {player.CurrentNumberOfCards()} card(s)");

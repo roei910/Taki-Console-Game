@@ -21,7 +21,7 @@ namespace Taki.Game.Cards
             Player currentPlayer = playersHandler.GetCurrentPlayer();
             Card? playerCard = currentPlayer.PickCard(IsStackableWith);
             IUserCommunicator userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
-            ICardDecksHolder cardsHandler = serviceProvider.GetRequiredService<ICardDecksHolder>();
+            ICardDecksHolder cardsHolder = serviceProvider.GetRequiredService<ICardDecksHolder>();
             
             while (playerCard is not null)
             {
@@ -30,7 +30,7 @@ namespace Taki.Game.Cards
 
                 topDiscard = playerCard;
                 currentPlayer.PlayerCards.Remove(playerCard);
-                cardsHandler.AddDiscardCard(playerCard);
+                cardsHolder.AddDiscardCard(playerCard);
                 playerCard = currentPlayer.PickCard(topDiscard.IsStackableWith);
             }
 
@@ -42,7 +42,7 @@ namespace Taki.Game.Cards
                 return;
             }
 
-            cardsHandler.GetTopDiscard().Play(topDiscard, playersHandler, serviceProvider);
+            cardsHolder.GetTopDiscard().Play(topDiscard, playersHandler, serviceProvider);
         }
 
         public override string ToString()

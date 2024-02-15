@@ -20,8 +20,8 @@ namespace Taki.Game.Cards
 
         public override void Play(Card topDisacrd, IPlayersHandler playersHandler, IServiceProvider serviceProvider)
         {
-            ICardDecksHolder cardsHandler = serviceProvider.GetRequiredService<ICardDecksHolder>();
-            Card topDiscard = cardsHandler.GetTopDiscard();
+            ICardDecksHolder cardsHolder = serviceProvider.GetRequiredService<ICardDecksHolder>();
+            Card topDiscard = cardsHolder.GetTopDiscard();
             prevCard = (topDiscard is SwitchCardsWithDirection card) ? card.prevCard : topDiscard;
 
             Player currentPlayer = playersHandler.GetCurrentPlayer();

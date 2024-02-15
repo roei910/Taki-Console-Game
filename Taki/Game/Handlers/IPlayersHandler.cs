@@ -7,7 +7,7 @@ namespace Taki.Game.Handlers
 {
     internal interface IPlayersHandler
     {
-        bool DrawCards(int numberOfCards, ICardDecksHolder cardsHandler, IUserCommunicator userCommunicator);
+        bool DrawCards(int numberOfCards, ICardDecksHolder cardsHolder, IUserCommunicator userCommunicator);
         void NextPlayer();
         Player RemoveWinner();
         List<Player> GetAllPlayers();
@@ -15,7 +15,7 @@ namespace Taki.Game.Handlers
         void CurrentPlayerPlay(IServiceProvider serviceProvider);
         void ChangeDirection();
         List<Card> GetAllCardsFromPlayers();
-        void DealCards(ICardDecksHolder cardsHandler);
+        void DealCards(ICardDecksHolder cardsHolder);
         Player GetCurrentPlayer();
         int CountPlayers();
     }

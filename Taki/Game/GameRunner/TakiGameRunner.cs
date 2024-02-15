@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Taki.Game.Deck;
 using Taki.Game.GameRunner;
 using Taki.Game.Handlers;
 using Taki.Game.Messages;
@@ -11,14 +12,14 @@ namespace Taki.Game.Managers
     {
         protected readonly IUserCommunicator _userCommunicator;
         protected readonly IPlayersHandler _playersHandler;
-        protected readonly ICardsHandler _cardsHandler;
+        protected readonly ICardDecksHolder _cardsHolder;
         protected readonly ProgramVariables _programVariables;
         protected readonly IServiceProvider _serviceProvider;
 
         public TakiGameRunner(IPlayersHandler playersHandler, IServiceProvider serviceProvider)
         {
             _playersHandler = playersHandler;
-            _cardsHandler = serviceProvider.GetRequiredService<ICardsHandler>();
+            _cardsHolder = serviceProvider.GetRequiredService<ICardDecksHolder>();
             _userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
             _programVariables = serviceProvider.GetRequiredService<ProgramVariables>();
             _serviceProvider = serviceProvider;
@@ -53,8 +54,8 @@ namespace Taki.Game.Managers
         public void ResetGame()
         {
             var cards = _playersHandler.GetAllCardsFromPlayers();
-            _cardsHandler.ResetCards(cards);
-            _playersHandler.DealCards(_cardsHandler);
+            _cardsHolder.ResetCards(cards);
+            _playersHandler.DealCards(_cardsHolder);
         }
 
         private Player GetWinner()
