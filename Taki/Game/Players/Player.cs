@@ -1,7 +1,6 @@
 ﻿using System.Drawing;
 using Taki.Game.Algorithm;
 using Taki.Game.Cards;
-using Taki.Game.Handlers;
 using Taki.Game.Messages;
 
 namespace Taki.Game.Players
