@@ -8,12 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Taki;
 using Taki.Game.Deck;
 
-//TODO: organizine blanks and general code 
-
 //TODO: error when drawing after finishing hand in pyramid => check
 //TODO: error with switch cards when putting another color on top is allowed (shouldnt work)
-
-//TODO: check why singleton or scoped!!!
 
 var serviceProvider = new ServiceCollection()
     .AddSingleton<IUserCommunicator, ConsoleUserCommunicator>()
@@ -30,9 +26,10 @@ var serviceProvider = new ServiceCollection()
     .AddSingleton<ProgramVariables>()
     .AddSingleton<TakiGameGenerator>()
     .AddSingleton<ICardDecksHolder, CardDecksHolder>()
+    .AddSingleton<TakiGameGenerator>()
     .BuildServiceProvider();
 
-TakiGameGenerator gameFactory = new(serviceProvider);
+TakiGameGenerator gameFactory = serviceProvider.GetRequiredService<TakiGameGenerator>();
 TakiGameRunner gameRunner = gameFactory.ChooseTypeOfGame();
 
 gameRunner.StartGame();
