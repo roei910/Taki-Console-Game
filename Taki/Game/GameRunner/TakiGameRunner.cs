@@ -34,7 +34,7 @@ namespace Taki.Game.Managers
                 totalWinners > numOfPlayers ? numOfPlayers : totalWinners)
                 .Select(i =>
                 {
-                    Player winner = _playersHolder.GetWinner(_serviceProvider);
+                    Player winner = _playersHolder.GetWinner();
                     _userCommunicator.GetCharFromUser($"Winner #{i + 1} is {winner.Name}\n" +
                         $"Press any key to continue");
                     return winner;
