@@ -1,6 +1,4 @@
-﻿using Taki.Game.Players;
-
-namespace Taki.Game.GameRunner
+﻿namespace Taki.Game.GameRunner
 {
     internal interface ITakiGameRunner
     {
