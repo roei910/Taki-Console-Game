@@ -42,8 +42,12 @@ namespace Taki.Game.Communicators
 
             if(!int.TryParse(Console.ReadLine(), out int index) || 
                 index >= values.Length || index < 0)
+            {
+                Console.WriteLine();
                 return GetEnumFromUser<T>();
+            }
 
+            Console.WriteLine();
             return values[index];
         }
 
@@ -59,13 +63,20 @@ namespace Taki.Game.Communicators
         {
             if(message != null)
                 SendMessageToUser(message);
-            return Console.ReadLine();
+
+            string? answer = Console.ReadLine();
+            Console.WriteLine();
+
+            return answer;
         }
 
         public int GetCharFromUser(object? message)
         {
             Console.WriteLine(message);
-            return Console.Read();
+            int answer = Console.Read();
+            Console.WriteLine();
+
+            return answer;
         }
 
         public int GetNumberFromUser(object? message)
@@ -76,6 +87,8 @@ namespace Taki.Game.Communicators
 
             while (!int.TryParse(Console.ReadLine(), out number))
                 SendErrorMessage($"Please enter a valid number");
+
+            Console.WriteLine();
 
             return number;
         }

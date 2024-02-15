@@ -4,7 +4,7 @@ namespace Taki.Game.Messages
 {
     internal interface IUserCommunicator
     {
-        void SendMessageToUser(object? message);
+        void SendMessageToUser(object? message = null);
         string? GetMessageFromUser(object? message = null);
         void SendAlertMessage(object? message);
         string? AlertGetMessageFromUser(object? message);
