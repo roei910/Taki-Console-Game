@@ -1,24 +1,22 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Taki.Game.Deck;
 using Taki.Game.GameRunner;
-using Taki.Game.Handlers;
 using Taki.Game.Messages;
 using Taki.Game.Players;
 
 namespace Taki.Game.Managers
 {
-    //TODO: try remove players handler, move all here
     internal class TakiGameRunner : ITakiGameRunner
     {
         protected readonly IUserCommunicator _userCommunicator;
-        protected readonly IPlayersHandler _playersHandler;
+        protected readonly IPlayersHolder _playersHolder;
         protected readonly ICardDecksHolder _cardsHolder;
         protected readonly ProgramVariables _programVariables;
         protected readonly IServiceProvider _serviceProvider;
 
-        public TakiGameRunner(IPlayersHandler playersHandler, IServiceProvider serviceProvider)
+        public TakiGameRunner(IPlayersHolder playersHolder, IServiceProvider serviceProvider)
         {
-            _playersHandler = playersHandler;
+            _playersHolder = playersHolder;
             _cardsHolder = serviceProvider.GetRequiredService<ICardDecksHolder>();
             _userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
             _programVariables = serviceProvider.GetRequiredService<ProgramVariables>();
@@ -29,14 +27,14 @@ namespace Taki.Game.Managers
         {
             ResetGame();
 
-            int numOfPlayers = _playersHandler.CountPlayers();
+            int numOfPlayers = _playersHolder.Players.Count;
             int totalWinners = _programVariables.NUMBER_OF_TOTAL_WINNERS;
 
             var winners = Enumerable.Range(0,
                 totalWinners > numOfPlayers ? numOfPlayers : totalWinners)
                 .Select(i =>
                 {
-                    Player winner = GetWinner();
+                    Player winner = _playersHolder.GetWinner(_serviceProvider);
                     _userCommunicator.GetCharFromUser($"Winner #{i + 1} is {winner.Name}\n" +
                         $"Press any key to continue");
                     return winner;
@@ -53,17 +51,9 @@ namespace Taki.Game.Managers
 
         public void ResetGame()
         {
-            var cards = _playersHandler.GetAllCardsFromPlayers();
+            var cards = _playersHolder.ReturnCardsFromPlayers();
             _cardsHolder.ResetCards(cards);
-            _playersHandler.DealCards(_cardsHolder);
-        }
-
-        private Player GetWinner()
-        {
-            while (_playersHandler.HasPlayerWon())
-                _playersHandler.CurrentPlayerPlay(_serviceProvider);
-
-            return _playersHandler.RemoveWinner();
+            _playersHolder.DealCards(_cardsHolder);
         }
     }
 }

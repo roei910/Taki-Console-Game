@@ -1,5 +1,5 @@
 ﻿using System.Drawing;
-using Taki.Game.Handlers;
+using Taki.Game.Players;
 
 namespace Taki.Game.Cards
 {
@@ -24,7 +24,7 @@ namespace Taki.Game.Cards
             return countPlus2 * 2;
         }
 
-        public override void Play(Card topDiscard, IPlayersHandler playersHandler, IServiceProvider serviceProvider)
+        public override void Play(Card topDiscard, IPlayersHolder playersHolder, IServiceProvider serviceProvider)
         {
             if (topDiscard is Plus2 card)
             {
@@ -35,7 +35,7 @@ namespace Taki.Game.Cards
             IsOnlyPlus2Allowed = true;
             countPlus2++;
 
-            base.Play(topDiscard, playersHandler, serviceProvider);
+            base.Play(topDiscard, playersHolder, serviceProvider);
         }
 
         public override string ToString()

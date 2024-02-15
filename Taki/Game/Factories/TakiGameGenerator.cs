@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Taki.Game.Deck;
-using Taki.Game.GameRules;
 using Taki.Game.Managers;
 using Taki.Game.Messages;
+using Taki.Game.Players;
 
 namespace Taki.Game.Factories
 {
@@ -36,13 +36,13 @@ namespace Taki.Game.Factories
             switch (typeOfGame)
             {
                 case GameTypeEnum.Normal:
-                    PlayersHandler playerHandler = _playersHandlerFactory
+                    PlayersHolder playerHandler = _playersHandlerFactory
                         .GeneratePlayersHandler(_serviceProvider, numberOfCards);
 
                     return new TakiGameRunner(playerHandler, _serviceProvider);
 
                 case GameTypeEnum.Pyramid:
-                    PlayersHandler pyramidPlayersHandler = _playersHandlerFactory
+                    PlayersHolder pyramidPlayersHandler = _playersHandlerFactory
                         .GeneratePyramidPlayersHandler(_serviceProvider);
 
                     return new TakiGameRunner(pyramidPlayersHandler, _serviceProvider);

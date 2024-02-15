@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Taki.Game.Deck;
-using Taki.Game.Handlers;
 using Taki.Game.Players;
 
 namespace Taki.Game.Cards
@@ -18,27 +17,27 @@ namespace Taki.Game.Cards
             return prevCard.IsStackableWith(other);
         }
 
-        public override void Play(Card topDisacrd, IPlayersHandler playersHandler, IServiceProvider serviceProvider)
+        public override void Play(Card topDisacrd, IPlayersHolder playersHolder, IServiceProvider serviceProvider)
         {
             ICardDecksHolder cardsHolder = serviceProvider.GetRequiredService<ICardDecksHolder>();
             Card topDiscard = cardsHolder.GetTopDiscard();
             prevCard = (topDiscard is SwitchCardsWithDirection card) ? card.prevCard : topDiscard;
 
-            Player currentPlayer = playersHandler.GetCurrentPlayer();
+            Player currentPlayer = playersHolder.CurrentPlayer;
             List<Card> savedCards = currentPlayer.PlayerCards;
             currentPlayer.PlayerCards = [];
 
-            playersHandler.NextPlayer();
+            playersHolder.NextPlayer();
 
             //TODO: work on players
-            while (playersHandler.GetCurrentPlayer().Id != currentPlayer.Id)
+            while (playersHolder.CurrentPlayer.Id != currentPlayer.Id)
             {
-                (savedCards, playersHandler.GetCurrentPlayer().PlayerCards) = (playersHandler.GetCurrentPlayer().PlayerCards, savedCards);
-                playersHandler.NextPlayer();
+                (savedCards, playersHolder.CurrentPlayer.PlayerCards) = (playersHolder.CurrentPlayer.PlayerCards, savedCards);
+                playersHolder.NextPlayer();
             }
 
             currentPlayer.PlayerCards = savedCards;
-            base.Play(topDiscard, playersHandler, serviceProvider);
+            base.Play(topDiscard, playersHolder, serviceProvider);
         }
 
         public override void FinishPlay()

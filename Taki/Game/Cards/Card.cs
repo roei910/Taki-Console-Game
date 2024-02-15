@@ -1,5 +1,5 @@
-﻿using Taki.Game.Handlers;
-using Taki.Game.Messages;
+﻿using Taki.Game.Messages;
+using Taki.Game.Players;
 
 namespace Taki.Game.Cards
 {
@@ -21,9 +21,9 @@ namespace Taki.Game.Cards
 
         public abstract bool IsStackableWith(Card other);
 
-        public virtual void Play(Card topDiscard, IPlayersHandler playersHandler, IServiceProvider serviceProvider) 
+        public virtual void Play(Card topDiscard, IPlayersHolder playersHolder, IServiceProvider serviceProvider) 
         {
-            playersHandler.NextPlayer();
+            playersHolder.NextPlayer();
         }
 
         public virtual void FinishNoPlay() { }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Drawing;
-using Taki.Game.Handlers;
 using Taki.Game.Messages;
 using Taki.Game.Players;
 
@@ -15,19 +14,19 @@ namespace Taki.Game.Cards
             return base.IsStackableWith(other) || other is Stop;
         }
 
-        public override void Play(Card topDiscard, IPlayersHandler playersHandler, 
+        public override void Play(Card topDiscard, IPlayersHolder playersHolder, 
             IServiceProvider serviceProvider)
         {
             IUserCommunicator userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
-            Player currentPlayer = playersHandler.GetCurrentPlayer();
-            playersHandler.NextPlayer();
+            Player currentPlayer = playersHolder.CurrentPlayer;
+            playersHolder.NextPlayer();
 
-            Player nextPlayer = playersHandler.GetCurrentPlayer();
+            Player nextPlayer = playersHolder.CurrentPlayer;
             userCommunicator.SendErrorMessage(
                 $"{nextPlayer.GetName()} was stopped by " +
                 $"{currentPlayer.GetName()}\n");
 
-            base.Play(topDiscard, playersHandler, serviceProvider);
+            base.Play(topDiscard, playersHolder, serviceProvider);
         }
 
         public override string ToString()

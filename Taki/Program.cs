@@ -10,11 +10,8 @@ using Taki.Game.Deck;
 
 //TODO: organizine blanks and general code 
 
-//TODO: change handler names if doesnt fit
 //TODO: error when drawing after finishing hand in pyramid => check
 //TODO: error with switch cards when putting another color on top is allowed (shouldnt work)
-//TODO: maybe move players to game runner and change players handler to something else (move handler???)
-//TODO: maybe save instances of all handlers inside the code????
 
 //TODO: check why singleton or scoped!!!
 

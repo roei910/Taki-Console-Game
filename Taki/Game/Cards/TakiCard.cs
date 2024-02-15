@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Drawing;
 using Taki.Game.Deck;
-using Taki.Game.Handlers;
 using Taki.Game.Messages;
 using Taki.Game.Players;
 
@@ -16,9 +15,9 @@ namespace Taki.Game.Cards
             return base.IsStackableWith(other) || other is TakiCard;
         }
 
-        public override void Play(Card topDiscard, IPlayersHandler playersHandler, IServiceProvider serviceProvider)
+        public override void Play(Card topDiscard, IPlayersHolder playersHolder, IServiceProvider serviceProvider)
         {
-            Player currentPlayer = playersHandler.GetCurrentPlayer();
+            Player currentPlayer = playersHolder.CurrentPlayer;
             Card? playerCard = currentPlayer.PickCard(IsStackableWith);
             IUserCommunicator userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
             ICardDecksHolder cardsHolder = serviceProvider.GetRequiredService<ICardDecksHolder>();
@@ -38,11 +37,11 @@ namespace Taki.Game.Cards
 
             if (Equals(topDiscard))
             {
-                base.Play(topDiscard, playersHandler, serviceProvider);
+                base.Play(topDiscard, playersHolder, serviceProvider);
                 return;
             }
 
-            cardsHolder.GetTopDiscard().Play(topDiscard, playersHandler, serviceProvider);
+            cardsHolder.GetTopDiscard().Play(topDiscard, playersHolder, serviceProvider);
         }
 
         public override string ToString()

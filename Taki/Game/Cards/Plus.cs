@@ -1,5 +1,5 @@
 ﻿using System.Drawing;
-using Taki.Game.Handlers;
+using Taki.Game.Players;
 
 namespace Taki.Game.Cards
 {
@@ -12,7 +12,7 @@ namespace Taki.Game.Cards
             return base.IsStackableWith(other) || other is Plus;
         }
 
-        public override void Play(Card topDiscard, IPlayersHandler playersHandler, 
+        public override void Play(Card topDiscard, IPlayersHolder playersHolder, 
             IServiceProvider serviceProvider) { }
 
         public override string ToString()

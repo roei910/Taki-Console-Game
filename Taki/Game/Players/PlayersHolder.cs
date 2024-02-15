@@ -1,29 +1,28 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Security;
 using Taki.Game.Cards;
 using Taki.Game.Deck;
-using Taki.Game.Handlers;
 using Taki.Game.Messages;
-using Taki.Game.Players;
 
-namespace Taki.Game.GameRules
+namespace Taki.Game.Players
 {
     //TODO: naming => players holder? or change to move maker or something similar to only make player moves
-    internal class PlayersHandler : IPlayersHandler
+    internal class PlayersHolder : IPlayersHolder
     {
         private readonly Queue<Player> _winners;
         private bool _isDirectionNormal = true;
         private int _noPlayCounter = 0;
-
         protected readonly int _numberOfPlayerCards;
-
         public readonly LinkedList<Player> _players;
 
-        public Player CurrentPlayer { get; private set; }
+        public List<Player> Players { get => _players.ToList(); }
 
-        public PlayersHandler(List<Player> players, int numberOfPlayerCards)
+        public Player CurrentPlayer { get => _players.First(); }
+
+        public PlayersHolder(List<Player> players, int numberOfPlayerCards)
         {
             _players = new(players);
-            CurrentPlayer = players.First();
             _winners = new Queue<Player>();
             _numberOfPlayerCards = numberOfPlayerCards;
         }
@@ -35,7 +34,7 @@ namespace Taki.Game.GameRules
                 {
                     Card? card = cardsHolder.DrawCard();
 
-                    if(card == null)
+                    if (card == null)
                         return false;
                     CurrentPlayer.AddCard(card);
 
@@ -55,25 +54,28 @@ namespace Taki.Game.GameRules
         {
             if (_isDirectionNormal)
             {
+                Player current = CurrentPlayer;
                 _players.RemoveFirst();
-                _players.AddLast(CurrentPlayer);
-                CurrentPlayer = _players.First();
+                _players.AddLast(current);
             }
             else
             {
-                CurrentPlayer = _players.Last();
+                Player current = _players.Last();
                 _players.RemoveLast();
-                _players.AddFirst(CurrentPlayer);
+                _players.AddFirst(current);
             }
         }
 
-        public Player RemoveWinner()
+        public Player GetWinner(IServiceProvider serviceProvider)
         {
+            while (HasPlayerWon())
+                CurrentPlayerPlay(serviceProvider);
+
             Player savedPlayer = CurrentPlayer;
 
             NextPlayer();
 
-            if(!_players.Remove(savedPlayer))
+            if (!_players.Remove(savedPlayer))
                 throw new Exception("error removing the player");
 
             _winners.Enqueue(savedPlayer);
@@ -81,12 +83,7 @@ namespace Taki.Game.GameRules
             return savedPlayer;
         }
 
-        public List<Player> GetAllPlayers()
-        {
-            return _players.ToList();
-        }
-
-        public bool HasPlayerWon()
+        private bool HasPlayerWon()
         {
             if (_players.Count == 1)
                 return false;
@@ -115,7 +112,7 @@ namespace Taki.Game.GameRules
                 NextPlayer();
                 _noPlayCounter++;
 
-                if (_noPlayCounter >= _players.Count && _noPlayCounter%_players.Count == 0)
+                if (_noPlayCounter >= _players.Count && _noPlayCounter % _players.Count == 0)
                 {
                     string message = "Too many rounds without play, consider calling a tie ;)\n" +
                         "press any enter to continue";
@@ -139,7 +136,7 @@ namespace Taki.Game.GameRules
             _isDirectionNormal = !_isDirectionNormal;
         }
 
-        public virtual List<Card> GetAllCardsFromPlayers()
+        public virtual List<Card> ReturnCardsFromPlayers()
         {
             List<Card> cards = [];
 
@@ -147,7 +144,7 @@ namespace Taki.Game.GameRules
             {
                 cards.AddRange(player.PlayerCards);
                 player.PlayerCards.Clear();
-                
+
                 return player;
             }).ToList();
 
@@ -156,13 +153,13 @@ namespace Taki.Game.GameRules
 
         public void DealCards(ICardDecksHolder cardsHolder)
         {
-            Enumerable.Range(0, _numberOfPlayerCards).ToList()
+            Enumerable.Range(0, _numberOfPlayerCards)
                 .Select(i =>
                 {
                     _players.Select(p =>
                     {
                         Card? drawCard = cardsHolder.DrawCard();
-                        if(drawCard != null)
+                        if (drawCard != null)
                             p.AddCard(drawCard);
 
                         return p;
@@ -172,16 +169,6 @@ namespace Taki.Game.GameRules
                 }).ToList();
 
             cardsHolder.DrawFirstCard();
-        }
-
-        public Player GetCurrentPlayer()
-        {
-            return CurrentPlayer;
-        }
-
-        public int CountPlayers()
-        {
-            return _players.Count;
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Drawing;
-using Taki.Game.Handlers;
 using Taki.Game.Messages;
+using Taki.Game.Players;
 
 namespace Taki.Game.Cards
 {
@@ -19,17 +19,17 @@ namespace Taki.Game.Cards
             takiInstance?.FinishPlay();
         }
 
-        public override void Play(Card topDiscard, IPlayersHandler playersHandler, 
+        public override void Play(Card topDiscard, IPlayersHolder playersHolder, 
             IServiceProvider serviceProvider)
         {
             IUserCommunicator userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
             Color color = Color.Empty;
 
             while (!ColorCard.Colors.Contains(color))
-                color = playersHandler.GetCurrentPlayer().ChooseColor();
+                color = playersHolder.CurrentPlayer.ChooseColor();
 
             takiInstance = new TakiCard(color);
-            takiInstance.Play(topDiscard, playersHandler, serviceProvider);
+            takiInstance.Play(topDiscard, playersHolder, serviceProvider);
         }
 
         public override bool IsStackableWith(Card other)

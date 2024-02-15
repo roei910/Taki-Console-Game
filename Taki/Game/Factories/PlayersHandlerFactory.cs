@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Taki.Game.Algorithm;
-using Taki.Game.GameRules;
+using Taki.Game.GameRunner;
 using Taki.Game.Handlers;
 using Taki.Game.Messages;
 using Taki.Game.Players;
@@ -46,7 +46,7 @@ namespace Taki.Game.Factories
             return players;
         }
 
-        public PlayersHandler GeneratePlayersHandler(IServiceProvider serviceProvider, int maxCards)
+        public PlayersHolder GeneratePlayersHandler(IServiceProvider serviceProvider, int maxCards)
         {
             //TODO: combine with the pyramid somehow
             var userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
@@ -54,10 +54,10 @@ namespace Taki.Game.Factories
             int numberOfPlayerCards = GetNumberOfPlayerCards(numberOfPlayers, maxCards, userCommunicator);
             List<Player> players = GeneratePlayers(numberOfPlayers, serviceProvider);
 
-            return new PlayersHandler(players, numberOfPlayerCards);
+            return new PlayersHolder(players, numberOfPlayerCards);
         }
 
-        public PlayersHandler GeneratePyramidPlayersHandler(IServiceProvider serviceProvider)
+        public PlayersHolder GeneratePyramidPlayersHandler(IServiceProvider serviceProvider)
         {
             var userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
             var playerAlgorithms = serviceProvider.GetRequiredService<List<IPlayerAlgorithm>>();
@@ -68,7 +68,7 @@ namespace Taki.Game.Factories
                 .Select(player => 
                 (Player)new PyramidPlayer(player, _programVariables.NUMBER_OF_PYRAMID_PLAYER_CARDS)).ToList();
 
-            return new PyramidPlayersHandler(pyramidPlayers, _programVariables.NUMBER_OF_PYRAMID_PLAYER_CARDS);
+            return new PyramidPlayersHolder(pyramidPlayers, _programVariables.NUMBER_OF_PYRAMID_PLAYER_CARDS);
         }
 
         private int GetNumberOfPlayers(IUserCommunicator userCommunicator)
