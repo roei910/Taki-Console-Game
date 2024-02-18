@@ -31,24 +31,7 @@ namespace Taki.Game.Communicators
         {
             T[] values = (T[])Enum.GetValues(typeof(T));
 
-            SendMessageToUser("Please choose the type by index:");
-
-            _ = values
-                .Select((i, value) =>
-                {
-                    SendMessageToUser($"{i}. {value}");
-                    return i;
-                }).ToList();
-
-            if(!int.TryParse(Console.ReadLine(), out int index) || 
-                index >= values.Length || index < 0)
-            {
-                Console.WriteLine();
-                return GetEnumFromUser<T>();
-            }
-
-            Console.WriteLine();
-            return values[index];
+            return GetUserEnumFromArray(values);
         }
 
         public Color GetColorFromUserEnum<EnumType>()
@@ -61,7 +44,7 @@ namespace Taki.Game.Communicators
 
         public string? GetMessageFromUser(object? message)
         {
-            if(message != null)
+            if (message != null)
                 SendMessageToUser(message);
 
             string? answer = Console.ReadLine();
@@ -97,6 +80,34 @@ namespace Taki.Game.Communicators
         {
             SendAlertMessage(message);
             return Console.ReadLine();
+        }
+
+        public T GetEnumFromUser<T>(List<T> excludedOptions)
+        {
+            T[] values = (T[])Enum.GetValues(typeof(T));
+            return GetUserEnumFromArray(values.Where(value => !excludedOptions.Contains(value)).ToArray());
+        }
+
+        private T GetUserEnumFromArray<T>(T[] values)
+        {
+            SendMessageToUser("Please choose the type by index:");
+
+            _ = values
+                .Select((i, value) =>
+                {
+                    SendMessageToUser($"{i}. {value}");
+                    return i;
+                }).ToList();
+
+            if (!int.TryParse(Console.ReadLine(), out int index) ||
+                index >= values.Length || index < 0)
+            {
+                Console.WriteLine();
+                return GetUserEnumFromArray<T>(values);
+            }
+
+            Console.WriteLine();
+            return values[index];
         }
     }
 }

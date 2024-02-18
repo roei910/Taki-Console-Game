@@ -12,6 +12,7 @@ namespace Taki.Game.Messages
         int GetNumberFromUser(object? message = null);
         int GetCharFromUser(object? message);
         EnumType GetEnumFromUser<EnumType>();
+        EnumType GetEnumFromUser<EnumType>(List<EnumType> excludedOptions);
         Color GetColorFromUserEnum<EnumType>();
     }
 }
