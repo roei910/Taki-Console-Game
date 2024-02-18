@@ -7,6 +7,7 @@ using Taki.Game.Messages;
 using Microsoft.Extensions.Configuration;
 using Taki;
 using Taki.Game.Deck;
+using Taki.Game.GameRunner;
 
 //TODO: extract the players choosing and add as function
 
@@ -42,7 +43,18 @@ var serviceProvider = new ServiceCollection()
     .AddSingleton<IGameScore, GameScore>()
     .BuildServiceProvider();
 
-TakiGameGenerator gameFactory = serviceProvider.GetRequiredService<TakiGameGenerator>();
-TakiGameRunner gameRunner = gameFactory.ChooseTypeOfGame();
+IUserCommunicator userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
+TakiGameGenerator gameGenerator = serviceProvider.GetRequiredService<TakiGameGenerator>();
 
-gameRunner.StartGame();
+TakiGameRunner gameRunner = gameGenerator.ChooseTypeOfGame();
+
+while (true)
+{
+    gameRunner.StartGame();
+
+    var answer = userCommunicator.AlertGetMessageFromUser("y to restart the game");
+    if (answer != "y")
+        break;
+}
+
+
