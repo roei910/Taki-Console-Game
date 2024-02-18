@@ -11,13 +11,6 @@ using Taki.Game.GameRunner;
 
 //TODO: extract the players choosing and add as function
 
-/*
- * TODO: add a section in the code where it is adding the user and searching
- * in a json file to see if the user already exists under the same name and ask 
- * if he wants to take his current score,
- * when someone wins the scores will update in the json file(add!!! not remove anything)
- */
-
 var serviceProvider = new ServiceCollection()
     .AddSingleton<IUserCommunicator, ConsoleUserCommunicator>()
     .AddSingleton<IPlayerAlgorithm, PlayerAlgorithm>()
