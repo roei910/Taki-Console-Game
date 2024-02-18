@@ -5,10 +5,9 @@ using Taki.Game.Messages;
 
 namespace Taki.Game.Players
 {
-    //TODO: check finish hand in pyramid taki => pyramid not working
     internal class PlayersHolder : IPlayersHolder
     {
-        private readonly Queue<Player> _winners;
+        protected readonly Queue<Player> _winners;
         private bool _isDirectionNormal = true;
         private int _noPlayCounter = 0;
         protected readonly int _numberOfPlayerCards;
@@ -138,7 +137,7 @@ namespace Taki.Game.Players
             _isDirectionNormal = !_isDirectionNormal;
         }
 
-        public virtual List<Card> ReturnCardsFromPlayers()
+        public List<Card> ReturnCardsFromPlayers()
         {
             List<Card> cards = [];
 
@@ -181,7 +180,7 @@ namespace Taki.Game.Players
             cardsHolder.DrawFirstCard();
         }
 
-        public void ResetPlayers()
+        public virtual void ResetPlayers()
         {
             _ = Enumerable.Range(0, _winners.Count)
             .Select(i =>

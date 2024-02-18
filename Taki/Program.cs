@@ -9,7 +9,7 @@ using Taki;
 using Taki.Game.Deck;
 using Taki.Game.GameRunner;
 
-//TODO: extract the players choosing and add as function
+//TODO: extract the players choosing and add as function to the beggining of the start game
 
 var serviceProvider = new ServiceCollection()
     .AddSingleton<IUserCommunicator, ConsoleUserCommunicator>()

@@ -6,7 +6,6 @@ using Taki.Game.Players;
 
 namespace Taki.Game.Cards
 {
-    //TODO: fix error finishing hand while playing taki not finishing turn and winning or going to next hand in pyramid
     internal class TakiCard : ColorCard
     {
         public TakiCard(Color color) : base(color) { }

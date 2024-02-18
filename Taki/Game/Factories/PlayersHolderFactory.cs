@@ -15,14 +15,16 @@ namespace Taki.Game.Factories
             _programVariables = programVariables;
         }
 
-        private List<Player> GeneratePlayers(int numberOfPlayers, IServiceProvider serviceProvider)
+        private List<Player> GeneratePlayers(IServiceProvider serviceProvider)
         {
             var userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
             var playerAlgorithms = serviceProvider.GetRequiredService<List<IPlayerAlgorithm>>();
             var manualPlayerAlgorithm = serviceProvider.GetRequiredService<ManualPlayerAlgorithm>();
             var random = serviceProvider.GetRequiredService<Random>();
-            int numberOfManualPlayers = GetNumberOfManualPlayer(numberOfPlayers, userCommunicator);
             var gameScore = serviceProvider.GetRequiredService<IGameScore>();
+
+            int numberOfPlayers = GetNumberOfPlayers(userCommunicator);
+            int numberOfManualPlayers = GetNumberOfManualPlayer(numberOfPlayers, userCommunicator);
 
             List<Player> players = Enumerable
                 .Range(0, numberOfPlayers)
@@ -58,13 +60,11 @@ namespace Taki.Game.Factories
             return players;
         }
 
-        public PlayersHolder GeneratePlayersHandler(IServiceProvider serviceProvider, int maxCards)
+        public PlayersHolder GeneratePlayersHandler(IServiceProvider serviceProvider, int maxNumberOfCards)
         {
-            //TODO: combine with the pyramid somehow
             var userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
-            int numberOfPlayers = GetNumberOfPlayers(userCommunicator);
-            int numberOfPlayerCards = GetNumberOfPlayerCards(numberOfPlayers, maxCards, userCommunicator);
-            List<Player> players = GeneratePlayers(numberOfPlayers, serviceProvider);
+            List<Player> players = GeneratePlayers(serviceProvider);
+            int numberOfPlayerCards = GetNumberOfPlayerCards(players.Count, maxNumberOfCards, userCommunicator);
 
             return new PlayersHolder(players, numberOfPlayerCards, serviceProvider);
         }
@@ -72,11 +72,8 @@ namespace Taki.Game.Factories
         public PlayersHolder GeneratePyramidPlayersHandler(IServiceProvider serviceProvider)
         {
             var userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
-            var playerAlgorithms = serviceProvider.GetRequiredService<List<IPlayerAlgorithm>>();
-            var manualPlayerAlgorithm = serviceProvider.GetRequiredService<ManualPlayerAlgorithm>();
-            int numberOfPlayers = GetNumberOfPlayers(userCommunicator);
 
-            List<Player> pyramidPlayers = GeneratePlayers(numberOfPlayers, serviceProvider)
+            List<Player> pyramidPlayers = GeneratePlayers(serviceProvider)
                 .Select(player => 
                 (Player)new PyramidPlayer(player, _programVariables.NUMBER_OF_PYRAMID_PLAYER_CARDS)).ToList();
 
@@ -131,9 +128,9 @@ namespace Taki.Game.Factories
             return name.Split(" ").ElementAt(0);
         }
 
-        private int GetNumberOfPlayerCards(int numberOfPlayers, int maxCards, IUserCommunicator userCommunicator)
+        private int GetNumberOfPlayerCards(int numberOfPlayers, int maxNumberOfCards, IUserCommunicator userCommunicator)
         {
-            int maxNumberOfPlayerCards = maxCards / numberOfPlayers - 1;
+            int maxNumberOfPlayerCards = maxNumberOfCards / numberOfPlayers - 1;
 
             if (maxNumberOfPlayerCards > _programVariables.MAX_NUMBER_OF_PLAYER_CARDS)
                 maxNumberOfPlayerCards = _programVariables.MAX_NUMBER_OF_PLAYER_CARDS;

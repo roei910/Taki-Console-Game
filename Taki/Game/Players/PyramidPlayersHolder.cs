@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Taki.Game.Cards;
 using Taki.Game.Deck;
 using Taki.Game.Messages;
 
@@ -18,7 +17,7 @@ namespace Taki.Game.Players
                 ICardDecksHolder cardsHolder = _serviceProvider.GetRequiredService<ICardDecksHolder>();
                 PyramidPlayer player = (PyramidPlayer)_players.Where(player => player.IsHandEmpty()).First();
 
-                if (player.CurrentNumberOfCards() != 0)
+                if (player.CurrentNumberOfCards() > 1)
                 {
                     DrawCards(player.GetNextPlayerHand(userCommunicator), player);
                     userCommunicator.SendErrorMessage(
@@ -34,18 +33,23 @@ namespace Taki.Game.Players
             return false;
         }
 
-        public override List<Card> ReturnCardsFromPlayers()
+        public override void ResetPlayers()
         {
-            var cards = base.ReturnCardsFromPlayers();
-
-            _players.Select(player =>
+            _ = _players.Select(player =>
             {
                 PyramidPlayer pyramidPlayer = (PyramidPlayer)player;
                 pyramidPlayer.ResetPyramidPlayerCards(_numberOfPlayerCards);
                 return player;
             }).ToList();
 
-            return cards;
+            _ = _winners.ToList().Select(w =>
+            {
+                PyramidPlayer pyramidPlayer = (PyramidPlayer)w;
+                pyramidPlayer.ResetPyramidPlayerCards(_numberOfPlayerCards);
+                return w;
+            }).ToList();
+
+            base.ResetPlayers();
         }
     }
 }
