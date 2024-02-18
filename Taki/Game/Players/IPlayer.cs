@@ -11,5 +11,6 @@ namespace Taki.Game.Players
         bool IsHandEmpty();
         string GetInformation();
         string GetName();
+        bool IsManualPlayer();
     }
 }

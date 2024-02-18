@@ -9,8 +9,9 @@ namespace Taki.Game.Players
     {
         private static int id = 0;
 
-        private readonly IPlayerAlgorithm choosingAlgorithm;
+        private readonly IPlayerAlgorithm _choosingAlgorithm;
         private readonly IUserCommunicator _userCommunicator;
+        public int Score { get; set; } = 0;
         public string Name { get; }
         public int Id { get; }
         public List<Card> PlayerCards { get; set; }
@@ -19,7 +20,7 @@ namespace Taki.Game.Players
         {
             PlayerCards = [];
             Id = id++;
-            choosingAlgorithm = playerAlgorithm ?? throw new ArgumentNullException(nameof(playerAlgorithm));
+            _choosingAlgorithm = playerAlgorithm ?? throw new ArgumentNullException(nameof(playerAlgorithm));
             Name = personName;
             _userCommunicator = userCommunicator;
         }
@@ -28,14 +29,14 @@ namespace Taki.Game.Players
         {
             PlayerCards = new(other.PlayerCards);
             Id = other.Id;
-            choosingAlgorithm = other.choosingAlgorithm;
+            _choosingAlgorithm = other._choosingAlgorithm;
             Name = other.Name;
             _userCommunicator = other._userCommunicator;
         }
 
         public Color ChooseColor()
         {
-            Color color = choosingAlgorithm.ChooseColor(PlayerCards, _userCommunicator);
+            Color color = _choosingAlgorithm.ChooseColor(PlayerCards, _userCommunicator);
             _userCommunicator.SendErrorMessage($"Player chose the color: {color}\n");
 
             return color;
@@ -67,17 +68,22 @@ namespace Taki.Game.Players
 
         public Card? PickCard(Func<Card, bool> IsStackableWith)
         {
-            return choosingAlgorithm.ChooseCard(IsStackableWith, PlayerCards, _userCommunicator);
+            return _choosingAlgorithm.ChooseCard(IsStackableWith, PlayerCards, _userCommunicator);
         }
 
         public string GetInformation()
         {
-            return $"Player[{Id}] ({Name}), {PlayerCards.Count} Algo: {choosingAlgorithm}";
+            return $"Player[{Id}] ({Name}), {PlayerCards.Count} Algo: {_choosingAlgorithm}";
         }
 
         public string GetName()
         {
             return $"Player[{Id}] ({Name})";
+        }
+
+        public bool IsManualPlayer()
+        {
+            return _choosingAlgorithm is ManualPlayerAlgorithm;
         }
     }
 }

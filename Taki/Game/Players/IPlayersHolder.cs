@@ -14,5 +14,6 @@ namespace Taki.Game.Players
         bool DrawCards(int numberOfCards, Player playerToDraw);
         Player GetWinner();
         List<Card> ReturnCardsFromPlayers();
+        void ResetPlayers();
     }
 }

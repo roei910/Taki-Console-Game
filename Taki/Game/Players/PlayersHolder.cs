@@ -74,7 +74,7 @@ namespace Taki.Game.Players
             while (!HasPlayerFinishedHand())
                 CurrentPlayerPlay();
 
-            Player playerWon = _players.First(player => player.IsHandEmpty());
+            Player playerWon = _players.FirstOrDefault(player => player.IsHandEmpty(), _players.First());
 
             if (!_players.Remove(playerWon))
                 throw new Exception("error removing the player");
@@ -87,7 +87,7 @@ namespace Taki.Game.Players
         protected virtual bool HasPlayerFinishedHand()
         {
             if (_players.Count == 1)
-                return false;
+                return true;
 
             return _players.Any(player => player.IsHandEmpty());
         }
@@ -150,6 +150,14 @@ namespace Taki.Game.Players
                 return player;
             }).ToList();
 
+            _ = _winners.Select(player =>
+            {
+                cards.AddRange(player.PlayerCards);
+                player.PlayerCards.Clear();
+
+                return player;
+            }).ToList();
+
             return cards;
         }
 
@@ -171,6 +179,16 @@ namespace Taki.Game.Players
                 }).ToList();
 
             cardsHolder.DrawFirstCard();
+        }
+
+        public void ResetPlayers()
+        {
+            _ = Enumerable.Range(0, _winners.Count)
+            .Select(i =>
+            {
+                _players.AddLast(_winners.Dequeue());
+                return i;
+            }).ToList();
         }
     }
 }
