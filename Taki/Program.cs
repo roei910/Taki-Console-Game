@@ -13,19 +13,19 @@ var serviceProvider = new ServiceCollection()
     .AddSingleton<IUserCommunicator, ConsoleUserCommunicator>()
     .AddSingleton<IPlayerAlgorithm, PlayerAlgorithm>()
     .AddSingleton<IPlayerAlgorithm, PlayerHateTakiAlgo>()
+    .AddSingleton<List<IPlayerAlgorithm>>()
+    .AddSingleton<ICardDecksHolder, CardDecksHolder>()
+    .AddSingleton<IGameScore, GameScore>()
     .AddSingleton<ManualPlayerAlgorithm>()
     .AddSingleton<PlayersHolderFactory>()
     .AddSingleton<CardDeckFactory>()
+    .AddSingleton<ProgramVariables>()
     .AddSingleton<Random>()
-    .AddSingleton<List<IPlayerAlgorithm>>()
     .AddSingleton<IConfiguration>(x => new ConfigurationBuilder()
         .AddJsonFile("AppConfigurations.json", false, true)
         .Build())
-    .AddSingleton<ProgramVariables>()
-    .AddSingleton<ICardDecksHolder, CardDecksHolder>()
-    .AddSingleton<IGameScore, GameScore>()
     .BuildServiceProvider();
 
-TakiGameRunner gameRunner = new TakiGameRunner(serviceProvider);
+TakiGameRunner gameRunner = new (serviceProvider);
 
 gameRunner.StartGameLoop();
