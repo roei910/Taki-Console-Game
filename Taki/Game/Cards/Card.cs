@@ -1,4 +1,6 @@
-﻿using Taki.Game.Players;
+﻿using Taki.Game.Deck;
+using Taki.Game.Messages;
+using Taki.Game.Players;
 
 namespace Taki.Game.Cards
 {
@@ -6,13 +8,19 @@ namespace Taki.Game.Cards
     {
         private static int idsCounter = 0;
         private readonly int _id = idsCounter++;
+        protected readonly IUserCommunicator _userCommunicator;
+
+        public Card(IUserCommunicator userCommunicator)
+        {
+            _userCommunicator = userCommunicator;
+        }
 
         public virtual int CardsToDraw()
         {
             return 1;
         }
 
-        public virtual void Play(Card topDiscard, IPlayersHolder playersHolder, IServiceProvider serviceProvider) 
+        public virtual void Play(Card topDiscard, ICardDecksHolder cardDecksHolder, IPlayersHolder playersHolder) 
         {
             playersHolder.NextPlayer();
         }

@@ -8,11 +8,11 @@ namespace Taki.Game.Players
         Player CurrentPlayer { get; }
         List<Player> Players { get; }
         void NextPlayer();
-        void CurrentPlayerPlay();
+        void CurrentPlayerPlay(ICardDecksHolder cardDecksHolder);
         void ChangeDirection();
         void DealCards(ICardDecksHolder cardsHolder);
-        bool DrawCards(int numberOfCards, Player playerToDraw);
-        Player GetWinner();
+        bool DrawCards(int numberOfCards, Player playerToDraw, ICardDecksHolder cardDecksHolder);
+        Player GetWinner(ICardDecksHolder cardDecksHolder);
         List<Card> ReturnCardsFromPlayers();
         void ResetPlayers();
     }

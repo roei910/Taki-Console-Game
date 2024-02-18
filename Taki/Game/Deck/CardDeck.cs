@@ -5,16 +5,16 @@ namespace Taki.Game.Deck
 {
     internal class CardDeck : ICardDeck
     {
-        private readonly IServiceProvider _serviceProvider;
         private LinkedList<Card> _cards;
+        private readonly Random _random;
 
-        public CardDeck(List<Card> cards, IServiceProvider serviceProvider)
+        public CardDeck(List<Card> cards, Random random)
         {
-            _serviceProvider = serviceProvider;
             _cards = new(cards);
+            _random = random;
         }
 
-        public CardDeck(IServiceProvider serviceProvider) : this(new List<Card>(), serviceProvider) { }
+        public CardDeck(Random random) : this(new List<Card>(), random) { }
         
         public Card GetFirst()
         {
@@ -33,9 +33,7 @@ namespace Taki.Game.Deck
 
         public void ShuffleDeck()
         {
-            var random = _serviceProvider.GetRequiredService<Random>();
-
-            _cards = new(_cards.OrderBy(val => random.Next(_cards.Count)));
+            _cards = new(_cards.OrderBy(val => _random.Next(_cards.Count)));
         }
 
         public void CombineFromDeck(CardDeck other)

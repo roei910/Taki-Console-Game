@@ -9,11 +9,10 @@ namespace Taki.Game.Deck
         private readonly CardDeck _drawPile;
         private readonly CardDeck _discardPile;
 
-        public CardDecksHolder(IServiceProvider serviceProvider)
+        public CardDecksHolder(CardDeckFactory cardDeckFactory, Random random)
         {
-            CardDeckFactory factory = serviceProvider.GetRequiredService<CardDeckFactory>();
-            _drawPile = factory.GenerateCardDeck(serviceProvider);
-            _discardPile = new(serviceProvider);
+            _drawPile = cardDeckFactory.GenerateCardDeck();
+            _discardPile = new CardDeck(random);
         }
 
         public Card GetTopDiscard()

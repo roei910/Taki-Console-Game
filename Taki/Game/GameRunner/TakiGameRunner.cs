@@ -17,24 +17,26 @@ namespace Taki.Game.Managers
 
     internal class TakiGameRunner : ITakiGameRunner
     {
+        protected readonly PlayersHolderFactory _playersHolderFactory;
+        //protected readonly CardDeckFactory _cardDeckFactory;
         protected readonly IUserCommunicator _userCommunicator;
-        protected readonly ICardDecksHolder _cardsHolder;
+        protected readonly ICardDecksHolder _cardDecksHolder;
         protected readonly ProgramVariables _programVariables;
-        protected readonly IServiceProvider _serviceProvider;
+        protected readonly IGameScore _gameScore;
         protected IPlayersHolder? _playersHolder;
 
-        public TakiGameRunner(IServiceProvider serviceProvider)
+        public TakiGameRunner(PlayersHolderFactory playersHolderFactory, CardDeckFactory cardDeckFactory,
+            IUserCommunicator userCommunicator, ProgramVariables programVariables, IGameScore gameScore, Random random)
         {
-            _cardsHolder = serviceProvider.GetRequiredService<ICardDecksHolder>();
-            _userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
-            _programVariables = serviceProvider.GetRequiredService<ProgramVariables>();
-            _serviceProvider = serviceProvider;
+            _userCommunicator = userCommunicator;
+            _programVariables = programVariables;
+            _playersHolderFactory = playersHolderFactory;
+            _gameScore = gameScore;
+            _cardDecksHolder = new CardDecksHolder(cardDeckFactory, random);
         }
 
         private void StartSingleGame()
         {
-            var gameScores = _serviceProvider.GetRequiredService<IGameScore>();
-
             int numOfPlayers = _playersHolder!.Players.Count;
             int totalWinners = _programVariables.NUMBER_OF_TOTAL_WINNERS;
 
@@ -42,7 +44,7 @@ namespace Taki.Game.Managers
                 totalWinners > numOfPlayers ? numOfPlayers : totalWinners)
                 .Select(i =>
                 {
-                    Player winner = _playersHolder.GetWinner();
+                    Player winner = _playersHolder.GetWinner(_cardDecksHolder);
                     _userCommunicator.GetCharFromUser($"Winner #{i + 1} is {winner.Name}\n" +
                         $"Press any key to continue");
 
@@ -51,8 +53,8 @@ namespace Taki.Game.Managers
 
             if (winners[0].IsManualPlayer())
             {
-                gameScores.SetScoreByName(winners[0].Name, ++winners[0].Score);
-                gameScores.UpdateScores();
+                _gameScore.SetScoreByName(winners[0].Name, ++winners[0].Score);
+                _gameScore.UpdateScores();
             }
 
             _userCommunicator.SendMessageToUser("The winners by order:");
@@ -80,15 +82,14 @@ namespace Taki.Game.Managers
         private void ResetGame()
         {
             var cards = _playersHolder!.ReturnCardsFromPlayers();
-            _cardsHolder.ResetCards(cards);
+            _cardDecksHolder.ResetCards(cards);
             _playersHolder.ResetPlayers();
-            _playersHolder.DealCards(_cardsHolder);
+            _playersHolder.DealCards(_cardDecksHolder);
         }
 
         private bool ChooseGameType()
         {
-            PlayersHolderFactory playersHolderFactory = _serviceProvider.GetRequiredService<PlayersHolderFactory>();
-            int numberOfCards = _cardsHolder.CountAllCards();
+            int numberOfCards = _cardDecksHolder.CountAllCards();
 
             GameRunnerOptions options = (_playersHolder != null) ?
                     _userCommunicator.GetEnumFromUser<GameRunnerOptions>() :
@@ -97,13 +98,13 @@ namespace Taki.Game.Managers
             switch (options)
             {
                 case GameRunnerOptions.NewNormalGame:
-                    _playersHolder = playersHolderFactory
-                    .GeneratePlayersHandler(_serviceProvider, numberOfCards);
+                    _playersHolder = _playersHolderFactory
+                    .GeneratePlayersHandler(numberOfCards);
                     break;
 
                 case GameRunnerOptions.NewPyramidGame:
-                    _playersHolder = playersHolderFactory
-                    .GeneratePyramidPlayersHandler(_serviceProvider);
+                    _playersHolder = _playersHolderFactory
+                    .GeneratePyramidPlayersHandler();
                     break;
 
                 case GameRunnerOptions.RestartGame:

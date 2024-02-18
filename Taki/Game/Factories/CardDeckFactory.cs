@@ -1,25 +1,25 @@
 ﻿using Taki.Game.Cards;
 using Taki.Game.Deck;
+using Taki.Game.Messages;
 
 namespace Taki.Game.Factories
 {
     internal class CardDeckFactory
     {
-        public CardDeck GenerateCardDeck(IServiceProvider serviceProvider)
+        private readonly IUserCommunicator _userCommunicator;
+        private readonly Random _random;
+
+        public CardDeckFactory(IUserCommunicator userCommunicator, Random random)
         {
-            return new(GetCardsList(), serviceProvider);
+            _userCommunicator = userCommunicator;
+            _random = random;
         }
 
-        public int MaxNumberOfCards()
-        {
-            return GetCardsList().Count;
-        }
-
-        private List<Card> GetCardsList()
+        public CardDeck GenerateCardDeck()
         {
             List<Card> cards = [.. GenerateNumberCards(), .. GenerateSpecialCards()];
 
-            return cards;
+            return new(cards, _random);
         }
 
         private List<Card> GenerateNumberCards()
@@ -27,7 +27,7 @@ namespace Taki.Game.Factories
             var cards = Enumerable.Range(0, 2)
                 .SelectMany(_ => Enumerable.Range(3, 7)
                 .SelectMany(number => ColorCard.Colors
-                .Select(color => (Card)new NumberCard(number, color)))).ToList();
+                .Select(color => (Card)new NumberCard(number, color, _userCommunicator)))).ToList();
 
             return cards;
         }
@@ -47,12 +47,12 @@ namespace Taki.Game.Factories
             {
                 return new List<Card>()
                 {
-                    new ChangeDirection(color),
-                    new ChangeDirection(color),
-                    new Plus(color),
-                    new Plus2(color),
-                    new TakiCard(color),
-                    new Stop(color)
+                    new ChangeDirection(color, _userCommunicator),
+                    new ChangeDirection(color, _userCommunicator),
+                    new Plus(color, _userCommunicator),
+                    new Plus2(color, _userCommunicator),
+                    new TakiCard(color, _userCommunicator),
+                    new Stop(color, _userCommunicator)
                 };
             }).ToList();
         }
@@ -60,12 +60,12 @@ namespace Taki.Game.Factories
         private List<Card> GenerateSpecialNoColor()
         {
             var cards = new List<Card>() {
-                new SuperTaki(),
-                new SwitchCardsWithDirection()
+                new SuperTaki(_userCommunicator),
+                new SwitchCardsWithDirection(_userCommunicator)
             };
 
             return Enumerable.Range(0, 2)
-                .Select(j => new ChangeColor())
+                .Select(j => new ChangeColor(_userCommunicator))
                 .Union(cards).ToList(); ;
         }
     }

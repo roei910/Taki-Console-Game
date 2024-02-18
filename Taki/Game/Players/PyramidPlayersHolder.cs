@@ -6,21 +6,20 @@ namespace Taki.Game.Players
 {
     internal class PyramidPlayersHolder : PlayersHolder
     {
-        public PyramidPlayersHolder(List<Player> players, int numberOfPlayerCards, IServiceProvider serviceProvider) :
-            base(players, numberOfPlayerCards, serviceProvider) { }
+        public PyramidPlayersHolder(List<Player> players, int numberOfPlayerCards, 
+            IUserCommunicator userCommunicator) :
+            base(players, numberOfPlayerCards, userCommunicator) { }
 
-        protected override bool HasPlayerFinishedHand()
+        protected override bool HasPlayerFinishedHand(ICardDecksHolder cardDecksHolder)
         {
-            if (base.HasPlayerFinishedHand())
+            if (base.HasPlayerFinishedHand(cardDecksHolder))
             {
-                IUserCommunicator userCommunicator = _serviceProvider.GetRequiredService<IUserCommunicator>();
-                ICardDecksHolder cardsHolder = _serviceProvider.GetRequiredService<ICardDecksHolder>();
                 PyramidPlayer player = (PyramidPlayer)_players.Where(player => player.IsHandEmpty()).First();
 
                 if (player.CurrentNumberOfCards() > 1)
                 {
-                    DrawCards(player.GetNextPlayerHand(userCommunicator), player);
-                    userCommunicator.SendErrorMessage(
+                    DrawCards(player.GetNextPlayerHand(_userCommunicator), player, cardDecksHolder);
+                    _userCommunicator.SendErrorMessage(
                         $"Player[{player.Id}] finished his current hand," +
                         $" currently on {player.CurrentNumberOfCards()} card(s)");
 

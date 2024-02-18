@@ -6,7 +6,6 @@ using Taki.Game.Factories;
 using Taki.Game.Messages;
 using Microsoft.Extensions.Configuration;
 using Taki;
-using Taki.Game.Deck;
 using Taki.Game.GameRunner;
 
 //TODO: check exception ewhen restarting, after reset there was only 2 cards in deck: 1 null, cards are being deleted somehow
@@ -23,7 +22,6 @@ var serviceProvider = new ServiceCollection()
     .AddSingleton<IPlayerAlgorithm, PlayerAlgorithm>()
     .AddSingleton<IPlayerAlgorithm, PlayerHateTakiAlgo>()
     .AddSingleton<List<IPlayerAlgorithm>>()
-    .AddSingleton<ICardDecksHolder, CardDecksHolder>()
     .AddSingleton<IGameScore, GameScore>()
     .AddSingleton<ManualPlayerAlgorithm>()
     .AddSingleton<PlayersHolderFactory>()
@@ -33,8 +31,9 @@ var serviceProvider = new ServiceCollection()
     .AddSingleton<IConfiguration>(x => new ConfigurationBuilder()
         .AddJsonFile("AppConfigurations.json", false, true)
         .Build())
+    .AddSingleton<TakiGameRunner>()
     .BuildServiceProvider();
 
-TakiGameRunner gameRunner = new (serviceProvider);
+TakiGameRunner gameRunner = serviceProvider.GetRequiredService<TakiGameRunner>();
 
 gameRunner.StartGameLoop();

@@ -1,4 +1,5 @@
-﻿using Taki.Game.Players;
+﻿using Taki.Game.Deck;
+using Taki.Game.Players;
 
 namespace Taki.Game.Cards
 {
@@ -6,7 +7,7 @@ namespace Taki.Game.Cards
     {
         int CardsToDraw();
         bool IsStackableWith(Card other);
-        void Play(Card topDiscard, IPlayersHolder playersHolder, IServiceProvider serviceProvider);
+        void Play(Card topDiscard, ICardDecksHolder cardDecksHolder, IPlayersHolder playersHolder);
         void FinishNoPlay();
         void FinishPlay();
     }

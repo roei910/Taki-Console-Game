@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System.Drawing;
+﻿using System.Drawing;
+using Taki.Game.Deck;
 using Taki.Game.Messages;
 using Taki.Game.Players;
 
@@ -7,26 +7,25 @@ namespace Taki.Game.Cards
 {
     internal class Stop : ColorCard
     {
-        public Stop(Color color) : base(color) { }
+        public Stop(Color color, IUserCommunicator userCommunicator) : 
+            base(color, userCommunicator) { }
 
         public override bool IsStackableWith(Card other)
         {
             return base.IsStackableWith(other) || other is Stop;
         }
 
-        public override void Play(Card topDiscard, IPlayersHolder playersHolder, 
-            IServiceProvider serviceProvider)
+        public override void Play(Card topDiscard, ICardDecksHolder cardDecksHolder, IPlayersHolder playersHolder)
         {
-            IUserCommunicator userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
             Player currentPlayer = playersHolder.CurrentPlayer;
             playersHolder.NextPlayer();
 
             Player nextPlayer = playersHolder.CurrentPlayer;
-            userCommunicator.SendErrorMessage(
+            _userCommunicator.SendErrorMessage(
                 $"{nextPlayer.GetName()} was stopped by " +
                 $"{currentPlayer.GetName()}\n");
 
-            base.Play(topDiscard, playersHolder, serviceProvider);
+            base.Play(topDiscard, cardDecksHolder, playersHolder);
         }
 
         public override string ToString()

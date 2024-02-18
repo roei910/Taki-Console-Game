@@ -1,4 +1,7 @@
 ﻿using System.Drawing;
+using Taki.Game.Deck;
+using Taki.Game.Messages;
+using Taki.Game.Players;
 
 namespace Taki.Game.Cards
 {
@@ -16,7 +19,8 @@ namespace Taki.Game.Cards
 
         public static List<Color> Colors = [Color.Green, Color.Red, Color.Yellow, Color.Blue];
 
-        public ColorCard(Color color) 
+        public ColorCard(Color color, IUserCommunicator userCommunicator) :
+            base(userCommunicator)
         {
             _color = color;
         }

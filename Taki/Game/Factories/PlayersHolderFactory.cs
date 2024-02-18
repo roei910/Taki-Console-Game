@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Taki.Game.Algorithm;
+﻿using Taki.Game.Algorithm;
+using Taki.Game.Deck;
 using Taki.Game.GameRunner;
 using Taki.Game.Messages;
 using Taki.Game.Players;
@@ -9,36 +9,42 @@ namespace Taki.Game.Factories
     internal class PlayersHolderFactory
     {
         private readonly ProgramVariables _programVariables;
+        private readonly IUserCommunicator _userCommunicator;
+        private readonly List<IPlayerAlgorithm> _playerAlgorithms;
+        private readonly Random _random;
+        private readonly IGameScore _gameScore;
+        private readonly ManualPlayerAlgorithm _manualPlayerAlgorithm;
 
-        public PlayersHolderFactory(ProgramVariables programVariables)
+        public PlayersHolderFactory(ProgramVariables programVariables, IUserCommunicator userCommunicator,
+            List<IPlayerAlgorithm> playerAlgorithms, Random random, IGameScore gameScore,
+            ManualPlayerAlgorithm manualPlayerAlgorithm)
         {
             _programVariables = programVariables;
+            _userCommunicator = userCommunicator;
+            _playerAlgorithms = playerAlgorithms;
+            _random = random;
+            _gameScore = gameScore;
+            _manualPlayerAlgorithm = manualPlayerAlgorithm;
         }
 
-        private List<Player> GeneratePlayers(IServiceProvider serviceProvider)
+        private List<Player> GeneratePlayers()
         {
-            var userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
-            var playerAlgorithms = serviceProvider.GetRequiredService<List<IPlayerAlgorithm>>();
-            var manualPlayerAlgorithm = serviceProvider.GetRequiredService<ManualPlayerAlgorithm>();
-            var random = serviceProvider.GetRequiredService<Random>();
-            var gameScore = serviceProvider.GetRequiredService<IGameScore>();
-
-            int numberOfPlayers = GetNumberOfPlayers(userCommunicator);
-            int numberOfManualPlayers = GetNumberOfManualPlayer(numberOfPlayers, userCommunicator);
+            int numberOfPlayers = GetNumberOfPlayers();
+            int numberOfManualPlayers = GetNumberOfManualPlayer(numberOfPlayers);
 
             List<Player> players = Enumerable
                 .Range(0, numberOfPlayers)
                 .Select(i =>
                 {
-                    string name = GetNameFromUser(i, userCommunicator);
+                    string name = GetNameFromUser(i);
 
                     if (numberOfManualPlayers-- > 0)
                     {
-                        Player player = new Player(name, manualPlayerAlgorithm, userCommunicator);
-                        if(gameScore.DoesUserExist(name))
+                        Player player = new Player(name, _manualPlayerAlgorithm, _userCommunicator);
+                        if(_gameScore.DoesUserExist(name))
                         {
-                            int score = gameScore.GetScoreByName(name);
-                            string? answer = userCommunicator.GetMessageFromUser($"would you like to load the existing " +
+                            int score = _gameScore.GetScoreByName(name);
+                            string? answer = _userCommunicator.GetMessageFromUser($"would you like to load the existing " +
                                 $"score of {score} for user {name}, y or else to avoid");
                             if(answer != null)
                                 player.Score = score;
@@ -46,55 +52,53 @@ namespace Taki.Game.Factories
                         return player;
                     }
 
-                    int algoRandomIndex = random.Next(playerAlgorithms.Count);
+                    int algoRandomIndex = _random.Next(_playerAlgorithms.Count);
 
-                    return new Player(name, playerAlgorithms[algoRandomIndex], userCommunicator);
+                    return new Player(name, _playerAlgorithms[algoRandomIndex], _userCommunicator);
                 }).ToList();
 
-            userCommunicator.SendMessageToUser("users created are:");
+            _userCommunicator.SendMessageToUser("users created are:");
             var playersInormation = players.Select(p => p.GetInformation())
                 .ToList();
-            userCommunicator.SendMessageToUser(string.Join("\n", playersInormation));
-            userCommunicator.SendMessageToUser();
+            _userCommunicator.SendMessageToUser(string.Join("\n", playersInormation));
+            _userCommunicator.SendMessageToUser();
 
             return players;
         }
 
-        public PlayersHolder GeneratePlayersHandler(IServiceProvider serviceProvider, int maxNumberOfCards)
+        public PlayersHolder GeneratePlayersHandler(int maxNumberOfCards)
         {
-            var userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
-            List<Player> players = GeneratePlayers(serviceProvider);
-            int numberOfPlayerCards = GetNumberOfPlayerCards(players.Count, maxNumberOfCards, userCommunicator);
+            List<Player> players = GeneratePlayers();
+            int numberOfPlayerCards = GetNumberOfPlayerCards(players.Count, maxNumberOfCards);
 
-            return new PlayersHolder(players, numberOfPlayerCards, serviceProvider);
+            return new PlayersHolder(players, numberOfPlayerCards, _userCommunicator);
         }
 
-        public PlayersHolder GeneratePyramidPlayersHandler(IServiceProvider serviceProvider)
+        public PlayersHolder GeneratePyramidPlayersHandler()
         {
-            var userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
-
-            List<Player> pyramidPlayers = GeneratePlayers(serviceProvider)
+            List<Player> pyramidPlayers = GeneratePlayers()
                 .Select(player => 
                 (Player)new PyramidPlayer(player, _programVariables.NUMBER_OF_PYRAMID_PLAYER_CARDS)).ToList();
 
-            return new PyramidPlayersHolder(pyramidPlayers, _programVariables.NUMBER_OF_PYRAMID_PLAYER_CARDS, serviceProvider);
+            return new PyramidPlayersHolder(pyramidPlayers, _programVariables.NUMBER_OF_PYRAMID_PLAYER_CARDS, 
+                _userCommunicator);
         }
 
-        private int GetNumberOfPlayers(IUserCommunicator userCommunicator)
+        private int GetNumberOfPlayers()
         {
             string message = $"Please enter number of players," +
                 $" a number between {_programVariables.MIN_NUMBER_OF_PLAYERS} and {_programVariables.MAX_NUMBER_OF_PLAYERS}";
-            int numberOfPlayers = userCommunicator.GetNumberFromUser(message);
+            int numberOfPlayers = _userCommunicator.GetNumberFromUser(message);
 
             if (numberOfPlayers < _programVariables.MIN_NUMBER_OF_PLAYERS)
             {
-                userCommunicator.SendMessageToUser($"Not enough players, setting as min value {_programVariables.MIN_NUMBER_OF_PLAYERS}");
+                _userCommunicator.SendMessageToUser($"Not enough players, setting as min value {_programVariables.MIN_NUMBER_OF_PLAYERS}");
 
                 numberOfPlayers = _programVariables.MIN_NUMBER_OF_PLAYERS;
             }
             else if (numberOfPlayers > _programVariables.MAX_NUMBER_OF_PLAYERS)
             {
-                userCommunicator.SendMessageToUser($"Too many players for the game, setting as max value {_programVariables.MAX_NUMBER_OF_PLAYERS}");
+                _userCommunicator.SendMessageToUser($"Too many players for the game, setting as max value {_programVariables.MAX_NUMBER_OF_PLAYERS}");
 
                 numberOfPlayers = _programVariables.MAX_NUMBER_OF_PLAYERS;
             }
@@ -102,9 +106,9 @@ namespace Taki.Game.Factories
             return numberOfPlayers;
         }
 
-        private int GetNumberOfManualPlayer(int maxPlayers, IUserCommunicator userCommunicator)
+        private int GetNumberOfManualPlayer(int maxPlayers)
         {
-            int numberOfPlayers = userCommunicator.GetNumberFromUser(
+            int numberOfPlayers = _userCommunicator.GetNumberFromUser(
                 $"Please enter number of manual players or 0 for none");
 
             if (numberOfPlayers < 0)
@@ -116,31 +120,31 @@ namespace Taki.Game.Factories
             return numberOfPlayers;
         }
 
-        private string GetNameFromUser(int index, IUserCommunicator userCommunicator)
+        private string GetNameFromUser(int index)
         {
-            string? name = userCommunicator.GetMessageFromUser(
+            string? name = _userCommunicator.GetMessageFromUser(
                 $"Please enter a name #{index + 1}");
 
             while(name == null)
-                name = userCommunicator.GetMessageFromUser(
+                name = _userCommunicator.GetMessageFromUser(
                     $"Please enter a valid name #{index + 1}");
 
             return name.Split(" ").ElementAt(0);
         }
 
-        private int GetNumberOfPlayerCards(int numberOfPlayers, int maxNumberOfCards, IUserCommunicator userCommunicator)
+        private int GetNumberOfPlayerCards(int numberOfPlayers, int maxNumberOfCards)
         {
             int maxNumberOfPlayerCards = maxNumberOfCards / numberOfPlayers - 1;
 
             if (maxNumberOfPlayerCards > _programVariables.MAX_NUMBER_OF_PLAYER_CARDS)
                 maxNumberOfPlayerCards = _programVariables.MAX_NUMBER_OF_PLAYER_CARDS;
 
-            int numberOfPlayerCards = userCommunicator.GetNumberFromUser(
+            int numberOfPlayerCards = _userCommunicator.GetNumberFromUser(
                 "please enter a number of player cards");
 
             if (numberOfPlayerCards > maxNumberOfPlayerCards)
             {
-                userCommunicator.SendMessageToUser($"Too many cards per player, max is {maxNumberOfPlayerCards}." +
+                _userCommunicator.SendMessageToUser($"Too many cards per player, max is {maxNumberOfPlayerCards}." +
                     $" setting as the max value");
 
                 return maxNumberOfPlayerCards;
@@ -148,7 +152,7 @@ namespace Taki.Game.Factories
 
             if (numberOfPlayerCards < _programVariables.MIN_NUMBER_OF_PLAYER_CARDS)
             {
-                userCommunicator.SendMessageToUser($"Not enough cards per player, " +
+                _userCommunicator.SendMessageToUser($"Not enough cards per player, " +
                     $"min is {_programVariables.MIN_NUMBER_OF_PLAYER_CARDS} setting as min value");
 
                 return _programVariables.MIN_NUMBER_OF_PLAYER_CARDS;

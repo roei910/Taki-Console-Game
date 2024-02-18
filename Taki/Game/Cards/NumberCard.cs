@@ -1,4 +1,7 @@
 ﻿using System.Drawing;
+using Taki.Game.Deck;
+using Taki.Game.Messages;
+using Taki.Game.Players;
 
 namespace Taki.Game.Cards
 {
@@ -6,7 +9,8 @@ namespace Taki.Game.Cards
     {
         private readonly int _number;
 
-        public NumberCard(int number, Color color) : base(color)
+        public NumberCard(int number, Color color, IUserCommunicator userCommunicator) : 
+            base(color, userCommunicator)
         {
             _number = number;
         }

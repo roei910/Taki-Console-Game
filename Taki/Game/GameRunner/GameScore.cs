@@ -28,6 +28,7 @@ namespace Taki.Game.GameRunner
             scoresDictionary[name] = score;
         }
 
+        //TODO: maybe connect with get score
         public bool DoesUserExist(string name)
         {
             return scoresDictionary.ContainsKey(name);

@@ -1,4 +1,6 @@
-﻿using Taki.Game.Players;
+﻿using Taki.Game.Deck;
+using Taki.Game.Messages;
+using Taki.Game.Players;
 
 namespace Taki.Game.Cards
 {
@@ -6,7 +8,8 @@ namespace Taki.Game.Cards
     {
         private Card? prevCard = null;
 
-        public SwitchCardsWithDirection() { }
+        public SwitchCardsWithDirection(IUserCommunicator userCommunicator) : 
+            base(userCommunicator) { }
 
         public override bool IsStackableWith(Card other)
         {
@@ -15,7 +18,7 @@ namespace Taki.Game.Cards
             return prevCard.IsStackableWith(other);
         }
 
-        public override void Play(Card topDiscard, IPlayersHolder playersHolder, IServiceProvider serviceProvider)
+        public override void Play(Card topDiscard, ICardDecksHolder cardDecksHolder, IPlayersHolder playersHolder)
         {
             prevCard = (topDiscard is SwitchCardsWithDirection card) ? card.prevCard : topDiscard;
 
@@ -27,7 +30,7 @@ namespace Taki.Game.Cards
                 (savedCards, players[i].PlayerCards) = (players[i].PlayerCards, savedCards);
 
             players[0].PlayerCards = savedCards;
-            base.Play(topDiscard, playersHolder, serviceProvider);
+            base.Play(topDiscard, cardDecksHolder, playersHolder);
         }
 
         public override void FinishPlay()
