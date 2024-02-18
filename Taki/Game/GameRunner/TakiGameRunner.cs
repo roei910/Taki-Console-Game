@@ -58,9 +58,9 @@ namespace Taki.Game.Managers
 
             _userCommunicator.SendMessageToUser("The winners by order:");
 
-            winners.Select(winner =>
+            winners.Select((winner, i) =>
             {
-                _userCommunicator.SendMessageToUser($"{winners.IndexOf(winner)}. {winner.Name}");
+                _userCommunicator.SendMessageToUser($"{i+1}. {winner.Name}");
 
                 return winner;
             }).ToList();

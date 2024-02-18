@@ -58,7 +58,7 @@ namespace Taki.Game.Factories
                 }).ToList();
 
             _userCommunicator.SendMessageToUser("users created are:");
-            var playersInormation = players.Select(p => p.GetInformation())
+            var playersInormation = players.Select((p, i) => $"{i+1}. {p.GetInformation()}")
                 .ToList();
             _userCommunicator.SendMessageToUser(string.Join("\n", playersInormation));
             _userCommunicator.SendMessageToUser();

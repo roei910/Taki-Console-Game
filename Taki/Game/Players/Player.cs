@@ -73,7 +73,7 @@ namespace Taki.Game.Players
 
         public string GetInformation()
         {
-            return $"Player[{Id}] ({Name}), {PlayerCards.Count} Algo: {_choosingAlgorithm}";
+            return $"{Name}: {PlayerCards.Count} Algo: {_choosingAlgorithm}";
         }
 
         public string GetName()

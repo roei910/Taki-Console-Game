@@ -93,8 +93,7 @@ namespace Taki.Game.Players
 
         public void CurrentPlayerPlay(ICardDecksHolder cardDecksHolder)
         {
-            _userCommunicator.SendAlertMessage($"Player[{CurrentPlayer.Id}]" +
-                $" ({CurrentPlayer.Name}) is playing, " +
+            _userCommunicator.SendAlertMessage($"{CurrentPlayer.Name} is playing, " +
                 $"{CurrentPlayer.PlayerCards.Count} cards in hand");
 
             Card topDiscard = cardDecksHolder.GetTopDiscard();
