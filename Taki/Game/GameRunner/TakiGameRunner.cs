@@ -26,6 +26,7 @@ namespace Taki.Game.Managers
         public void StartGame()
         {
             ResetGame();
+            var gameScores = _serviceProvider.GetRequiredService<IGameScore>();
 
             int numOfPlayers = _playersHolder.Players.Count;
             int totalWinners = _programVariables.NUMBER_OF_TOTAL_WINNERS;
@@ -37,22 +38,31 @@ namespace Taki.Game.Managers
                     Player winner = _playersHolder.GetWinner();
                     _userCommunicator.GetCharFromUser($"Winner #{i + 1} is {winner.Name}\n" +
                         $"Press any key to continue");
+
                     return winner;
                 }).ToList();
+
+            if (winners[0].IsManualPlayer())
+            {
+                gameScores.SetScoreByName(winners[0].Name, ++winners[0].Score);
+                gameScores.UpdateScores();
+            }
 
             _userCommunicator.SendMessageToUser("The winners by order:");
 
             winners.Select(winner =>
             {
                 _userCommunicator.SendMessageToUser($"{winners.IndexOf(winner)}. {winner.Name}");
+
                 return winner;
             }).ToList();
         }
 
-        public void ResetGame()
+        private void ResetGame()
         {
             var cards = _playersHolder.ReturnCardsFromPlayers();
             _cardsHolder.ResetCards(cards);
+            _playersHolder.ResetPlayers();
             _playersHolder.DealCards(_cardsHolder);
         }
     }

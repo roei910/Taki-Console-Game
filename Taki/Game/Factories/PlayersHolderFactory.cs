@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Taki.Game.Algorithm;
+using Taki.Game.GameRunner;
 using Taki.Game.Messages;
 using Taki.Game.Players;
 
@@ -21,6 +22,7 @@ namespace Taki.Game.Factories
             var manualPlayerAlgorithm = serviceProvider.GetRequiredService<ManualPlayerAlgorithm>();
             var random = serviceProvider.GetRequiredService<Random>();
             int numberOfManualPlayers = GetNumberOfManualPlayer(numberOfPlayers, userCommunicator);
+            var gameScore = serviceProvider.GetRequiredService<IGameScore>();
 
             List<Player> players = Enumerable
                 .Range(0, numberOfPlayers)
@@ -29,7 +31,18 @@ namespace Taki.Game.Factories
                     string name = GetNameFromUser(i, userCommunicator);
 
                     if (numberOfManualPlayers-- > 0)
-                        return new Player(name, manualPlayerAlgorithm, userCommunicator);
+                    {
+                        Player player = new Player(name, manualPlayerAlgorithm, userCommunicator);
+                        if(gameScore.DoesUserExist(name))
+                        {
+                            int score = gameScore.GetScoreByName(name);
+                            string? answer = userCommunicator.GetMessageFromUser($"would you like to load the existing " +
+                                $"score of {score} for user {name}, y or else to avoid");
+                            if(answer != null)
+                                player.Score = score;
+                        }
+                        return player;
+                    }
 
                     int algoRandomIndex = random.Next(playerAlgorithms.Count);
 

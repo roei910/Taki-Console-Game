@@ -27,6 +27,7 @@ var serviceProvider = new ServiceCollection()
     .AddSingleton<TakiGameGenerator>()
     .AddSingleton<ICardDecksHolder, CardDecksHolder>()
     .AddSingleton<TakiGameGenerator>()
+    .AddSingleton<IGameScore, GameScore>()
     .BuildServiceProvider();
 
 TakiGameGenerator gameFactory = serviceProvider.GetRequiredService<TakiGameGenerator>();
