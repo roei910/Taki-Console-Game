@@ -9,8 +9,6 @@ using Taki;
 using Taki.Game.Deck;
 using Taki.Game.GameRunner;
 
-//TODO: extract the players choosing and add as function to the beggining of the start game
-
 var serviceProvider = new ServiceCollection()
     .AddSingleton<IUserCommunicator, ConsoleUserCommunicator>()
     .AddSingleton<IPlayerAlgorithm, PlayerAlgorithm>()
@@ -24,14 +22,10 @@ var serviceProvider = new ServiceCollection()
         .AddJsonFile("AppConfigurations.json", false, true)
         .Build())
     .AddSingleton<ProgramVariables>()
-    .AddSingleton<TakiGameGenerator>()
     .AddSingleton<ICardDecksHolder, CardDecksHolder>()
-    .AddSingleton<TakiGameGenerator>()
     .AddSingleton<IGameScore, GameScore>()
     .BuildServiceProvider();
 
-TakiGameGenerator gameGenerator = serviceProvider.GetRequiredService<TakiGameGenerator>();
-
-TakiGameRunner gameRunner = gameGenerator.ChooseTypeOfGame();
+TakiGameRunner gameRunner = new TakiGameRunner(serviceProvider);
 
 gameRunner.StartGameLoop();

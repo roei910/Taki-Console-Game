@@ -1,34 +1,41 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Taki.Game.Deck;
+using Taki.Game.Factories;
 using Taki.Game.GameRunner;
 using Taki.Game.Messages;
 using Taki.Game.Players;
 
 namespace Taki.Game.Managers
 {
+    enum GameRunnerOptions
+    {
+        NewNormalGame,
+        NewPyramidGame,
+        RestartGame,
+        QuitGame
+    }
+
     internal class TakiGameRunner : ITakiGameRunner
     {
         protected readonly IUserCommunicator _userCommunicator;
-        protected readonly IPlayersHolder _playersHolder;
         protected readonly ICardDecksHolder _cardsHolder;
         protected readonly ProgramVariables _programVariables;
         protected readonly IServiceProvider _serviceProvider;
+        protected IPlayersHolder? _playersHolder;
 
-        public TakiGameRunner(IPlayersHolder playersHolder, IServiceProvider serviceProvider)
+        public TakiGameRunner(IServiceProvider serviceProvider)
         {
-            _playersHolder = playersHolder;
             _cardsHolder = serviceProvider.GetRequiredService<ICardDecksHolder>();
             _userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
             _programVariables = serviceProvider.GetRequiredService<ProgramVariables>();
             _serviceProvider = serviceProvider;
         }
 
-        public void StartSingleGame()
+        private void StartSingleGame()
         {
-            ResetGame();
             var gameScores = _serviceProvider.GetRequiredService<IGameScore>();
 
-            int numOfPlayers = _playersHolder.Players.Count;
+            int numOfPlayers = _playersHolder!.Players.Count;
             int totalWinners = _programVariables.NUMBER_OF_TOTAL_WINNERS;
 
             var winners = Enumerable.Range(0,
@@ -60,22 +67,56 @@ namespace Taki.Game.Managers
 
         public void StartGameLoop()
         {
-            while (true)
-            {
-                StartSingleGame();
+            if (!ChooseGameType())
+                return;
 
-                var answer = _userCommunicator.AlertGetMessageFromUser("y to restart the game");
-                if (answer != "y")
-                    break;
-            }
+            ResetGame();
+
+            StartSingleGame();
+
+            StartGameLoop();
         }
 
         private void ResetGame()
         {
-            var cards = _playersHolder.ReturnCardsFromPlayers();
+            var cards = _playersHolder!.ReturnCardsFromPlayers();
             _cardsHolder.ResetCards(cards);
             _playersHolder.ResetPlayers();
             _playersHolder.DealCards(_cardsHolder);
+        }
+
+        private bool ChooseGameType()
+        {
+            PlayersHolderFactory playersHolderFactory = _serviceProvider.GetRequiredService<PlayersHolderFactory>();
+            int numberOfCards = _cardsHolder.CountAllCards();
+
+            GameRunnerOptions options = (_playersHolder != null) ?
+                    _userCommunicator.GetEnumFromUser<GameRunnerOptions>() :
+                    _userCommunicator.GetEnumFromUser(new List<GameRunnerOptions>() { GameRunnerOptions.RestartGame });
+
+            switch (options)
+            {
+                case GameRunnerOptions.NewNormalGame:
+                    _playersHolder = playersHolderFactory
+                    .GeneratePlayersHandler(_serviceProvider, numberOfCards);
+                    break;
+
+                case GameRunnerOptions.NewPyramidGame:
+                    _playersHolder = playersHolderFactory
+                    .GeneratePyramidPlayersHandler(_serviceProvider);
+                    break;
+
+                case GameRunnerOptions.RestartGame:
+                    break;
+
+                case GameRunnerOptions.QuitGame:
+                    return false;
+
+                default:
+                    throw new Exception("type enum was invalid");
+            }
+
+            return true;
         }
     }
 }
