@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System.Reflection.Metadata.Ecma335;
 using Taki.Game.Deck;
 using Taki.Game.Managers;
 using Taki.Game.Messages;
@@ -49,7 +48,7 @@ namespace Taki.Game.Factories
                     return new TakiGameRunner(pyramidPlayersHandler, _serviceProvider);
 
                 default:
-                    throw new Exception("type enum was wrong");
+                    throw new Exception("type enum was invalid");
             }
         }
     }
