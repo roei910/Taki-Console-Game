@@ -2,6 +2,7 @@
 {
     internal interface ITakiGameRunner
     {
-        void StartGame();
+        void StartSingleGame();
+        void StartGameLoop();
     }
 }

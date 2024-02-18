@@ -48,13 +48,4 @@ TakiGameGenerator gameGenerator = serviceProvider.GetRequiredService<TakiGameGen
 
 TakiGameRunner gameRunner = gameGenerator.ChooseTypeOfGame();
 
-while (true)
-{
-    gameRunner.StartGame();
-
-    var answer = userCommunicator.AlertGetMessageFromUser("y to restart the game");
-    if (answer != "y")
-        break;
-}
-
-
+gameRunner.StartGameLoop();

@@ -23,7 +23,7 @@ namespace Taki.Game.Managers
             _serviceProvider = serviceProvider;
         }
 
-        public void StartGame()
+        public void StartSingleGame()
         {
             ResetGame();
             var gameScores = _serviceProvider.GetRequiredService<IGameScore>();
@@ -56,6 +56,18 @@ namespace Taki.Game.Managers
 
                 return winner;
             }).ToList();
+        }
+
+        public void StartGameLoop()
+        {
+            while (true)
+            {
+                StartSingleGame();
+
+                var answer = _userCommunicator.AlertGetMessageFromUser("y to restart the game");
+                if (answer != "y")
+                    break;
+            }
         }
 
         private void ResetGame()
