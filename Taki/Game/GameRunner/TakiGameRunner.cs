@@ -18,7 +18,6 @@ namespace Taki.Game.Managers
     internal class TakiGameRunner : ITakiGameRunner
     {
         protected readonly PlayersHolderFactory _playersHolderFactory;
-        //protected readonly CardDeckFactory _cardDeckFactory;
         protected readonly IUserCommunicator _userCommunicator;
         protected readonly ICardDecksHolder _cardDecksHolder;
         protected readonly ProgramVariables _programVariables;
