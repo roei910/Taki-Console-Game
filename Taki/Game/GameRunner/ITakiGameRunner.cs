@@ -3,6 +3,5 @@
     internal interface ITakiGameRunner
     {
         void StartGame();
-        void ResetGame();
     }
 }

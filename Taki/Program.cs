@@ -8,8 +8,20 @@ using Microsoft.Extensions.Configuration;
 using Taki;
 using Taki.Game.Deck;
 
-//TODO: error when drawing after finishing hand in pyramid => check
-//TODO: error with switch cards when putting another color on top is allowed (shouldnt work)
+//TODO: extract the players choosing and add as function
+
+/*
+ * TODO: add a section in the code where it is adding the user and searching
+ * in a json file to see if the user already exists under the same name and ask 
+ * if he wants to take his current score,
+ * when someone wins the scores will update in the json file(add!!! not remove anything)
+ */
+
+/*
+ * TODO: make loop to restart game if the player wants to
+ * add generic message to ask for something from user
+ * maybe add to the game runner => restart functionality
+ */
 
 var serviceProvider = new ServiceCollection()
     .AddSingleton<IUserCommunicator, ConsoleUserCommunicator>()
