@@ -18,12 +18,6 @@ using Taki.Game.GameRunner;
  * when someone wins the scores will update in the json file(add!!! not remove anything)
  */
 
-/*
- * TODO: make loop to restart game if the player wants to
- * add generic message to ask for something from user
- * maybe add to the game runner => restart functionality
- */
-
 var serviceProvider = new ServiceCollection()
     .AddSingleton<IUserCommunicator, ConsoleUserCommunicator>()
     .AddSingleton<IPlayerAlgorithm, PlayerAlgorithm>()
