@@ -37,7 +37,9 @@ namespace Taki.Game.Cards
 
         public override string ToString()
         {
-            return $"SwitchCardsWithDirection" + prevCard ?? "";
+            if (prevCard == null)
+                return "SwitchCards";
+            return $"SwitchCards, previous {prevCard}";
         }
     }
 }
