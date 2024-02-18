@@ -43,7 +43,6 @@ var serviceProvider = new ServiceCollection()
     .AddSingleton<IGameScore, GameScore>()
     .BuildServiceProvider();
 
-IUserCommunicator userCommunicator = serviceProvider.GetRequiredService<IUserCommunicator>();
 TakiGameGenerator gameGenerator = serviceProvider.GetRequiredService<TakiGameGenerator>();
 
 TakiGameRunner gameRunner = gameGenerator.ChooseTypeOfGame();
