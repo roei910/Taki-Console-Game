@@ -44,7 +44,7 @@ namespace Taki.Game.Managers
                 .Select(i =>
                 {
                     Player winner = _playersHolder.GetWinner(_cardDecksHolder);
-                    _userCommunicator.GetCharFromUser($"Winner #{i + 1} is {winner.Name}\n" +
+                    _userCommunicator.GetMessageFromUser($"Winner #{i + 1} is {winner.Name}\n" +
                         $"Press enter to continue");
 
                     return winner;
@@ -53,7 +53,7 @@ namespace Taki.Game.Managers
             if (winners[0].IsManualPlayer())
             {
                 _gameScore.SetScoreByName(winners[0].Name, ++winners[0].Score);
-                _gameScore.UpdateScores();
+                _gameScore.UpdateScoresFile();
             }
 
             _userCommunicator.SendMessageToUser("The winners by order:");
@@ -89,9 +89,6 @@ namespace Taki.Game.Managers
                 return;
             var cards = _playersHolder!.ReturnCardsFromPlayers();
             _cardDecksHolder.ResetCards(cards);
-            //TODO: REMOVE ONCE GOOD
-            if (_cardDecksHolder.CountAllCards() != 88)
-                throw new Exception("total number of cards is not correct");
             _playersHolder.ResetPlayers();
         }
 

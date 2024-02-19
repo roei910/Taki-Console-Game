@@ -1,5 +1,4 @@
 ﻿using Taki.Game.Algorithm;
-using Taki.Game.Deck;
 using Taki.Game.GameRunner;
 using Taki.Game.Messages;
 using Taki.Game.Players;
@@ -41,14 +40,16 @@ namespace Taki.Game.Factories
                     if (numberOfManualPlayers-- > 0)
                     {
                         Player player = new Player(name, _manualPlayerAlgorithm, _userCommunicator);
-                        if(_gameScore.DoesUserExist(name))
+                        int score = _gameScore.GetScoreByName(name);
+
+                        if(score != GameScore.NO_SCORE)
                         {
-                            int score = _gameScore.GetScoreByName(name);
                             string? answer = _userCommunicator.GetMessageFromUser($"would you like to load the existing " +
                                 $"score of {score} for user {name}, y or else to avoid");
-                            if(answer != null)
+                            if(answer == "y")
                                 player.Score = score;
                         }
+
                         return player;
                     }
 

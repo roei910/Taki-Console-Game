@@ -7,6 +7,7 @@ namespace Taki.Game.GameRunner
     {
         private readonly Dictionary<string, int> scoresDictionary;
         private readonly string scoresPath;
+        public const int NO_SCORE = -1;
 
         public GameScore(IConfiguration configuration)
         {
@@ -28,18 +29,14 @@ namespace Taki.Game.GameRunner
             scoresDictionary[name] = score;
         }
 
-        //TODO: maybe connect with get score
-        public bool DoesUserExist(string name)
-        {
-            return scoresDictionary.ContainsKey(name);
-        }
-
         public int GetScoreByName(string name)
         {
-            return scoresDictionary[name];
+            if (!scoresDictionary.TryGetValue(name, out int value))
+                return NO_SCORE;
+            return value;
         }
 
-        public void UpdateScores()
+        public void UpdateScoresFile()
         {
             File.WriteAllText(scoresPath, JsonSerializer.Serialize(scoresDictionary));
         }

@@ -103,7 +103,7 @@ namespace Taki.Game.Communicators
             if (!int.TryParse(Console.ReadLine(), out int index) ||
                 index >= values.Length || index < 0)
             {
-                Console.WriteLine();
+                SendErrorMessage("please choose valid index\n");
                 return GetUserEnumFromArray(values);
             }
 
