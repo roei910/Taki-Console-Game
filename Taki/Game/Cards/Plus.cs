@@ -7,7 +7,6 @@ namespace Taki.Game.Cards
 {
     internal class Plus : ColorCard
     {
-        //TODO: CHECK IF WORKING WELL
         public Plus(Color color, IUserCommunicator userCommunicator) : 
             base(color, userCommunicator) { }
 
@@ -20,6 +19,7 @@ namespace Taki.Game.Cards
         {
             _userCommunicator.SendAlertMessage("please choose one more card or draw");
 
+            _userCommunicator.SendAlertMessage($"Top discard: {this}");
             Player currentPlayer = playersHolder.CurrentPlayer;
             Card? playerCard = currentPlayer.PickCard(IsStackableWith);
 
@@ -31,9 +31,10 @@ namespace Taki.Game.Cards
                 return;
             }
 
+            _userCommunicator.SendAlertMessage($"{currentPlayer.Name} chose {playerCard}\n");
             currentPlayer.PlayerCards.Remove(playerCard);
             cardDecksHolder.AddDiscardCard(playerCard);
-            base.Play(topDiscard, cardDecksHolder, playersHolder);
+            playerCard.Play(topDiscard, cardDecksHolder, playersHolder);
         }
 
         public override string ToString()
