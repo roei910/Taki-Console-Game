@@ -76,11 +76,6 @@ namespace Taki.Game.Players
             return $"{Name}: {PlayerCards.Count} Algo: {_choosingAlgorithm}";
         }
 
-        public string GetName()
-        {
-            return $"Player[{Id}] ({Name})";
-        }
-
         public bool IsManualPlayer()
         {
             return _choosingAlgorithm is ManualPlayerAlgorithm;

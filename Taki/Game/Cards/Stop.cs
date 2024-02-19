@@ -22,8 +22,8 @@ namespace Taki.Game.Cards
 
             Player nextPlayer = playersHolder.CurrentPlayer;
             _userCommunicator.SendErrorMessage(
-                $"{nextPlayer.GetName()} was stopped by " +
-                $"{currentPlayer.GetName()}\n");
+                $"{nextPlayer.Name} was stopped by " +
+                $"{currentPlayer.Name}\n");
 
             base.Play(topDiscard, cardDecksHolder, playersHolder);
         }

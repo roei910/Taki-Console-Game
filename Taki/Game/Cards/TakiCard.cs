@@ -25,7 +25,7 @@ namespace Taki.Game.Cards
 
             while (playerCard is not null)
             {
-                _userCommunicator.SendAlertMessage($"{currentPlayer.GetName()} chose " +
+                _userCommunicator.SendAlertMessage($"{currentPlayer.Name} chose " +
                     $"{playerCard}");
 
                 previous = topDiscard;
