@@ -17,6 +17,8 @@ namespace Taki.Game.Cards
 
         public override void Play(Card topDiscard, ICardDecksHolder cardDecksHolder, IPlayersHolder playersHolder)
         {
+            _userCommunicator.SendErrorMessage("User used change direction card!\n");
+
             playersHolder.ChangeDirection();
             base.Play(topDiscard, cardDecksHolder, playersHolder);
         }

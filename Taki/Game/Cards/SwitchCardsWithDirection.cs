@@ -20,6 +20,8 @@ namespace Taki.Game.Cards
 
         public override void Play(Card topDiscard, ICardDecksHolder cardDecksHolder, IPlayersHolder playersHolder)
         {
+            _userCommunicator.SendErrorMessage("User used switch cards!\n");
+
             prevCard = (topDiscard is SwitchCardsWithDirection card) ? card.prevCard : topDiscard;
 
             var players = playersHolder.Players;
