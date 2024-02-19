@@ -1,7 +1,5 @@
 ﻿using System.Drawing;
-using Taki.Game.Deck;
 using Taki.Game.Messages;
-using Taki.Game.Players;
 
 namespace Taki.Game.Cards
 {
