@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Taki.Game.Cards;
+﻿using Taki.Game.Cards;
 
 namespace Taki.Game.Deck
 {
@@ -50,8 +49,12 @@ namespace Taki.Game.Deck
 
         public void AddMany(List<Card> playerCards)
         {
-            if(playerCards.Count > 0)
-                _cards.AddLast(playerCards.First());
+            if (playerCards.Count > 0)
+            {
+                var cards = _cards.ToList();
+                cards.AddRange(playerCards);
+                _cards = new(cards);
+            }
         }
 
         public Card PopFirst()
