@@ -12,6 +12,7 @@ namespace Taki.Game.Managers
         NewNormalGame,
         NewPyramidGame,
         RestartGame,
+        ShowAllScores,
         QuitGame
     }
 
@@ -71,9 +72,11 @@ namespace Taki.Game.Managers
             if (!ChooseGameType())
                 return;
 
-            ResetGame();
-
-            StartSingleGame();
+            if(_playersHolder is not null)
+            {
+                ResetGame();
+                StartSingleGame();
+            }
 
             StartGameLoop();
         }
@@ -90,7 +93,7 @@ namespace Taki.Game.Managers
         {
             int numberOfCards = _cardDecksHolder.CountAllCards();
 
-            GameRunnerOptions options = (_playersHolder != null) ?
+            GameRunnerOptions options = (_playersHolder is not null) ?
                     _userCommunicator.GetEnumFromUser<GameRunnerOptions>() :
                     _userCommunicator.GetEnumFromUser(new List<GameRunnerOptions>() { GameRunnerOptions.RestartGame });
 
@@ -111,6 +114,12 @@ namespace Taki.Game.Managers
 
                 case GameRunnerOptions.QuitGame:
                     return false;
+
+                case GameRunnerOptions.ShowAllScores:
+                    _userCommunicator.SendMessageToUser("The scores are:");
+                    _userCommunicator.SendMessageToUser(_gameScore.GetAllScores());
+                    _userCommunicator.SendMessageToUser();
+                    break;
 
                 default:
                     throw new Exception("type enum was invalid");

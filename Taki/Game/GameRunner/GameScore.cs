@@ -43,5 +43,12 @@ namespace Taki.Game.GameRunner
         {
             File.WriteAllText(scoresPath, JsonSerializer.Serialize(scoresDictionary));
         }
+
+        public string GetAllScores()
+        {
+            var scores = scoresDictionary.ToList()
+                .Select(keyValPair => $"Name: {keyValPair.Key}, Score: {keyValPair.Value}").ToList();
+            return string.Join("\n", scores);
+        }
     }
 }

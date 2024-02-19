@@ -6,5 +6,6 @@
         int GetScoreByName(string name);
         void SetScoreByName(string name, int score);
         void UpdateScores();
+        string GetAllScores();
     }
 }
