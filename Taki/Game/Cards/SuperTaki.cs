@@ -12,16 +12,6 @@ namespace Taki.Game.Cards
         public SuperTaki(IUserCommunicator userCommunicator) :
             base(userCommunicator) { }
 
-        public override void FinishNoPlay()
-        {
-            takiInstance?.FinishNoPlay();
-        }
-
-        public override void FinishPlay()
-        {
-            takiInstance?.FinishPlay();
-        }
-
         public override void Play(Card topDiscard, ICardDecksHolder cardDecksHolder, IPlayersHolder playersHolder)
         {
             Color color = Color.Empty;
