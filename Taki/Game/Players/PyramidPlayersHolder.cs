@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Taki.Game.Deck;
+﻿using Taki.Game.Deck;
 using Taki.Game.Messages;
 
 namespace Taki.Game.Players
@@ -20,7 +19,7 @@ namespace Taki.Game.Players
                 {
                     DrawCards(player.GetNextPlayerHand(_userCommunicator), player, cardDecksHolder);
                     _userCommunicator.SendErrorMessage(
-                        $"Player[{player.Id}] finished his current hand," +
+                        $"Player: {player.Name}, finished his current hand," +
                         $" currently on {player.CurrentNumberOfCards()} card(s)");
 
                     return false;

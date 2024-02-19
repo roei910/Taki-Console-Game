@@ -11,8 +11,6 @@ namespace Taki.Game.Players
         private bool _isDirectionNormal = true;
         private int _noPlayCounter = 0;
         private List<Player> players = new List<Player>();
-        //TODO: check why never used
-        private int numberOfPlayerCards;
         protected readonly int _numberOfPlayerCards;
         public readonly LinkedList<Player> _players;
 
@@ -47,7 +45,7 @@ namespace Taki.Game.Players
                 return false;
 
             _userCommunicator.SendErrorMessage(
-                $"Player[{playerToDraw.Id}]: drew {cardsDraw} card(s)\n");
+                $"Player: {playerToDraw.Name}, drew {cardsDraw} card(s)\n");
 
             return true;
         }
@@ -124,7 +122,6 @@ namespace Taki.Game.Players
             CurrentPlayer.PlayerCards.Remove(playerCard);
             cardDecksHolder.AddDiscardCard(playerCard);
 
-            topDiscard.FinishPlay();
             playerCard.Play(topDiscard, cardDecksHolder, this);
         }
 
