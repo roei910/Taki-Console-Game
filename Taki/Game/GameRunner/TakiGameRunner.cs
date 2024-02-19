@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Taki.Game.Deck;
+﻿using Taki.Game.Deck;
 using Taki.Game.Factories;
 using Taki.Game.GameRunner;
 using Taki.Game.Messages;
@@ -46,7 +45,7 @@ namespace Taki.Game.Managers
                 {
                     Player winner = _playersHolder.GetWinner(_cardDecksHolder);
                     _userCommunicator.GetCharFromUser($"Winner #{i + 1} is {winner.Name}\n" +
-                        $"Press any key to continue");
+                        $"Press enter to continue");
 
                     return winner;
                 }).ToList();
@@ -65,6 +64,8 @@ namespace Taki.Game.Managers
 
                 return winner;
             }).ToList();
+
+            _userCommunicator.SendMessageToUser();
         }
 
         public void StartGameLoop()
@@ -72,9 +73,10 @@ namespace Taki.Game.Managers
             if (!ChooseGameType())
                 return;
 
-            if(_playersHolder is not null)
+            if (_playersHolder is not null)
             {
                 ResetGame();
+                _playersHolder!.DealCards(_cardDecksHolder);
                 StartSingleGame();
             }
 
@@ -83,10 +85,14 @@ namespace Taki.Game.Managers
 
         private void ResetGame()
         {
+            if (_playersHolder is null)
+                return;
             var cards = _playersHolder!.ReturnCardsFromPlayers();
             _cardDecksHolder.ResetCards(cards);
+            //TODO: REMOVE ONCE GOOD
+            if (_cardDecksHolder.CountAllCards() != 88)
+                throw new Exception("total number of cards is not correct");
             _playersHolder.ResetPlayers();
-            _playersHolder.DealCards(_cardDecksHolder);
         }
 
         private bool ChooseGameType()
@@ -100,11 +106,13 @@ namespace Taki.Game.Managers
             switch (options)
             {
                 case GameRunnerOptions.NewNormalGame:
+                    ResetGame();
                     _playersHolder = _playersHolderFactory
                     .GeneratePlayersHandler(numberOfCards);
                     break;
 
                 case GameRunnerOptions.NewPyramidGame:
+                    ResetGame();
                     _playersHolder = _playersHolderFactory
                     .GeneratePyramidPlayersHandler();
                     break;
@@ -116,10 +124,10 @@ namespace Taki.Game.Managers
                     return false;
 
                 case GameRunnerOptions.ShowAllScores:
-                    _userCommunicator.SendMessageToUser("The scores are:");
+                    _userCommunicator.SendAlertMessage("The scores are:");
                     _userCommunicator.SendMessageToUser(_gameScore.GetAllScores());
                     _userCommunicator.SendMessageToUser();
-                    break;
+                    return ChooseGameType();
 
                 default:
                     throw new Exception("type enum was invalid");
