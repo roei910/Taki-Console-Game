@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using Taki.Game.Cards;
 using Taki.Game.Messages;
+using Taki.Game.Players;
 
 namespace Taki.Game.Algorithm
 {
@@ -42,6 +43,18 @@ namespace Taki.Game.Algorithm
             return _userCommunicator.GetColorFromUserEnum<CardColorsEnum>();
         }
 
+        public Player ChoosePlayer(Player currentPlayer, IPlayersHolder playersHolder)
+        {
+            //TODO: choose not including the current player
+            _userCommunicator.SendAlertMessage("Please choose one of the players by index:");
+            var players = playersHolder.Players.Select((player, i) =>
+                $"{i}. {player.Name}").ToList();
+
+            int index = _userCommunicator.GetNumberFromUser(string.Join("\n", players));
+
+            return playersHolder.Players.ElementAt(index);
+        }
+
         private Card? ChooseValidCard(List<Card> playerCards, Func<Card, bool> isSimilarTo)
         {
             if (!int.TryParse(_userCommunicator.GetMessageFromUser(), out int index)
@@ -77,6 +90,8 @@ namespace Taki.Game.Algorithm
         private bool IsValidIndex(int index, int maxCards)
         {
             return index >= -1 && index < maxCards;
-        }       
+        }
+
+        
     }
 }

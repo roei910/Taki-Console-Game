@@ -13,25 +13,13 @@ namespace Taki.Game.Cards
         public override void Play(Card topDiscard, ICardDecksHolder cardDecksHolder, IPlayersHolder playersHolder)
         {
             Player currentPlayer = playersHolder.CurrentPlayer;
-            Player playerToSwitch = GetPlayerFromUser(playersHolder);
+            Player playerToSwitch = currentPlayer.PickOtherPlayer(playersHolder);
 
-            (currentPlayer.PlayerCards, playerToSwitch.PlayerCards) = (currentPlayer.PlayerCards, playerToSwitch.PlayerCards);
+            (currentPlayer.PlayerCards, playerToSwitch.PlayerCards) = (playerToSwitch.PlayerCards, currentPlayer.PlayerCards);
 
             _userCommunicator.SendErrorMessage($"User used switch cards with Player: {playerToSwitch.Name}!\n");
 
             base.Play(topDiscard, cardDecksHolder, playersHolder);
-        }
-
-        //TODO: move function inside algorithm
-        private Player GetPlayerFromUser(IPlayersHolder playersHolder)
-        {
-            _userCommunicator.SendAlertMessage("Please choose one of the players by index:");
-            var players = playersHolder.Players.Select((player, i) =>
-                $"{i}. {player.Name}").ToList();
-
-            int index = _userCommunicator.GetNumberFromUser(string.Join("\n", players));
-
-            return playersHolder.Players.ElementAt(index);
         }
 
         public override void PrintCard()

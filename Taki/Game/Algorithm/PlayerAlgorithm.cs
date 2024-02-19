@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 using Taki.Game.Cards;
-using Taki.Game.Messages;
+using Taki.Game.Players;
 
 namespace Taki.Game.Algorithm
 {
@@ -25,6 +25,14 @@ namespace Taki.Game.Algorithm
                 return Color.Blue;
 
             return colors.OrderByDescending(color => color.Count()).First().FirstOrDefault(Color.Blue);
+        }
+
+        public Player ChoosePlayer(Player currentPlayer, IPlayersHolder playersHolder)
+        {
+            var players = playersHolder.Players
+                .Where(player => !player.Equals(currentPlayer)).ToList();
+
+            return players.OrderBy(val => Guid.NewGuid().ToString()).First();
         }
 
         public override string ToString()
