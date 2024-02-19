@@ -2,28 +2,22 @@
 
 namespace Taki.Game.Deck
 {
-    internal class CardDeck
+    internal class CardDeck : ICardDeck
     {
         private LinkedList<Card> _cards;
+        private readonly Random _random;
 
-        public CardDeck(List<Card> cards)
+        public CardDeck(List<Card> cards, Random random)
         {
             _cards = new(cards);
+            _random = random;
         }
 
-        public CardDeck() : this(new List<Card>()) { }
-
-        public CardDeck(CardDeck other) : this(other._cards.ToList()){ }
-
-
+        public CardDeck(Random random) : this(new List<Card>(), random) { }
+        
         public Card GetFirst()
         {
             return _cards.First();
-        }
-
-        public void RemoveFirst()
-        {
-            _cards.RemoveFirst();
         }
 
         public void AddFirst(Card card)
@@ -38,20 +32,18 @@ namespace Taki.Game.Deck
 
         public void ShuffleDeck()
         {
-            Random random = new();
-            var cards = _cards.ToList();
-            _cards = new(cards.Select(_ =>
+            _cards = new(_cards.OrderBy(val => _random.Next(_cards.Count)));
+            _cards.ToList().Select(card =>
             {
-                Card card = _cards.ElementAt(random.Next(_cards.Count));
-                _cards.Remove(card);
+                card.ResetCard();
                 return card;
-            }).ToList());
+            }).ToList();
         }
 
-        public void CombineDeckToThis(CardDeck cardDeck)
+        public void CombineFromDeck(CardDeck other)
         {
-            List<Card> cards = [.. _cards.ToList(), .. cardDeck._cards.ToList()];
-            cardDeck._cards = [];
+            List<Card> cards = [.. _cards.ToList(), .. other._cards.ToList()];
+            other._cards = [];
             _cards = new(cards);
         }
 
@@ -62,8 +54,19 @@ namespace Taki.Game.Deck
 
         public void AddMany(List<Card> playerCards)
         {
-            if(playerCards.Count > 0)
-                _cards.AddLast(playerCards.First());
+            if (playerCards.Count > 0)
+            {
+                var cards = _cards.ToList();
+                cards.AddRange(playerCards);
+                _cards = new(cards);
+            }
+        }
+
+        public Card PopFirst()
+        {
+            Card card = _cards.First();
+            _cards.RemoveFirst();
+            return card;
         }
     }
 }

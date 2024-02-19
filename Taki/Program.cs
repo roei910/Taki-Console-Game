@@ -2,26 +2,29 @@
 using Taki.Game.Managers;
 using Microsoft.Extensions.DependencyInjection;
 using Taki.Game.Algorithm;
-using Taki.Game.Interfaces;
 using Taki.Game.Factories;
-
-//TODO: maybe save instances of all handlers inside the code????
+using Taki.Game.Messages;
+using Microsoft.Extensions.Configuration;
+using Taki;
+using Taki.Game.GameRunner;
 
 var serviceProvider = new ServiceCollection()
-    .AddSingleton<IMessageHandler, ConsoleMessageHandler>()
-    .AddSingleton<IPlayerAlgorithm, ManualPlayerAlgorithm>()
+    .AddSingleton<IUserCommunicator, ConsoleUserCommunicator>()
+    .AddSingleton<IPlayerAlgorithm, PlayerAlgorithm>()
+    .AddSingleton<IPlayerAlgorithm, PlayerHateTakiAlgo>()
+    .AddSingleton<List<IPlayerAlgorithm>>()
+    .AddSingleton<IGameScore, GameScore>()
+    .AddSingleton<ManualPlayerAlgorithm>()
+    .AddSingleton<PlayersHolderFactory>()
+    .AddSingleton<CardDeckFactory>()
+    .AddSingleton<ProgramVariables>()
+    .AddSingleton<Random>()
+    .AddSingleton<IConfiguration>(x => new ConfigurationBuilder()
+        .AddJsonFile("AppConfigurations.json", false, true)
+        .Build())
+    .AddSingleton<TakiGameRunner>()
     .BuildServiceProvider();
 
-List<IPlayerAlgorithm> algorithms =
-[
-    new PlayerAlgorithm(),
-    new PlayerHateTakiAlgo(),
-];
+TakiGameRunner gameRunner = serviceProvider.GetRequiredService<TakiGameRunner>();
 
-PlayersHandlerFactory playersHandlerFactory = new(serviceProvider, algorithms);
-CardsHandlerFactory cardsHandlerFactory = new();
-
-TakiGameFactory gameFactory = new(serviceProvider);
-TakiGameRunner gameRunner = gameFactory.ChooseTypeOfGame(playersHandlerFactory, cardsHandlerFactory, serviceProvider);
-
-gameRunner.StartGame();
+gameRunner.StartGameLoop();

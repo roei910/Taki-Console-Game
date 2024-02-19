@@ -1,6 +1,5 @@
 ﻿using Taki.Game.Cards;
-using Taki.Game.Handlers;
-using Taki.Game.Players;
+using Taki.Game.Messages;
 
 namespace Taki.Game.Algorithm
 {
@@ -8,17 +7,15 @@ namespace Taki.Game.Algorithm
     {
         bool IsTaki = false;
 
-        public override Card? ChooseCard(Func<Card, bool> isSimilarTo,
-            Player player, GameHandlers gameHandlers)
+        public override Card? ChooseCard(Func<Card, bool> isSimilarTo, List<Card> playerCards, string? elseMessage = null)
         {
-            Card topDiscard = gameHandlers.GetCardsHandler().GetTopDiscard();
             if (IsTaki)
             {
                 IsTaki = false;
                 return null;
             }
 
-            Card? playerCard = base.ChooseCard(isSimilarTo, player, gameHandlers);
+            Card? playerCard = base.ChooseCard(isSimilarTo, playerCards);
             if (playerCard is TakiCard)
                 IsTaki = true;
 

@@ -1,4 +1,5 @@
-﻿using Taki.Game.Handlers;
+﻿using Taki.Game.Deck;
+using Taki.Game.Messages;
 using Taki.Game.Players;
 
 namespace Taki.Game.Cards
@@ -6,45 +7,45 @@ namespace Taki.Game.Cards
     internal class SwitchCardsWithDirection : Card
     {
         private Card? prevCard = null;
+        
+        public SwitchCardsWithDirection(IUserCommunicator userCommunicator) : 
+            base(userCommunicator) { }
 
-        public SwitchCardsWithDirection() { }
-
-        public override bool IsSimilarTo(Card other)
+        public override bool IsStackableWith(Card other)
         {
-            if(prevCard == null)
+            if (prevCard == null)
                 return true;
-            return prevCard.IsSimilarTo(other);
+            return prevCard.IsStackableWith(other);
         }
 
-        public override void Play(GameHandlers gameHandlers)
+        public override void Play(Card topDiscard, ICardDecksHolder cardDecksHolder, IPlayersHolder playersHolder)
         {
-            Card topDiscard = gameHandlers.GetCardsHandler().GetTopDiscard();
+            _userCommunicator.SendErrorMessage("User used switch cards!\n");
+
             prevCard = (topDiscard is SwitchCardsWithDirection card) ? card.prevCard : topDiscard;
 
-            Player currentPlayer = gameHandlers.GetPlayersHandler().CurrentPlayer;
-            List<Card> savedCards = currentPlayer.PlayerCards;
-            currentPlayer.PlayerCards = [];
+            var players = playersHolder.Players;
+            List<Card> savedCards = players[0].PlayerCards;
+            players[0].PlayerCards = [];
 
-            gameHandlers.GetPlayersHandler().NextPlayer();
+            for (int i = 1; i < players.Count; i++)
+                (savedCards, players[i].PlayerCards) = (players[i].PlayerCards, savedCards);
 
-            while (gameHandlers.GetPlayersHandler().CurrentPlayer.Id != currentPlayer.Id)
-            {
-                (savedCards, gameHandlers.GetPlayersHandler().CurrentPlayer.PlayerCards) = (gameHandlers.GetPlayersHandler().CurrentPlayer.PlayerCards, savedCards);
-                gameHandlers.GetPlayersHandler().NextPlayer();
-            }
+            players[0].PlayerCards = savedCards;
 
-            currentPlayer.PlayerCards = savedCards;
-            base.Play(gameHandlers);
+            base.Play(topDiscard, cardDecksHolder, playersHolder);
         }
 
-        public override void FinishPlay()
+        public override void ResetCard()
         {
             prevCard = null;
         }
 
         public override string ToString()
         {
-            return $"SwitchCardsWithDirection";
+            if (prevCard == null)
+                return "SwitchCards";
+            return $"SwitchCards, previous {prevCard}";
         }
     }
 }

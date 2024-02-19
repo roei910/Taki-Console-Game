@@ -1,29 +1,31 @@
 ﻿using System.Drawing;
-using Taki.Game.Handlers;
+using Taki.Game.Deck;
+using Taki.Game.Messages;
 using Taki.Game.Players;
 
 namespace Taki.Game.Cards
 {
     internal class Stop : ColorCard
     {
-        public Stop(Color color) : base(color) { }
+        public Stop(Color color, IUserCommunicator userCommunicator) : 
+            base(color, userCommunicator) { }
 
-        public override bool IsSimilarTo(Card other)
+        public override bool IsStackableWith(Card other)
         {
-            return base.IsSimilarTo(other) || other is Stop;
+            return base.IsStackableWith(other) || other is Stop;
         }
 
-        public override void Play(GameHandlers gameHandlers)
+        public override void Play(Card topDiscard, ICardDecksHolder cardDecksHolder, IPlayersHolder playersHolder)
         {
-            Player currentPlayer = gameHandlers.GetPlayersHandler().CurrentPlayer;
-            gameHandlers.GetPlayersHandler().NextPlayer();
+            Player currentPlayer = playersHolder.CurrentPlayer;
+            playersHolder.NextPlayer();
 
-            Player nextPlayer = gameHandlers.GetPlayersHandler().CurrentPlayer;
-            gameHandlers.GetMessageHandler().SendErrorMessage(
-                $"{nextPlayer.GetName()} was stopped by " +
-                $"{currentPlayer.GetName()}\n");
+            Player nextPlayer = playersHolder.CurrentPlayer;
+            _userCommunicator.SendErrorMessage(
+                $"{nextPlayer.Name} was stopped by " +
+                $"{currentPlayer.Name}\n");
 
-            base.Play(gameHandlers);
+            base.Play(topDiscard, cardDecksHolder, playersHolder);
         }
 
         public override string ToString()

@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using Taki.Game.Messages;
 
 namespace Taki.Game.Cards
 {
@@ -16,7 +17,8 @@ namespace Taki.Game.Cards
 
         public static List<Color> Colors = [Color.Green, Color.Red, Color.Yellow, Color.Blue];
 
-        public ColorCard(Color color) : base()
+        public ColorCard(Color color, IUserCommunicator userCommunicator) :
+            base(userCommunicator)
         {
             _color = color;
         }
@@ -26,7 +28,7 @@ namespace Taki.Game.Cards
             return _color; 
         }
 
-        public override bool IsSimilarTo(Card other)
+        public override bool IsStackableWith(Card other)
         {
             if (other is not ColorCard card)
                 return true;

@@ -1,49 +1,52 @@
 ﻿using System.Drawing;
-using Taki.Game.GameRules;
-using Taki.Game.Handlers;
-using Taki.Game.Interfaces;
+using Taki.Game.Deck;
+using Taki.Game.Messages;
 using Taki.Game.Players;
 
 namespace Taki.Game.Cards
 {
     internal class TakiCard : ColorCard
     {
-        public TakiCard(Color color) : base(color) { }
+        public TakiCard(Color color, IUserCommunicator userCommunicator) : 
+            base(color, userCommunicator) { }
 
-        public override bool IsSimilarTo(Card other)
+        public override bool IsStackableWith(Card other)
         {
-            return base.IsSimilarTo(other) || other is TakiCard;
+            return base.IsStackableWith(other) || other is TakiCard;
         }
 
-        public override void Play(GameHandlers gameHandlers)
+        public override void Play(Card topDiscard, ICardDecksHolder cardDecksHolder, IPlayersHolder playersHolder)
         {
-            CardsHandler cardsHandler = gameHandlers.GetCardsHandler();
-            PlayersHandler playersHandler = gameHandlers.GetPlayersHandler();
-            IMessageHandler messageHandler = gameHandlers.GetMessageHandler();
-            Player currentPlayer = playersHandler.CurrentPlayer;
-            Card topDiscard = this;
-            Card? playerCard = currentPlayer.PickCard(IsSimilarTo, gameHandlers);
-            
+            Player currentPlayer = playersHolder.CurrentPlayer;
+            Func<Card, bool> isStackable = card => card is ColorCard && base.IsStackableWith(card);
+            Card previous = topDiscard;
+            topDiscard = this;
+            _userCommunicator.SendAlertMessage("Taki Open!\n");
+            _userCommunicator.SendAlertMessage($"Top discard: {topDiscard}");
+            Card? playerCard = currentPlayer.PickCard(isStackable, elseMessage: "or -1 to finish taki");
+
             while (playerCard is not null)
             {
-                messageHandler.SendAlertMessage($"{currentPlayer.GetName()} chose " +
+                _userCommunicator.SendAlertMessage($"{currentPlayer.Name} chose " +
                     $"{playerCard}");
 
+                previous = topDiscard;
                 topDiscard = playerCard;
                 currentPlayer.PlayerCards.Remove(playerCard);
-                cardsHandler.AddDiscardCard(playerCard);
-                playerCard = currentPlayer.PickCard(topDiscard.IsSimilarTo, gameHandlers);
+                cardDecksHolder.AddDiscardCard(playerCard);
+                _userCommunicator.SendAlertMessage($"Top discard: {topDiscard}");
+                playerCard = currentPlayer.PickCard(isStackable, elseMessage: "or -1 to finish taki");
             }
 
-            messageHandler.SendAlertMessage("Taki Closed!\n");
+            _userCommunicator.SendAlertMessage("Taki Closed!\n");
 
-            if (Equals(topDiscard))
+            if (!Equals(topDiscard))
             {
-                base.Play(gameHandlers);
+                topDiscard.Play(previous, cardDecksHolder, playersHolder);
                 return;
             }
 
-            cardsHandler.GetTopDiscard().Play(gameHandlers);
+            base.Play(topDiscard, cardDecksHolder, playersHolder);
         }
 
         public override string ToString()

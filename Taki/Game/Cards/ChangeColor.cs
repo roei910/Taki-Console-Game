@@ -1,5 +1,7 @@
 ﻿using System.Drawing;
-using Taki.Game.Handlers;
+using Taki.Game.Deck;
+using Taki.Game.Messages;
+using Taki.Game.Players;
 
 namespace Taki.Game.Cards
 {
@@ -8,22 +10,25 @@ namespace Taki.Game.Cards
         static readonly Color DEFAULT_COLOR = Color.Empty;
         Color color = DEFAULT_COLOR;
 
-        public override bool IsSimilarTo(Card other)
+        public ChangeColor(IUserCommunicator userCommunicator) : 
+            base(userCommunicator) { }
+
+        public override bool IsStackableWith(Card other)
         {
             if (color == DEFAULT_COLOR)
                 return true;
-            return other.IsSimilarTo(new NumberCard(0, color));
+            return other.IsStackableWith(new NumberCard(0, color, _userCommunicator));
         }
 
-        public override void Play(GameHandlers gameHandlers)
+        public override void Play(Card topDiscard, ICardDecksHolder cardDecksHolder, IPlayersHolder playersHolder)
         {
             while (!ColorCard.Colors.Contains(color))
-                color = gameHandlers.GetPlayersHandler().CurrentPlayer.ChooseColor(gameHandlers);
+                color = playersHolder.CurrentPlayer.ChooseColor();
             
-            base.Play(gameHandlers);
+            base.Play(topDiscard, cardDecksHolder, playersHolder);
         }
 
-        public override void FinishPlay()
+        public override void ResetCard()
         {
             color = DEFAULT_COLOR;
         }

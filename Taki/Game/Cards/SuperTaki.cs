@@ -1,5 +1,7 @@
 ﻿using System.Drawing;
-using Taki.Game.Handlers;
+using Taki.Game.Deck;
+using Taki.Game.Messages;
+using Taki.Game.Players;
 
 namespace Taki.Game.Cards
 {
@@ -7,31 +9,25 @@ namespace Taki.Game.Cards
     {
         private TakiCard? takiInstance;
 
-        public override void FinishNoPlay()
-        {
-            takiInstance?.FinishNoPlay();
-        }
+        public SuperTaki(IUserCommunicator userCommunicator) :
+            base(userCommunicator) { }
 
-        public override void FinishPlay()
-        {
-            takiInstance?.FinishPlay();
-        }
-
-        public override void Play(GameHandlers gameHandlers)
+        public override void Play(Card topDiscard, ICardDecksHolder cardDecksHolder, IPlayersHolder playersHolder)
         {
             Color color = Color.Empty;
-            while (!ColorCard.Colors.Contains(color))
-                color = gameHandlers.GetPlayersHandler().CurrentPlayer.ChooseColor(gameHandlers);
 
-            takiInstance = new TakiCard(color);
-            takiInstance.Play(gameHandlers);
+            while (!ColorCard.Colors.Contains(color))
+                color = playersHolder.CurrentPlayer.ChooseColor();
+
+            takiInstance = new TakiCard(color, _userCommunicator);
+            takiInstance.Play(topDiscard, cardDecksHolder, playersHolder);
         }
 
-        public override bool IsSimilarTo(Card other)
+        public override bool IsStackableWith(Card other)
         {
             if (takiInstance is null)
                 return true;
-            return takiInstance.IsSimilarTo(other);
+            return takiInstance.IsStackableWith(other);
         }
 
         public override string ToString()
