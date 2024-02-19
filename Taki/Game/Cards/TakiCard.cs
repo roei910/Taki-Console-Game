@@ -21,7 +21,7 @@ namespace Taki.Game.Cards
             Func<Card, bool> isStackable = card => card is ColorCard && base.IsStackableWith(card);
             Card previous = topDiscard;
             topDiscard = this;
-            Card? playerCard = currentPlayer.PickCard(isStackable);
+            Card? playerCard = currentPlayer.PickCard(isStackable, elseMessage: "or -1 to finish taki");
 
             while (playerCard is not null)
             {
@@ -32,7 +32,7 @@ namespace Taki.Game.Cards
                 topDiscard = playerCard;
                 currentPlayer.PlayerCards.Remove(playerCard);
                 cardDecksHolder.AddDiscardCard(playerCard);
-                playerCard = currentPlayer.PickCard(isStackable);
+                playerCard = currentPlayer.PickCard(isStackable, elseMessage: "or -1 to finish taki");
             }
 
             _userCommunicator.SendAlertMessage("Taki Closed!\n");

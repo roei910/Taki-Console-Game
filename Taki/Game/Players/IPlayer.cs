@@ -7,7 +7,7 @@ namespace Taki.Game.Players
     {
         string Name { get; }
         Color ChooseColor();
-        Card? PickCard(Func<Card, bool> isSimilarTo);
+        Card? PickCard(Func<Card, bool> isSimilarTo, string? elseMessage = null);
         void AddCard(Card card);
         bool IsHandEmpty();
         string GetInformation();

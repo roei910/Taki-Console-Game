@@ -6,35 +6,42 @@ namespace Taki.Game.Algorithm
 {
     internal class ManualPlayerAlgorithm : IPlayerAlgorithm
     {
+        private readonly IUserCommunicator _userCommunicator;
+
+        public ManualPlayerAlgorithm(IUserCommunicator userCommunicator)
+        {
+            _userCommunicator = userCommunicator;
+        }
+
         public override string ToString()
         {
             return "Manual Player Algo";
         }
 
-        public Card? ChooseCard(Func<Card, bool> isSimilarTo, List<Card> playerCards, IUserCommunicator userCommunicator)
+        public Card? ChooseCard(Func<Card, bool> isSimilarTo, List<Card> playerCards, string? elseMessage = null)
         {
             playerCards = OrderPlayerCardByColor(playerCards);
             var playerCardsString = playerCards.Select((card, i) => $"{i}. {card}").ToList();
-            userCommunicator.SendMessageToUser(string.Join("\n", playerCardsString));
-            userCommunicator.SendAlertMessage($"Please choose one of your cards by index, " +
-                $"-1 to draw a card");
+            _userCommunicator.SendMessageToUser(string.Join("\n", playerCardsString));
 
-            return ChooseValidCard(userCommunicator, playerCards, isSimilarTo);
+            string message = $"Please choose one of your cards by index, " + ((elseMessage is null) ? $"-1 to draw a card" : elseMessage);
+            _userCommunicator.SendAlertMessage(message);
+
+            return ChooseValidCard(playerCards, isSimilarTo);
         }
 
-        public Color ChooseColor(List<Card> playerCards, IUserCommunicator userCommunicator)
+        public Color ChooseColor(List<Card> playerCards)
         {
-            return userCommunicator.GetColorFromUserEnum<CardColorsEnum>();
+            return _userCommunicator.GetColorFromUserEnum<CardColorsEnum>();
         }
 
-        private Card? ChooseValidCard(IUserCommunicator userCommunicator, 
-            List<Card> playerCards, Func<Card, bool> isSimilarTo)
+        private Card? ChooseValidCard(List<Card> playerCards, Func<Card, bool> isSimilarTo)
         {
-            if (!int.TryParse(userCommunicator.GetMessageFromUser(), out int index)
+            if (!int.TryParse(_userCommunicator.GetMessageFromUser(), out int index)
                 || !IsValidIndex(index, playerCards.Count))
             {
-                userCommunicator.SendMessageToUser("please choose again the index of the card");
-                return ChooseValidCard(userCommunicator, playerCards, isSimilarTo);
+                _userCommunicator.SendMessageToUser("please choose again the index of the card");
+                return ChooseValidCard(playerCards, isSimilarTo);
             }
 
             if (index == -1)
@@ -43,8 +50,8 @@ namespace Taki.Game.Algorithm
             Card playerCard = playerCards.ElementAt(index);
             if (!isSimilarTo(playerCard))
             {
-                userCommunicator.SendErrorMessage("card does not meet the stacking rules");
-                return ChooseValidCard(userCommunicator, playerCards, isSimilarTo);
+                _userCommunicator.SendErrorMessage("card does not meet the stacking rules");
+                return ChooseValidCard(playerCards, isSimilarTo);
             }
 
             return playerCard;

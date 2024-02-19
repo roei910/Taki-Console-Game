@@ -36,7 +36,7 @@ namespace Taki.Game.Players
 
         public Color ChooseColor()
         {
-            Color color = _choosingAlgorithm.ChooseColor(PlayerCards, _userCommunicator);
+            Color color = _choosingAlgorithm.ChooseColor(PlayerCards);
             _userCommunicator.SendErrorMessage($"Player chose the color: {color}\n");
 
             return color;
@@ -66,9 +66,9 @@ namespace Taki.Game.Players
             return Id == other.Id;
         }
 
-        public Card? PickCard(Func<Card, bool> IsStackableWith)
+        public Card? PickCard(Func<Card, bool> IsStackableWith, string? elseMessage = null)
         {
-            return _choosingAlgorithm.ChooseCard(IsStackableWith, PlayerCards, _userCommunicator);
+            return _choosingAlgorithm.ChooseCard(IsStackableWith, PlayerCards, elseMessage);
         }
 
         public string GetInformation()

@@ -6,7 +6,7 @@ namespace Taki.Game.Algorithm
 {
     internal class PlayerAlgorithm : IPlayerAlgorithm
     {
-        public virtual Card? ChooseCard(Func<Card, bool> isSimilarTo, List<Card> playerCards, IUserCommunicator userCommunicator)
+        public virtual Card? ChooseCard(Func<Card, bool> isSimilarTo, List<Card> playerCards, string? elseMessage = null)
         {
             if (playerCards.Count == 0)
                 return null;
@@ -14,7 +14,7 @@ namespace Taki.Game.Algorithm
             return playerCards.FirstOrDefault(card => isSimilarTo(card!));
         }
 
-        public Color ChooseColor(List<Card> playerCards, IUserCommunicator userCommunicator)
+        public Color ChooseColor(List<Card> playerCards)
         {
             var colors = playerCards
                 .Where(card => card is ColorCard)
