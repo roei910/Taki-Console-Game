@@ -1,4 +1,5 @@
-﻿using Taki.Game.Deck;
+﻿using System.Drawing;
+using Taki.Game.Deck;
 using Taki.Game.Messages;
 using Taki.Game.Players;
 
@@ -34,6 +35,20 @@ namespace Taki.Game.Cards
             players[0].PlayerCards = savedCards;
 
             base.Play(topDiscard, cardDecksHolder, playersHolder);
+        }
+
+        public override void PrintCard()
+        {
+            string[] numberInArray = [
+                "**********",
+                "* SWITCH *",
+                "*        *",
+                "*        *",
+                "*        *",
+                "* CARDS  *",
+                "**********"];
+
+            _userCommunicator.SendColorMessageToUser(Color.White, string.Join("\n", numberInArray));
         }
 
         public override void ResetCard()

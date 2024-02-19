@@ -51,5 +51,19 @@ namespace Taki.Game.Cards
             IsOnlyPlus2Allowed = false;
             countPlus2 = 0;
         }
+
+        public override void PrintCard()
+        {
+            string[] numberInArray = [
+                "******************",
+                "*         ****** *",
+                "*    |        ** *",
+                "*  --+--  ****** *",
+                "*    |    **     *",
+                "*         ****** *",
+                "******************"];
+
+            _userCommunicator.SendColorMessageToUser(_color, string.Join("\n", numberInArray));
+        }
     }
 }

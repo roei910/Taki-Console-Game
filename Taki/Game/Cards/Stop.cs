@@ -28,6 +28,20 @@ namespace Taki.Game.Cards
             base.Play(topDiscard, cardDecksHolder, playersHolder);
         }
 
+        public override void PrintCard()
+        {
+            string[] numberInArray = [
+                "**********",
+                "*  STOP  *",
+                "*        *",
+                "*        *",
+                "*        *",
+                "*        *",
+                "**********"];
+
+            _userCommunicator.SendColorMessageToUser(_color, string.Join("\n", numberInArray));
+        }
+
         public override string ToString()
         {
             return $"Stop {base.ToString()}";

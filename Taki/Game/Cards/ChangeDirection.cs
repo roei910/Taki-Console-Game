@@ -23,6 +23,20 @@ namespace Taki.Game.Cards
             base.Play(topDiscard, cardDecksHolder, playersHolder);
         }
 
+        public override void PrintCard()
+        {
+            string[] numberInArray = [
+                "*************",
+                "*  CHANGE   *",
+                "*           *",
+                "*           *",
+                "*           *",
+                "* DIRECTION *",
+                "*************"];
+
+            _userCommunicator.SendColorMessageToUser(_color, string.Join("\n", numberInArray));
+        }
+
         public override string ToString()
         {
             return $"ChangeDirection, {base.ToString()}";

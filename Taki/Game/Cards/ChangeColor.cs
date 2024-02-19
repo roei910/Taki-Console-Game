@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using Taki.Game.Cards.NumberCards;
 using Taki.Game.Deck;
 using Taki.Game.Messages;
 using Taki.Game.Players;
@@ -17,7 +18,7 @@ namespace Taki.Game.Cards
         {
             if (color == DEFAULT_COLOR)
                 return true;
-            return other.IsStackableWith(new NumberCard(0, color, _userCommunicator));
+            return other.IsStackableWith(new NoNumberCard(color, _userCommunicator));
         }
 
         public override void Play(Card topDiscard, ICardDecksHolder cardDecksHolder, IPlayersHolder playersHolder)
@@ -26,6 +27,20 @@ namespace Taki.Game.Cards
                 color = playersHolder.CurrentPlayer.ChooseColor();
             
             base.Play(topDiscard, cardDecksHolder, playersHolder);
+        }
+
+        public override void PrintCard()
+        {
+            string[] numberInArray = [
+                "**********",
+                "* CHANGE *",
+                "*        *",
+                "*        *",
+                "*        *",
+                "* COLOR  *",
+                "**********"];
+
+            _userCommunicator.SendColorMessageToUser(Color.White, string.Join("\n", numberInArray));
         }
 
         public override void ResetCard()

@@ -23,6 +23,8 @@ namespace Taki.Game.Cards
             topDiscard = this;
             _userCommunicator.SendAlertMessage("Taki Open!\n");
             _userCommunicator.SendAlertMessage($"Top discard: {topDiscard}");
+            topDiscard.PrintCard();
+
             Card? playerCard = currentPlayer.PickCard(isStackable, elseMessage: "or -1 to finish taki");
 
             while (playerCard is not null)
@@ -35,6 +37,8 @@ namespace Taki.Game.Cards
                 currentPlayer.PlayerCards.Remove(playerCard);
                 cardDecksHolder.AddDiscardCard(playerCard);
                 _userCommunicator.SendAlertMessage($"Top discard: {topDiscard}");
+                topDiscard.PrintCard();
+
                 playerCard = currentPlayer.PickCard(isStackable, elseMessage: "or -1 to finish taki");
             }
 
@@ -47,6 +51,20 @@ namespace Taki.Game.Cards
             }
 
             base.Play(topDiscard, cardDecksHolder, playersHolder);
+        }
+
+        public override void PrintCard()
+        {
+            string[] numberInArray = [
+                "**********",
+                "*  TAKI  *",
+                "*        *",
+                "*        *",
+                "*        *",
+                "*        *",
+                "**********"];
+
+            _userCommunicator.SendColorMessageToUser(_color, string.Join("\n", numberInArray));
         }
 
         public override string ToString()

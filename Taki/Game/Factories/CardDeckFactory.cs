@@ -1,4 +1,6 @@
-﻿using Taki.Game.Cards;
+﻿using System.Drawing;
+using Taki.Game.Cards;
+using Taki.Game.Cards.NumberCards;
 using Taki.Game.Deck;
 using Taki.Game.Messages;
 
@@ -27,7 +29,17 @@ namespace Taki.Game.Factories
             var cards = Enumerable.Range(0, 2)
                 .SelectMany(_ => Enumerable.Range(3, 7)
                 .SelectMany(number => ColorCard.Colors
-                .Select(color => (Card)new NumberCard(number, color, _userCommunicator)))).ToList();
+                .SelectMany(color => 
+                    new List<Card>()
+                    {
+                        new ThreeCard(color, _userCommunicator),
+                        new FourCard(color, _userCommunicator),
+                        new FiveCard(color, _userCommunicator),
+                        new SixCard(color, _userCommunicator),
+                        new SevenCard(color, _userCommunicator),
+                        new EightCard(color, _userCommunicator),
+                        new NineCard(color, _userCommunicator)
+                    }))).ToList();
 
             return cards;
         }
@@ -61,7 +73,8 @@ namespace Taki.Game.Factories
         {
             var cards = new List<Card>() {
                 new SuperTaki(_userCommunicator),
-                new SwitchCardsWithDirection(_userCommunicator)
+                new SwitchCardsWithDirection(_userCommunicator),
+                new SwitchCardsWithUser(_userCommunicator)
             };
 
             return Enumerable.Range(0, 2)

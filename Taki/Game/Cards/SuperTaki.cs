@@ -34,5 +34,19 @@ namespace Taki.Game.Cards
         {
             return "SUPER-TAKI";
         }
+
+        public override void PrintCard()
+        {
+            string[] numberInArray = [
+                "**********",
+                "*  SUPER  *",
+                "*         *",
+                "*         *",
+                "*         *",
+                "*  TAKI   *",
+                "**********"];
+
+            _userCommunicator.SendColorMessageToUser(Color.White, string.Join("\n", numberInArray));
+        }
     }
 }

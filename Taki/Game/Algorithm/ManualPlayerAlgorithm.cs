@@ -21,8 +21,15 @@ namespace Taki.Game.Algorithm
         public Card? ChooseCard(Func<Card, bool> isSimilarTo, List<Card> playerCards, string? elseMessage = null)
         {
             playerCards = OrderPlayerCardByColor(playerCards);
+            _userCommunicator.SendAlertMessage("printing your current hand:");
             var playerCardsString = playerCards.Select((card, i) => $"{i}. {card}").ToList();
             _userCommunicator.SendMessageToUser(string.Join("\n", playerCardsString));
+            //playerCards.Select((card ,i) =>
+            //{
+            //_userCommunicator.SendMessageToUser($"{i}. {card}");
+            //    card.PrintCard();
+            //    return card;
+            //}).ToList();
 
             string message = $"Please choose one of your cards by index, " + ((elseMessage is null) ? $"-1 to draw a card" : elseMessage);
             _userCommunicator.SendAlertMessage(message);

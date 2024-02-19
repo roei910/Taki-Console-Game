@@ -5,7 +5,7 @@ namespace Taki.Game.Communicators
 {
     internal class ConsoleUserCommunicator : IUserCommunicator
     {
-        private void PrintMessageColor(ConsoleColor color, string message)
+        private void SendColorMessageToUser(ConsoleColor color, object? message)
         {
             Console.ForegroundColor = color;
             SendMessageToUser(message);
@@ -14,12 +14,12 @@ namespace Taki.Game.Communicators
 
         public void SendErrorMessage(object? message)
         {
-            PrintMessageColor(ConsoleColor.Red, message?.ToString() ?? "");
+            SendColorMessageToUser(ConsoleColor.Red, message?.ToString() ?? "");
         }
 
         public void SendAlertMessage(object? message)
         {
-            PrintMessageColor(ConsoleColor.Yellow, message?.ToString() ?? "");
+            SendColorMessageToUser(ConsoleColor.Yellow, message?.ToString() ?? "");
         }
 
         public void SendMessageToUser(object? message)
@@ -109,6 +109,25 @@ namespace Taki.Game.Communicators
 
             Console.WriteLine();
             return values[index];
+        }
+
+        public void SendColorMessageToUser(Color color, object? message)
+        {
+            SendColorMessageToUser(ColorToConsoleColor(color), message);
+            Console.WriteLine();
+        }
+
+        private ConsoleColor ColorToConsoleColor(Color color)
+        {
+            if(color.Equals(Color.Red))
+                return ConsoleColor.Red;
+            if(color.Equals(Color.Green))
+                return ConsoleColor.Green;
+            if(color.Equals (Color.Blue))
+                return ConsoleColor.Blue;
+            if(color.Equals(Color.Yellow))
+                return ConsoleColor.Yellow;
+            return ConsoleColor.White;
         }
     }
 }

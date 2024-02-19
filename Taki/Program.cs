@@ -8,6 +8,10 @@ using Microsoft.Extensions.Configuration;
 using Taki;
 using Taki.Game.GameRunner;
 
+//TODO: replace print cards with the new print cards function
+//TODO: check if restart game keeps the scores
+//TODO: make it possible to print many cards in a row of same color
+
 var serviceProvider = new ServiceCollection()
     .AddSingleton<IUserCommunicator, ConsoleUserCommunicator>()
     .AddSingleton<IPlayerAlgorithm, PlayerAlgorithm>()
