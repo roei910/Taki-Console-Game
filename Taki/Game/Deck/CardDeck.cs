@@ -33,6 +33,11 @@ namespace Taki.Game.Deck
         public void ShuffleDeck()
         {
             _cards = new(_cards.OrderBy(val => _random.Next(_cards.Count)));
+            _cards.ToList().Select(card =>
+            {
+                card.ResetCard();
+                return card;
+            }).ToList();
         }
 
         public void CombineFromDeck(CardDeck other)
