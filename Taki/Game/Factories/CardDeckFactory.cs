@@ -27,7 +27,6 @@ namespace Taki.Game.Factories
         private List<Card> GenerateNumberCards()
         {
             var cards = Enumerable.Range(0, 2)
-                .SelectMany(_ => Enumerable.Range(3, 7)
                 .SelectMany(number => ColorCard.Colors
                 .SelectMany(color => 
                     new List<Card>()
@@ -39,7 +38,7 @@ namespace Taki.Game.Factories
                         new SevenCard(color, _userCommunicator),
                         new EightCard(color, _userCommunicator),
                         new NineCard(color, _userCommunicator)
-                    }))).ToList();
+                    })).ToList();
 
             return cards;
         }
