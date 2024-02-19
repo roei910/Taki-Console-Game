@@ -27,7 +27,7 @@ namespace Taki.Game.Cards
 
         public virtual void FinishNoPlay() { }
 
-        public virtual void FinishPlay() { }
+        public virtual void ResetCard() { }
 
         public bool Equals(Card? other)
         {

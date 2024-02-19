@@ -7,7 +7,7 @@ namespace Taki.Game.Cards
     internal class SwitchCardsWithDirection : Card
     {
         private Card? prevCard = null;
-
+        
         public SwitchCardsWithDirection(IUserCommunicator userCommunicator) : 
             base(userCommunicator) { }
 
@@ -32,10 +32,11 @@ namespace Taki.Game.Cards
                 (savedCards, players[i].PlayerCards) = (players[i].PlayerCards, savedCards);
 
             players[0].PlayerCards = savedCards;
+
             base.Play(topDiscard, cardDecksHolder, playersHolder);
         }
 
-        public override void FinishPlay()
+        public override void ResetCard()
         {
             prevCard = null;
         }

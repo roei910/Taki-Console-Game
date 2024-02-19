@@ -9,6 +9,6 @@ namespace Taki.Game.Cards
         bool IsStackableWith(Card other);
         void Play(Card topDiscard, ICardDecksHolder cardDecksHolder, IPlayersHolder playersHolder);
         void FinishNoPlay();
-        void FinishPlay();
+        void ResetCard();
     }
 }

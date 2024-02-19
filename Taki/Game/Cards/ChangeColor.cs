@@ -28,7 +28,7 @@ namespace Taki.Game.Cards
             base.Play(topDiscard, cardDecksHolder, playersHolder);
         }
 
-        public override void FinishPlay()
+        public override void ResetCard()
         {
             color = DEFAULT_COLOR;
         }
