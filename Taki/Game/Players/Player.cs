@@ -73,7 +73,7 @@ namespace Taki.Game.Players
 
         public string GetInformation()
         {
-            return $"{Name}: {PlayerCards.Count} Algo: {_choosingAlgorithm}";
+            return $"Name: {Name}, Algo: {_choosingAlgorithm}";
         }
 
         public bool IsManualPlayer()

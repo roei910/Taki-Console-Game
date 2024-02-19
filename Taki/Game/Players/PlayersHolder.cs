@@ -112,7 +112,7 @@ namespace Taki.Game.Players
                 if (_noPlayCounter >= 2*_players.Count && _noPlayCounter % _players.Count == 0)
                 {
                     string message = "Too many rounds without play, consider calling a tie ;)\n" +
-                        "press any enter to continue";
+                        "press enter to continue";
                     _userCommunicator.GetMessageFromUser(message);
                 }
 

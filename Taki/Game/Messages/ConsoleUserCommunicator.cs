@@ -96,6 +96,7 @@ namespace Taki.Game.Communicators
                 .Select((i, value) =>
                 {
                     SendMessageToUser($"{i}. {value}");
+
                     return i;
                 }).ToList();
 
@@ -103,7 +104,7 @@ namespace Taki.Game.Communicators
                 index >= values.Length || index < 0)
             {
                 Console.WriteLine();
-                return GetUserEnumFromArray<T>(values);
+                return GetUserEnumFromArray(values);
             }
 
             Console.WriteLine();
