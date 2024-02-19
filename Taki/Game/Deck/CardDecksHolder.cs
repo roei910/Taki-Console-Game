@@ -44,8 +44,9 @@ namespace Taki.Game.Deck
 
             if (_drawPile.Count() == 0 && _discardPile.Count() > 1)
             {
+                Card topDiscard = _discardPile.PopFirst();
                 ResetCards();
-                DrawFirstCard();
+                _discardPile.AddFirst(topDiscard);
             }
 
             Card top = _drawPile.PopFirst();
