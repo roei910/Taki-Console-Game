@@ -8,23 +8,23 @@ namespace Taki.Game.Cards
 {
     internal class ChangeColor : Card
     {
-        static readonly Color DEFAULT_COLOR = Color.Empty;
-        Color color = DEFAULT_COLOR;
+        private static readonly Color DEFAULT_COLOR = Color.Empty;
+        private Color _color = DEFAULT_COLOR;
 
         public ChangeColor(IUserCommunicator userCommunicator) : 
             base(userCommunicator) { }
 
         public override bool IsStackableWith(Card other)
         {
-            if (color == DEFAULT_COLOR)
+            if (_color == DEFAULT_COLOR)
                 return true;
-            return other.IsStackableWith(new NoNumberCard(color, _userCommunicator));
+            return other.IsStackableWith(new NoNumberCard(_color, _userCommunicator));
         }
 
         public override void Play(Card topDiscard, ICardDecksHolder cardDecksHolder, IPlayersHolder playersHolder)
         {
-            while (!ColorCard.Colors.Contains(color))
-                color = playersHolder.CurrentPlayer.ChooseColor();
+            while (!ColorCard.Colors.Contains(_color))
+                _color = playersHolder.CurrentPlayer.ChooseColor();
             
             base.Play(topDiscard, cardDecksHolder, playersHolder);
         }
@@ -40,17 +40,17 @@ namespace Taki.Game.Cards
                 "* COLOR  *",
                 "**********"];
 
-            _userCommunicator.SendColorMessageToUser(Color.White, string.Join("\n", numberInArray));
+            _userCommunicator.SendColorMessageToUser(_color, string.Join("\n", numberInArray));
         }
 
         public override void ResetCard()
         {
-            color = DEFAULT_COLOR;
+            _color = DEFAULT_COLOR;
         }
 
         public override string ToString()
         {
-            return $"ChangeColor {color}";
+            return $"ChangeColor {_color}";
         }
     }
 }
