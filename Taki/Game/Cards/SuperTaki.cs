@@ -37,13 +37,13 @@ namespace Taki.Game.Cards
         public override string[] GetStringArray()
         {
             return [
-                "***********",
-                "*  SUPER  *",
-                "*         *",
-                "*         *",
-                "*         *",
-                "*  TAKI   *",
-                "***********"];
+                "**********",
+                "* SUPER  *",
+                "*        *",
+                "*        *",
+                "*        *",
+                "* TAKI   *",
+                "**********"];
         }
 
         public override void ResetCard()
