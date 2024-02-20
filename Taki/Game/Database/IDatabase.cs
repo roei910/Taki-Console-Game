@@ -7,5 +7,7 @@
         void Update(string key, string val, T newValue);
         bool Delete(string key, string val);
         bool CloseDB();
+        bool DeletAll();
+        bool IsEmpty();
     }
 }

@@ -34,10 +34,22 @@ namespace Taki.Game.Database
             return true;
         }
 
+        public bool DeletAll()
+        {
+            //TODO: delete all instances of the db
+            return true;
+        }
+
         public bool Delete(string key, string val)
         {
             var deleteFilter = Builders<T>.Filter.Eq(key, val);
             _collection.DeleteOne(deleteFilter);
+            return true;
+        }
+
+        public bool IsEmpty()
+        {
+            //TODO: create is empty => check if the db is currently empty
             return true;
         }
 
