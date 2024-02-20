@@ -44,7 +44,6 @@ namespace Taki.Game.Cards
 
         public abstract bool IsStackableWith(Card other);
         
-
         public abstract string[] GetStringArray();
     }
 }

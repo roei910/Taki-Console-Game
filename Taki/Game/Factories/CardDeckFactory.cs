@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using Taki.Game.Cards;
+﻿using Taki.Game.Cards;
 using Taki.Game.Cards.NumberCards;
 using Taki.Game.Deck;
 using Taki.Game.Messages;

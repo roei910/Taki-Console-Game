@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Taki.Game.Cards;
+﻿using Taki.Game.Cards;
 using Taki.Game.Factories;
 
 namespace Taki.Game.Deck
