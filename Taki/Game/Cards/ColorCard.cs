@@ -15,8 +15,9 @@ namespace Taki.Game.Cards
     {
         protected static readonly Color DEFAULT_COLOR = Color.Empty;
         protected Color _color;
-
         public static List<Color> Colors = [Color.Green, Color.Red, Color.Yellow, Color.Blue];
+
+        public string CardColor { get => _color.ToString(); set => _color = Color.FromName(value); }
 
         public ColorCard(Color color, IUserCommunicator userCommunicator) :
             base(userCommunicator)

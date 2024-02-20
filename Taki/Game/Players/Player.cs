@@ -12,17 +12,19 @@ namespace Taki.Game.Players
         private readonly IPlayerAlgorithm _choosingAlgorithm;
         private readonly IUserCommunicator _userCommunicator;
         public int Score { get; set; } = 0;
-        public string Name { get; }
+        public string Name { get; set; }
         public int Id { get; }
         public List<Card> PlayerCards { get; set; }
+        public string ChoosingAlgorithm { get; set; }
 
         public Player(string personName, IPlayerAlgorithm playerAlgorithm, IUserCommunicator userCommunicator)
         {
             PlayerCards = [];
             Id = id++;
-            _choosingAlgorithm = playerAlgorithm ?? throw new ArgumentNullException(nameof(playerAlgorithm));
+            _choosingAlgorithm = playerAlgorithm;
             Name = personName;
             _userCommunicator = userCommunicator;
+            ChoosingAlgorithm = _choosingAlgorithm.ToString() ?? "no algorithm";
         }
 
         public Player(Player other)
@@ -32,6 +34,7 @@ namespace Taki.Game.Players
             _choosingAlgorithm = other._choosingAlgorithm;
             Name = other.Name;
             _userCommunicator = other._userCommunicator;
+            ChoosingAlgorithm = other.ChoosingAlgorithm;
         }
 
         public Color ChooseColor()
