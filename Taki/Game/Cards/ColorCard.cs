@@ -13,7 +13,8 @@ namespace Taki.Game.Cards
 
     internal abstract class ColorCard : Card
     {
-        protected readonly Color _color;
+        protected static readonly Color DEFAULT_COLOR = Color.Empty;
+        protected Color _color;
 
         public static List<Color> Colors = [Color.Green, Color.Red, Color.Yellow, Color.Blue];
 
@@ -31,6 +32,8 @@ namespace Taki.Game.Cards
         public override bool IsStackableWith(Card other)
         {
             if (other is not ColorCard card)
+                return true;
+            if (card._color.Equals(DEFAULT_COLOR))
                 return true;
             return _color.Equals(card._color);
         }
