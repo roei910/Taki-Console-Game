@@ -13,7 +13,8 @@ namespace Taki.Game.Cards
 
     internal abstract class ColorCard : Card
     {
-        private readonly Color _color;
+        protected static readonly Color DEFAULT_COLOR = Color.Empty;
+        protected Color _color;
 
         public static List<Color> Colors = [Color.Green, Color.Red, Color.Yellow, Color.Blue];
 
@@ -32,12 +33,21 @@ namespace Taki.Game.Cards
         {
             if (other is not ColorCard card)
                 return true;
+            if (card._color.Equals(DEFAULT_COLOR))
+                return true;
             return _color.Equals(card._color);
         }
 
         public override string ToString()
         {
             return _color.ToString();
+        }
+
+        public override void PrintCard()
+        {
+            string[] numberInArray = GetStringArray();
+
+            _userCommunicator.SendColorMessageToUser(_color, string.Join("\n", numberInArray));
         }
     }
 }

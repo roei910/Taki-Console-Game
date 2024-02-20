@@ -51,5 +51,17 @@ namespace Taki.Game.Cards
             IsOnlyPlus2Allowed = false;
             countPlus2 = 0;
         }
+
+        public override string[] GetStringArray()
+        {
+            return [
+                "******************",
+                "*         ****** *",
+                "*    |         * *",
+                "*  --+--  ****** *",
+                "*    |    *      *",
+                "*         ****** *",
+                "******************"];
+        }
     }
 }

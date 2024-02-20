@@ -10,6 +10,18 @@ namespace Taki.Game.Cards
         public Stop(Color color, IUserCommunicator userCommunicator) : 
             base(color, userCommunicator) { }
 
+        public override string[] GetStringArray()
+        {
+            return [
+                "**********",
+                "*  STOP  *",
+                "*        *",
+                "*        *",
+                "*        *",
+                "*        *",
+                "**********"];
+        }
+
         public override bool IsStackableWith(Card other)
         {
             return base.IsStackableWith(other) || other is Stop;

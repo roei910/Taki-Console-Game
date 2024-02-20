@@ -80,5 +80,10 @@ namespace Taki.Game.Players
         {
             return _choosingAlgorithm is ManualPlayerAlgorithm;
         }
+
+        public Player PickOtherPlayer(IPlayersHolder playersHolder)
+        {
+            return _choosingAlgorithm.ChoosePlayer(this, playersHolder);
+        }
     }
 }

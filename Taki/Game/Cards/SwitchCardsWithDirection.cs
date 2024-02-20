@@ -6,10 +6,28 @@ namespace Taki.Game.Cards
 {
     internal class SwitchCardsWithDirection : Card
     {
-        private Card? prevCard = null;
+        protected Card? prevCard = null;
         
         public SwitchCardsWithDirection(IUserCommunicator userCommunicator) : 
             base(userCommunicator) { }
+
+        public override string[] GetStringArray()
+        {
+            return [
+                "**********",
+                "* SWITCH *",
+                "*        *",
+                "*        *",
+                "*        *",
+                "* CARDS  *",
+                "**********"];
+        }
+
+        public override void PrintCard()
+        {
+            prevCard?.PrintCard();
+            base.PrintCard();
+        }
 
         public override bool IsStackableWith(Card other)
         {
@@ -44,8 +62,8 @@ namespace Taki.Game.Cards
         public override string ToString()
         {
             if (prevCard == null)
-                return "SwitchCards";
-            return $"SwitchCards, previous {prevCard}";
+                return "Switch Cards";
+            return $"Switch Cards, previous {prevCard}";
         }
     }
 }

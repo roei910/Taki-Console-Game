@@ -29,3 +29,6 @@
 /Taki/bin/Debug/net8.0/Taki.deps.json
 /Taki/bin/Debug/net8.0/Taki.dll.config
 /Taki/obj/Debug/net8.0/Taki.csproj.AssemblyReference.cache
+/Taki/bin/Debug/net8.0/runtimes/linux/native/libmongocrypt.so
+/Taki/bin/Debug/net8.0/runtimes/osx/native/libmongocrypt.dylib
+/Taki/bin/Debug/net8.0

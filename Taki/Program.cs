@@ -8,6 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Taki;
 using Taki.Game.GameRunner;
 
+//TODO: make it possible to print many cards in a row of same color for manual choose, use the get stringArray method and add the strings
+
 var serviceProvider = new ServiceCollection()
     .AddSingleton<IUserCommunicator, ConsoleUserCommunicator>()
     .AddSingleton<IPlayerAlgorithm, PlayerAlgorithm>()

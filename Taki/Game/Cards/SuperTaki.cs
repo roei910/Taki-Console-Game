@@ -5,34 +5,50 @@ using Taki.Game.Players;
 
 namespace Taki.Game.Cards
 {
-    internal class SuperTaki : Card
+    internal class SuperTaki : TakiCard
     {
-        private TakiCard? takiInstance;
-
         public SuperTaki(IUserCommunicator userCommunicator) :
-            base(userCommunicator) { }
+            base(Color.Empty, userCommunicator) { }
 
         public override void Play(Card topDiscard, ICardDecksHolder cardDecksHolder, IPlayersHolder playersHolder)
         {
-            Color color = Color.Empty;
+            _color = Color.Empty;
 
-            while (!ColorCard.Colors.Contains(color))
-                color = playersHolder.CurrentPlayer.ChooseColor();
+            while (!Colors.Contains(_color))
+                _color = playersHolder.CurrentPlayer.ChooseColor();
 
-            takiInstance = new TakiCard(color, _userCommunicator);
-            takiInstance.Play(topDiscard, cardDecksHolder, playersHolder);
+            base.Play(topDiscard, cardDecksHolder, playersHolder);
         }
 
         public override bool IsStackableWith(Card other)
         {
-            if (takiInstance is null)
+            if (_color.Equals(DEFAULT_COLOR))
                 return true;
-            return takiInstance.IsStackableWith(other);
+            return base.IsStackableWith(other);
         }
 
         public override string ToString()
         {
-            return "SUPER-TAKI";
+            if(_color.Equals(DEFAULT_COLOR))
+                return "SUPER-TAKI";
+            return $"SUPER-TAKI, {_color}";
+        }
+
+        public override string[] GetStringArray()
+        {
+            return [
+                "**********",
+                "* SUPER  *",
+                "*        *",
+                "*        *",
+                "*        *",
+                "* TAKI   *",
+                "**********"];
+        }
+
+        public override void ResetCard()
+        {
+            _color = DEFAULT_COLOR;
         }
     }
 }

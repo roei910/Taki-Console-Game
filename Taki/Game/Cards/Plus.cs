@@ -10,6 +10,18 @@ namespace Taki.Game.Cards
         public Plus(Color color, IUserCommunicator userCommunicator) : 
             base(color, userCommunicator) { }
 
+        public override string[] GetStringArray()
+        {
+            return [
+                "***********",
+                "*         *",
+                "*    |    *",
+                "*  --+--  *",
+                "*    |    *",
+                "*         *",
+                "***********"];
+        }
+
         public override bool IsStackableWith(Card other)
         {
             return base.IsStackableWith(other) || other is Plus;
@@ -20,6 +32,8 @@ namespace Taki.Game.Cards
             _userCommunicator.SendAlertMessage("please choose one more card or draw");
 
             _userCommunicator.SendAlertMessage($"Top discard: {this}");
+            PrintCard();
+
             Player currentPlayer = playersHolder.CurrentPlayer;
             Card? playerCard = currentPlayer.PickCard(IsStackableWith);
 

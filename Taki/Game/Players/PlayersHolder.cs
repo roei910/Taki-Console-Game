@@ -96,10 +96,11 @@ namespace Taki.Game.Players
 
             Card topDiscard = cardDecksHolder.GetTopDiscard();
             _userCommunicator.SendAlertMessage($"Top discard: {topDiscard}");
+            topDiscard.PrintCard();
 
             Card? playerCard = CurrentPlayer.PickCard(topDiscard.IsStackableWith);
-            _userCommunicator.SendAlertMessage($"Player picked: {playerCard?.ToString() ?? "no card"}\n");
-
+            _userCommunicator.SendAlertMessage($"Player picked: {playerCard?.ToString() ?? "draw card(s)"}\n");
+            
             if (playerCard == null)
             {
                 DrawCards(topDiscard.CardsToDraw(), CurrentPlayer, cardDecksHolder);
@@ -117,8 +118,8 @@ namespace Taki.Game.Players
                 return;
             }
 
+            playerCard.PrintCard();
             _noPlayCounter = 0;
-
             CurrentPlayer.PlayerCards.Remove(playerCard);
             cardDecksHolder.AddDiscardCard(playerCard);
 

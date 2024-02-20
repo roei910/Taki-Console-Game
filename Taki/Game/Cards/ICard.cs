@@ -10,5 +10,7 @@ namespace Taki.Game.Cards
         void Play(Card topDiscard, ICardDecksHolder cardDecksHolder, IPlayersHolder playersHolder);
         void FinishNoPlay();
         void ResetCard();
+        void PrintCard();
+        string[] GetStringArray();
     }
 }

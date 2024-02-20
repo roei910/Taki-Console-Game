@@ -4,6 +4,7 @@ namespace Taki.Game.Messages
 {
     internal interface IUserCommunicator
     {
+        void SendColorMessageToUser(Color color, object? message);
         void SendMessageToUser(object? message = null);
         string? GetMessageFromUser(object? message = null);
         void SendAlertMessage(object? message);
