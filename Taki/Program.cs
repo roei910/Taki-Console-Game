@@ -8,10 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Taki;
 using Taki.Game.GameRunner;
 
-//TODO: check if restart game keeps the scores
-//TODO: make it possible to print many cards in a row of same color for manual choose
-//TODO: for the row print maybe create a print card method from list of strings and then
-//each card would return the string array and then be printed (not directly from the card like now)
+//TODO: make it possible to print many cards in a row of same color for manual choose, use the get stringArray method and add the strings
 
 var serviceProvider = new ServiceCollection()
     .AddSingleton<IUserCommunicator, ConsoleUserCommunicator>()

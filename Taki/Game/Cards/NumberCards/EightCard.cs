@@ -8,9 +8,9 @@ namespace Taki.Game.Cards.NumberCards
         public EightCard(Color color, IUserCommunicator userCommunicator) : 
             base(8, color, userCommunicator) { }
 
-        public override void PrintCard()
+        public override string[] GetStringArray()
         {
-            string[] numberInArray = [
+            return [
                 "************",
                 "* ******** *",
                 "* **    ** *",
@@ -18,8 +18,6 @@ namespace Taki.Game.Cards.NumberCards
                 "* **    ** *",
                 "* ******** *",
                 "************"];
-
-            _userCommunicator.SendColorMessageToUser(_color ,string.Join("\n", numberInArray));
         }
     }
 }

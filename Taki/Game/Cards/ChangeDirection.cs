@@ -10,6 +10,18 @@ namespace Taki.Game.Cards
         public ChangeDirection(Color color, IUserCommunicator userCommunicator) : 
             base(color, userCommunicator) { }
 
+        public override string[] GetStringArray()
+        {
+            return [
+                "*************",
+                "*  CHANGE   *",
+                "*           *",
+                "*           *",
+                "*           *",
+                "* DIRECTION *",
+                "*************"];
+        }
+
         public override bool IsStackableWith(Card other)
         {
             return base.IsStackableWith(other) || other is ChangeDirection;
@@ -21,20 +33,6 @@ namespace Taki.Game.Cards
 
             playersHolder.ChangeDirection();
             base.Play(topDiscard, cardDecksHolder, playersHolder);
-        }
-
-        public override void PrintCard()
-        {
-            string[] numberInArray = [
-                "*************",
-                "*  CHANGE   *",
-                "*           *",
-                "*           *",
-                "*           *",
-                "* DIRECTION *",
-                "*************"];
-
-            _userCommunicator.SendColorMessageToUser(_color, string.Join("\n", numberInArray));
         }
 
         public override string ToString()

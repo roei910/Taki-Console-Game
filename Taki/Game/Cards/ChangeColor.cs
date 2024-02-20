@@ -14,6 +14,25 @@ namespace Taki.Game.Cards
         public ChangeColor(IUserCommunicator userCommunicator) : 
             base(userCommunicator) { }
 
+        public override string[] GetStringArray()
+        {
+            return [
+                "**********",
+                "* CHANGE *",
+                "*        *",
+                "*        *",
+                "*        *",
+                "* COLOR  *",
+                "**********"];
+        }
+
+        public override void PrintCard()
+        {
+            string[] numberInArray = GetStringArray();
+
+            _userCommunicator.SendColorMessageToUser(_color, string.Join("\n", numberInArray));
+        }
+
         public override bool IsStackableWith(Card other)
         {
             if (_color == DEFAULT_COLOR)
@@ -27,20 +46,6 @@ namespace Taki.Game.Cards
                 _color = playersHolder.CurrentPlayer.ChooseColor();
             
             base.Play(topDiscard, cardDecksHolder, playersHolder);
-        }
-
-        public override void PrintCard()
-        {
-            string[] numberInArray = [
-                "**********",
-                "* CHANGE *",
-                "*        *",
-                "*        *",
-                "*        *",
-                "* COLOR  *",
-                "**********"];
-
-            _userCommunicator.SendColorMessageToUser(_color, string.Join("\n", numberInArray));
         }
 
         public override void ResetCard()

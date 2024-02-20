@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using Taki.Game.Deck;
+﻿using Taki.Game.Deck;
 using Taki.Game.Messages;
 using Taki.Game.Players;
 
@@ -22,9 +21,9 @@ namespace Taki.Game.Cards
             playersHolder.NextPlayer();
         }
 
-        public override void PrintCard()
+        public override string[] GetStringArray()
         {
-            string[] numberInArray = [
+            return [
                 "**********",
                 "* SWITCH *",
                 "*        *",
@@ -32,8 +31,6 @@ namespace Taki.Game.Cards
                 "*        *",
                 "* CARDS  *",
                 "**********"];
-
-            _userCommunicator.SendColorMessageToUser(Color.White, string.Join("\n", numberInArray));
         }
 
         public override string ToString()

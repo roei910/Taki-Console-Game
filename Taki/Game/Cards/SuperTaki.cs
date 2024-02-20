@@ -5,6 +5,7 @@ using Taki.Game.Players;
 
 namespace Taki.Game.Cards
 {
+    //TODO: try inherit from taki
     internal class SuperTaki : Card
     {
         private TakiCard? takiInstance;
@@ -35,18 +36,16 @@ namespace Taki.Game.Cards
             return "SUPER-TAKI";
         }
 
-        public override void PrintCard()
+        public override string[] GetStringArray()
         {
-            string[] numberInArray = [
-                "**********",
+            return [
+                "***********",
                 "*  SUPER  *",
                 "*         *",
                 "*         *",
                 "*         *",
                 "*  TAKI   *",
-                "**********"];
-
-            _userCommunicator.SendColorMessageToUser(Color.White, string.Join("\n", numberInArray));
+                "***********"];
         }
     }
 }

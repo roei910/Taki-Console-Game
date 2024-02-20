@@ -10,6 +10,18 @@ namespace Taki.Game.Cards
         public Plus(Color color, IUserCommunicator userCommunicator) : 
             base(color, userCommunicator) { }
 
+        public override string[] GetStringArray()
+        {
+            return [
+                "***********",
+                "*         *",
+                "*    |    *",
+                "*  --+--  *",
+                "*    |    *",
+                "*         *",
+                "***********"];
+        }
+
         public override bool IsStackableWith(Card other)
         {
             return base.IsStackableWith(other) || other is Plus;
@@ -37,20 +49,6 @@ namespace Taki.Game.Cards
             currentPlayer.PlayerCards.Remove(playerCard);
             cardDecksHolder.AddDiscardCard(playerCard);
             playerCard.Play(topDiscard, cardDecksHolder, playersHolder);
-        }
-
-        public override void PrintCard()
-        {
-            string[] numberInArray = [
-                "***********",
-                "*         *",
-                "*    |    *",
-                "*  --+--  *",
-                "*    |    *",
-                "*         *",
-                "***********"];
-
-            _userCommunicator.SendColorMessageToUser(_color, string.Join("\n", numberInArray));
         }
 
         public override string ToString()

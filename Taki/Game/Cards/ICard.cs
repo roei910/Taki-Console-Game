@@ -11,5 +11,6 @@ namespace Taki.Game.Cards
         void FinishNoPlay();
         void ResetCard();
         void PrintCard();
+        string[] GetStringArray();
     }
 }

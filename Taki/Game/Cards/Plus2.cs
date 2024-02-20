@@ -52,9 +52,9 @@ namespace Taki.Game.Cards
             countPlus2 = 0;
         }
 
-        public override void PrintCard()
+        public override string[] GetStringArray()
         {
-            string[] numberInArray = [
+            return [
                 "******************",
                 "*         ****** *",
                 "*    |        ** *",
@@ -62,8 +62,6 @@ namespace Taki.Game.Cards
                 "*    |    **     *",
                 "*         ****** *",
                 "******************"];
-
-            _userCommunicator.SendColorMessageToUser(_color, string.Join("\n", numberInArray));
         }
     }
 }

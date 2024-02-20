@@ -8,7 +8,7 @@ namespace Taki.Game.Cards.NumberCards
         public NoNumberCard(Color color, IUserCommunicator userCommunicator) : 
             base(0, color, userCommunicator) { }
 
-        public override void PrintCard()
+        public override string[] GetStringArray()
         {
             throw new NotImplementedException();
         }

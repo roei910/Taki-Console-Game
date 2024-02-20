@@ -1,4 +1,5 @@
-﻿using Taki.Game.Deck;
+﻿using System.Drawing;
+using Taki.Game.Deck;
 using Taki.Game.Messages;
 using Taki.Game.Players;
 
@@ -34,7 +35,16 @@ namespace Taki.Game.Cards
             return _id == other?._id;
         }
 
+        public virtual void PrintCard()
+        {
+            string[] numberInArray = GetStringArray();
+
+            _userCommunicator.SendColorMessageToUser(Color.White, string.Join("\n", numberInArray));
+        }
+
         public abstract bool IsStackableWith(Card other);
-        public abstract void PrintCard();
+        
+
+        public abstract string[] GetStringArray();
     }
 }

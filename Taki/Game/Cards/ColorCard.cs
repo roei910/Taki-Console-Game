@@ -39,5 +39,12 @@ namespace Taki.Game.Cards
         {
             return _color.ToString();
         }
+
+        public override void PrintCard()
+        {
+            string[] numberInArray = GetStringArray();
+
+            _userCommunicator.SendColorMessageToUser(_color, string.Join("\n", numberInArray));
+        }
     }
 }

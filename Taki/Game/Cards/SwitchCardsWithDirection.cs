@@ -12,6 +12,24 @@ namespace Taki.Game.Cards
         public SwitchCardsWithDirection(IUserCommunicator userCommunicator) : 
             base(userCommunicator) { }
 
+        public override string[] GetStringArray()
+        {
+            return [
+                "**********",
+                "* SWITCH *",
+                "*        *",
+                "*        *",
+                "*        *",
+                "* CARDS  *",
+                "**********"];
+        }
+
+        public override void PrintCard()
+        {
+            prevCard?.PrintCard();
+            base.PrintCard();
+        }
+
         public override bool IsStackableWith(Card other)
         {
             if (prevCard == null)
@@ -35,20 +53,6 @@ namespace Taki.Game.Cards
             players[0].PlayerCards = savedCards;
 
             base.Play(topDiscard, cardDecksHolder, playersHolder);
-        }
-
-        public override void PrintCard()
-        {
-            string[] numberInArray = [
-                "**********",
-                "* SWITCH *",
-                "*        *",
-                "*        *",
-                "*        *",
-                "* CARDS  *",
-                "**********"];
-
-            _userCommunicator.SendColorMessageToUser(Color.White, string.Join("\n", numberInArray));
         }
 
         public override void ResetCard()
