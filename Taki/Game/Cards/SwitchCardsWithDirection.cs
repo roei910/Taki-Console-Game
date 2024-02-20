@@ -7,7 +7,7 @@ namespace Taki.Game.Cards
 {
     internal class SwitchCardsWithDirection : Card
     {
-        private Card? prevCard = null;
+        protected Card? prevCard = null;
         
         public SwitchCardsWithDirection(IUserCommunicator userCommunicator) : 
             base(userCommunicator) { }

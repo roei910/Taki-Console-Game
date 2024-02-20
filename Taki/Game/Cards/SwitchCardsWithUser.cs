@@ -5,7 +5,7 @@ using Taki.Game.Players;
 
 namespace Taki.Game.Cards
 {
-    internal class SwitchCardsWithUser : Card
+    internal class SwitchCardsWithUser : SwitchCardsWithDirection
     {
         public SwitchCardsWithUser(IUserCommunicator userCommunicator) : 
             base(userCommunicator) { }
@@ -17,9 +17,9 @@ namespace Taki.Game.Cards
 
             (currentPlayer.PlayerCards, playerToSwitch.PlayerCards) = (playerToSwitch.PlayerCards, currentPlayer.PlayerCards);
 
-            _userCommunicator.SendErrorMessage($"User used switch cards with Player: {playerToSwitch.Name}!\n");
+            _userCommunicator.SendErrorMessage($"Player: {currentPlayer.Name} used switch cards with Player: {playerToSwitch.Name}!\n");
 
-            base.Play(topDiscard, cardDecksHolder, playersHolder);
+            playersHolder.NextPlayer();
         }
 
         public override void PrintCard()
@@ -36,14 +36,11 @@ namespace Taki.Game.Cards
             _userCommunicator.SendColorMessageToUser(Color.White, string.Join("\n", numberInArray));
         }
 
-        public override bool IsStackableWith(Card other)
-        {
-            return true;
-        }
-
         public override string ToString()
         {
-            return "Switch Cards With User";
+            if (prevCard == null)
+                return "Switch Cards With User";
+            return $"Switch Cards With User, previous {prevCard}";
         }
     }
 }
