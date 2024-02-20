@@ -62,8 +62,8 @@ namespace Taki.Game.Cards
         public override string ToString()
         {
             if (prevCard == null)
-                return "SwitchCards";
-            return $"SwitchCards, previous {prevCard}";
+                return "Switch Cards";
+            return $"Switch Cards, previous {prevCard}";
         }
     }
 }
