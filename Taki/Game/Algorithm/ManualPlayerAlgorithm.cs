@@ -45,14 +45,14 @@ namespace Taki.Game.Algorithm
 
         public Player ChoosePlayer(Player currentPlayer, IPlayersHolder playersHolder)
         {
-            //TODO: choose not including the current player
-            _userCommunicator.SendAlertMessage("Please choose one of the players by index:");
-            var players = playersHolder.Players.Select((player, i) =>
+            var players = playersHolder.Players.Where(p => p.Id != currentPlayer.Id).ToList();
+            var messages = players.Select((player, i) =>
                 $"{i}. {player.Name}").ToList();
 
-            int index = _userCommunicator.GetNumberFromUser(string.Join("\n", players));
+            _userCommunicator.SendAlertMessage("Please choose one of the players by index:");
+            int index = _userCommunicator.GetNumberFromUser(string.Join("\n", messages));
 
-            return playersHolder.Players.ElementAt(index);
+            return players[index];
         }
 
         private Card? ChooseValidCard(List<Card> playerCards, Func<Card, bool> isSimilarTo)
@@ -90,8 +90,6 @@ namespace Taki.Game.Algorithm
         private bool IsValidIndex(int index, int maxCards)
         {
             return index >= -1 && index < maxCards;
-        }
-
-        
+        }        
     }
 }
