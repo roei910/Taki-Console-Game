@@ -1,4 +1,5 @@
-﻿using Taki.Game.Deck;
+﻿using Taki.Game.Database;
+using Taki.Game.Deck;
 using Taki.Game.Factories;
 using Taki.Game.GameRunner;
 using Taki.Game.Messages;
@@ -22,16 +23,19 @@ namespace Taki.Game.Managers
         protected readonly ICardDecksHolder _cardDecksHolder;
         protected readonly ProgramVariables _programVariables;
         protected readonly IGameScore _gameScore;
+        protected readonly IDatabase<Player> _playersDatabase;
         protected IPlayersHolder? _playersHolder;
 
         public TakiGameRunner(PlayersHolderFactory playersHolderFactory, CardDeckFactory cardDeckFactory,
-            IUserCommunicator userCommunicator, ProgramVariables programVariables, IGameScore gameScore, Random random)
+            IUserCommunicator userCommunicator, ProgramVariables programVariables, IGameScore gameScore, 
+            Random random, IDatabase<Player> playersDB)
         {
             _userCommunicator = userCommunicator;
             _programVariables = programVariables;
             _playersHolderFactory = playersHolderFactory;
             _gameScore = gameScore;
             _cardDecksHolder = new CardDecksHolder(cardDeckFactory, random);
+            _playersDatabase = playersDB;
         }
 
         private void StartSingleGame()
@@ -77,6 +81,13 @@ namespace Taki.Game.Managers
             {
                 ResetGame();
                 _playersHolder!.DealCards(_cardDecksHolder);
+
+                //TODO: add all players to db
+                _playersHolder.Players.ForEach(player =>
+                {
+                    _playersDatabase.Create(player);
+                });
+
                 StartSingleGame();
             }
 

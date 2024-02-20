@@ -7,6 +7,8 @@ using Taki.Game.Messages;
 using Microsoft.Extensions.Configuration;
 using Taki;
 using Taki.Game.GameRunner;
+using Taki.Game.Database;
+using Taki.Game.Players;
 
 //TODO: make it possible to print many cards in a row of same color for manual choose, use the get stringArray method and add the strings
 
@@ -25,6 +27,7 @@ var serviceProvider = new ServiceCollection()
         .AddJsonFile("AppConfigurations.json", false, true)
         .Build())
     .AddSingleton<TakiGameRunner>()
+    .AddSingleton<IDatabase<Player>, PlayerDatabase>()
     .BuildServiceProvider();
 
 TakiGameRunner gameRunner = serviceProvider.GetRequiredService<TakiGameRunner>();

@@ -1,4 +1,5 @@
 ﻿using Taki.Game.Algorithm;
+using Taki.Game.Database;
 using Taki.Game.GameRunner;
 using Taki.Game.Messages;
 using Taki.Game.Players;
@@ -13,10 +14,11 @@ namespace Taki.Game.Factories
         private readonly Random _random;
         private readonly IGameScore _gameScore;
         private readonly ManualPlayerAlgorithm _manualPlayerAlgorithm;
+        private readonly IDatabase<Player> _playersDatabase;
 
         public PlayersHolderFactory(ProgramVariables programVariables, IUserCommunicator userCommunicator,
             List<IPlayerAlgorithm> playerAlgorithms, Random random, IGameScore gameScore,
-            ManualPlayerAlgorithm manualPlayerAlgorithm)
+            ManualPlayerAlgorithm manualPlayerAlgorithm, IDatabase<Player> playersDatabase)
         {
             _programVariables = programVariables;
             _userCommunicator = userCommunicator;
@@ -24,6 +26,7 @@ namespace Taki.Game.Factories
             _random = random;
             _gameScore = gameScore;
             _manualPlayerAlgorithm = manualPlayerAlgorithm;
+            _playersDatabase = playersDatabase;
         }
 
         private List<Player> GeneratePlayers()

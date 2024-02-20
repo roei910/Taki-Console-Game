@@ -16,22 +16,22 @@ namespace Taki
             var variables = configuration.GetSection("LocalVariables");
 
             MIN_NUMBER_OF_PLAYERS = int.Parse(variables["MIN_NUMBER_OF_PLAYERS"]?? 
-                throw new ArgumentNullException("Please define minimum number of players"));
+                throw new NullReferenceException("Please define minimum number of players"));
 
             MAX_NUMBER_OF_PLAYERS = int.Parse(variables["MAX_NUMBER_OF_PLAYERS"] ?? 
-                throw new ArgumentNullException("Please define maximum number of players"));
+                throw new NullReferenceException("Please define maximum number of players"));
 
             MIN_NUMBER_OF_PLAYER_CARDS = int.Parse(variables["MIN_NUMBER_OF_PLAYER_CARDS"] ?? 
-                throw new ArgumentNullException("Please define a minimum number of player cards"));
+                throw new NullReferenceException("Please define a minimum number of player cards"));
 
             MAX_NUMBER_OF_PLAYER_CARDS = int.Parse(variables["MAX_NUMBER_OF_PLAYER_CARDS"] ??
-                throw new ArgumentNullException("Please define a maximum number of player cards"));
+                throw new NullReferenceException("Please define a maximum number of player cards"));
 
             NUMBER_OF_PYRAMID_PLAYER_CARDS = int.Parse(variables["NUMBER_OF_PYRAMID_PLAYER_CARDS"] ?? 
-                throw new ArgumentNullException("Please define a number of cards for pyramid player"));
+                throw new NullReferenceException("Please define a number of cards for pyramid player"));
 
             NUMBER_OF_TOTAL_WINNERS = int.Parse(variables["NUMBER_OF_TOTAL_WINNERS"] ?? 
-                throw new ArgumentNullException("Please define a number of total winners for the game"));
+                throw new NullReferenceException("Please define a number of total winners for the game"));
         }
     }
 }
