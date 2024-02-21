@@ -1,13 +1,19 @@
-﻿namespace Taki.Game.Database
+﻿using MongoDB.Driver;
+
+namespace Taki.Game.Database
 {
     internal interface IDatabase<T>
     {
         bool Create(T value);
-        T Read(string key, string val);
-        void Update(string key, string val, T newValue);
-        bool Delete(string key, string val);
+        bool CreateMany(List<T> values);
+        T? FindOne(FilterDefinition<T> filterDefinition);
+        List<T> FindAll();
+        void ReplaceOne(FilterDefinition<T> filterDefinition, T newValue);
+        bool Delete(FilterDefinition<T> filterDefinition);
         bool CloseDB();
-        bool DeletAll();
+        bool DeleteAll();
         bool IsEmpty();
+        void UpdateAll(List<T> values);
+        void UpdateOne(T value);
     }
 }

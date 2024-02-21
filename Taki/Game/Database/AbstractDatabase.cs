@@ -5,20 +5,27 @@ namespace Taki.Game.Database
 {
     internal abstract class AbstractDatabase<T> : IDatabase<T>
     {
-        private readonly MongoClient _client;
-        private readonly IMongoDatabase _database;
-        private readonly IMongoCollection<T> _collection;
+        protected readonly MongoClient _client;
+        protected readonly IMongoDatabase _database;
+        protected readonly IMongoCollection<T> _collection;
 
-        public AbstractDatabase(IConfiguration configuration, string collectionName) 
+        public AbstractDatabase(IConfiguration configuration, string collectionName)
         {
             var mongoUrl = configuration.GetSection("MongoUrl").Value ??
                 throw new NullReferenceException("please define mongoDB url");
             _client = new MongoClient(mongoUrl);
-            
+
             var dbName = configuration.GetSection("MongoDatabaseName").Value ??
                 throw new NullReferenceException("please define mongoDB url");
             _database = _client.GetDatabase(dbName);
 
+            _collection = _database.GetCollection<T>(collectionName);
+        }
+
+        public AbstractDatabase(string mongoUrl, string dbName, string collectionName)
+        {
+            _client = new MongoClient(mongoUrl);
+            _database = _client.GetDatabase(dbName);
             _collection = _database.GetCollection<T>(collectionName);
         }
 
@@ -34,37 +41,42 @@ namespace Taki.Game.Database
             return true;
         }
 
-        public bool DeletAll()
-        {
-            //TODO: delete all instances of the db
-            return true;
-        }
-
-        public bool Delete(string key, string val)
-        {
-            var deleteFilter = Builders<T>.Filter.Eq(key, val);
-            _collection.DeleteOne(deleteFilter);
-            return true;
-        }
-
         public bool IsEmpty()
         {
-            //TODO: create is empty => check if the db is currently empty
+            return FindAll().Count == 0;
+        }
+
+        public bool CreateMany(List<T> values)
+        {
+            values.ForEach(val => Create(val));
             return true;
         }
 
-        public T Read(string key, string val)
+        public List<T> FindAll()
         {
-            var filter = Builders<T>.Filter.Eq(key, val);
+            var filter = Builders<T>.Filter.Empty;
             var result = _collection.Find(filter).ToList();
-            return result.First();
+            return result;
         }
 
-        public void Update(string key, string val, T newValue)
+        public T? FindOne(FilterDefinition<T> filterDefinition)
         {
-            var updateFilter = Builders<T>.Filter.Eq("key", "value");
-            var update = Builders<T>.Update.Set("key", "updatedValue");
-            _collection.UpdateOne(updateFilter, update);
+            var result = _collection.Find(filterDefinition).ToList();
+            return result.FirstOrDefault();
         }
+
+        public void ReplaceOne(FilterDefinition<T> filterDefinition, T newValue)
+        {
+            _collection.ReplaceOne(filterDefinition, newValue);
+        }
+
+        public bool Delete(FilterDefinition<T> filterDefinition)
+        {
+            return _collection.DeleteOne(filterDefinition).IsAcknowledged;
+        }
+
+        public abstract void UpdateAll(List<T> values);
+        public abstract void UpdateOne(T value);
+        public abstract bool DeleteAll();
     }
 }

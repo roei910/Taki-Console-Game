@@ -13,7 +13,7 @@ namespace Taki.Game.Cards
 
     internal abstract class ColorCard : Card
     {
-        protected static readonly Color DEFAULT_COLOR = Color.Empty;
+        public static readonly Color DEFAULT_COLOR = Color.Empty;
         protected Color _color;
         public static List<Color> Colors = [Color.Green, Color.Red, Color.Yellow, Color.Blue];
 

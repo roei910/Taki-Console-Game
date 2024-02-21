@@ -11,5 +11,7 @@ namespace Taki.Game.Deck
         void ShuffleDeck();
         void CombineFromDeck(CardDeck other);
         void AddMany(List<Card> playerCards);
+        Card RemoveFirstDTO(CardDTO card);
+        List<Card> GetAllCards();
     }
 }

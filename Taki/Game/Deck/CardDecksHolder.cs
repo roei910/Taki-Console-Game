@@ -63,5 +63,28 @@ namespace Taki.Game.Deck
         {
             return _drawPile.Count() + _discardPile.Count();
         }
+
+        public Card RemoveCardByDTO(CardDTO card)
+        {
+            return _drawPile.RemoveFirstDTO(card);
+        }
+
+        public CardDeck GetDrawPile()
+        {
+            return _drawPile;
+        }
+
+        public CardDeck GetDiscardPile()
+        {
+            return _discardPile;
+        }
+
+        public void UpdateCardsFromDB(List<CardDTO> drawPile, List<CardDTO> discardPile)
+        {
+            var newDrawPile = drawPile.Select(RemoveCardByDTO).ToList();
+            _drawPile.AddMany(newDrawPile);
+            var newDiscardPile = discardPile.Select(RemoveCardByDTO).ToList();
+            _discardPile.AddMany(newDiscardPile);
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Taki.Game.Cards;
+using Taki.Game.Database;
 using Taki.Game.Deck;
 
 namespace Taki.Game.Players
@@ -12,7 +13,7 @@ namespace Taki.Game.Players
         void ChangeDirection();
         void DealCards(ICardDecksHolder cardsHolder);
         bool DrawCards(int numberOfCards, Player playerToDraw, ICardDecksHolder cardDecksHolder);
-        Player GetWinner(ICardDecksHolder cardDecksHolder);
+        Player GetWinner(ICardDecksHolder cardDecksHolder, TakiGameDatabaseHolder takiGameDatabaseHolder);
         List<Card> ReturnCardsFromPlayers();
         void ResetPlayers();
     }

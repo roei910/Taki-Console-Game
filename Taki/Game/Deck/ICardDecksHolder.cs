@@ -11,5 +11,9 @@ namespace Taki.Game.Deck
         Card? DrawCard();
         void DrawFirstCard();
         int CountAllCards();
+        Card RemoveCardByDTO(CardDTO card);
+        CardDeck GetDrawPile();
+        CardDeck GetDiscardPile();
+        void UpdateCardsFromDB(List<CardDTO> drawPile, List<CardDTO> discardPile);
     }
 }

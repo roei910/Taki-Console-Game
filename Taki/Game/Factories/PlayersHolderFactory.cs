@@ -1,4 +1,5 @@
-﻿using Taki.Game.Algorithm;
+﻿using System.Xml.Linq;
+using Taki.Game.Algorithm;
 using Taki.Game.Database;
 using Taki.Game.GameRunner;
 using Taki.Game.Messages;
@@ -14,11 +15,10 @@ namespace Taki.Game.Factories
         private readonly Random _random;
         private readonly IGameScore _gameScore;
         private readonly ManualPlayerAlgorithm _manualPlayerAlgorithm;
-        private readonly IDatabase<Player> _playersDatabase;
 
         public PlayersHolderFactory(ProgramVariables programVariables, IUserCommunicator userCommunicator,
             List<IPlayerAlgorithm> playerAlgorithms, Random random, IGameScore gameScore,
-            ManualPlayerAlgorithm manualPlayerAlgorithm, IDatabase<Player> playersDatabase)
+            ManualPlayerAlgorithm manualPlayerAlgorithm)
         {
             _programVariables = programVariables;
             _userCommunicator = userCommunicator;
@@ -26,7 +26,6 @@ namespace Taki.Game.Factories
             _random = random;
             _gameScore = gameScore;
             _manualPlayerAlgorithm = manualPlayerAlgorithm;
-            _playersDatabase = playersDatabase;
         }
 
         private List<Player> GeneratePlayers()
@@ -70,6 +69,34 @@ namespace Taki.Game.Factories
             return players;
         }
 
+        private List<Player> GeneratePlayersFromDTO(List<PlayerDTO> playerDTOs)
+        {
+            var players = playerDTOs.Select(player =>
+            {
+                if (player.ChoosingAlgorithm == _manualPlayerAlgorithm.ToString())
+                {
+                    Player newPlayer = new(player.Name, _manualPlayerAlgorithm, _userCommunicator)
+                    {
+                        Score = player.Score
+                    };
+
+                    return newPlayer;
+                }
+                
+                IPlayerAlgorithm playerAlgorithm = _playerAlgorithms.Where(algo => algo.ToString() == player.ChoosingAlgorithm).First();
+
+                return new Player(player.Name, playerAlgorithm, _userCommunicator);
+            }).ToList();
+
+            _userCommunicator.SendMessageToUser("users restored are:");
+            var playersInormation = players.Select((p, i) => $"{i + 1}. {p.GetInformation()}")
+                .ToList();
+            _userCommunicator.SendMessageToUser(string.Join("\n", playersInormation));
+            _userCommunicator.SendMessageToUser();
+
+            return players;
+        }
+
         public PlayersHolder GeneratePlayersHandler(int maxNumberOfCards)
         {
             List<Player> players = GeneratePlayers();
@@ -86,6 +113,15 @@ namespace Taki.Game.Factories
 
             return new PyramidPlayersHolder(pyramidPlayers, _programVariables.NUMBER_OF_PYRAMID_PLAYER_CARDS, 
                 _userCommunicator);
+        }
+
+        public PlayersHolder GeneratePlayersHolderFromDTO(List<PlayerDTO> playerDTOs)
+        {
+            //TODO: start with reading normal players
+            var players = GeneratePlayersFromDTO(playerDTOs);
+            return new PlayersHolder(players, 0, _userCommunicator);
+
+            //TODO: work on reading pyramid players
         }
 
         private int GetNumberOfPlayers()

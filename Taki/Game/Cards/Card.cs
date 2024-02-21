@@ -8,8 +8,8 @@ namespace Taki.Game.Cards
     internal abstract class Card : ICard, IEquatable<Card>
     {
         private static int idsCounter = 0;
-        private readonly int _id = idsCounter++;
         protected readonly IUserCommunicator _userCommunicator;
+        public int Id { get; set; } = idsCounter++;
 
         public Card(IUserCommunicator userCommunicator)
         {
@@ -32,7 +32,7 @@ namespace Taki.Game.Cards
 
         public bool Equals(Card? other)
         {
-            return _id == other?._id;
+            return Id == other?.Id;
         }
 
         public virtual void PrintCard()

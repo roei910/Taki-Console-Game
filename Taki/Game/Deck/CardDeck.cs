@@ -68,5 +68,29 @@ namespace Taki.Game.Deck
             _cards.RemoveFirst();
             return card;
         }
+
+        public Card RemoveFirstDTO(CardDTO card)
+        {
+            Card foundCard = _cards.Where(c =>
+            {
+                var type1 = c.GetType();
+                var type2 = card.Type;
+                if (c.GetType().ToString() != card.Type)
+                    return false;
+
+                if (c is ColorCard colorCard)
+                    return colorCard.CardColor == card.Color;
+
+                return true;
+            }).First();
+
+            _cards.Remove(foundCard);
+            return foundCard;
+        }
+
+        public List<Card> GetAllCards()
+        {
+            return _cards.ToList();
+        }
     }
 }

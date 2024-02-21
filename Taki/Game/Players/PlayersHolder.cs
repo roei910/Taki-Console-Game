@@ -1,4 +1,5 @@
 ﻿using Taki.Game.Cards;
+using Taki.Game.Database;
 using Taki.Game.Deck;
 using Taki.Game.Messages;
 
@@ -66,10 +67,13 @@ namespace Taki.Game.Players
             }
         }
 
-        public Player GetWinner(ICardDecksHolder cardDecksHolder)
+        public Player GetWinner(ICardDecksHolder cardDecksHolder, TakiGameDatabaseHolder takiGameDatabaseHolder)
         {
             while (!HasPlayerFinishedHand(cardDecksHolder))
+            {
                 CurrentPlayerPlay(cardDecksHolder);
+                takiGameDatabaseHolder.UpdateDatabase(this, cardDecksHolder);
+            }
 
             Player playerWon = _players.FirstOrDefault(player => player.IsHandEmpty(), _players.First());
 
