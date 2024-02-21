@@ -8,8 +8,8 @@ namespace Taki.Game.Players
     internal class PlayersHolder : IPlayersHolder
     {
         protected readonly IUserCommunicator _userCommunicator;
+        private readonly TakiGameDatabaseHolder _takiGameDatabaseHolder;
         protected readonly Queue<Player> _winners;
-        private bool _isDirectionNormal = true;
         private int _noPlayCounter = 0;
         private List<Player> players = new List<Player>();
         protected readonly int _numberOfPlayerCards;
@@ -20,12 +20,13 @@ namespace Taki.Game.Players
         public Player CurrentPlayer { get => _players.First(); }
 
         public PlayersHolder(List<Player> players, int numberOfPlayerCards, 
-            IUserCommunicator userCommunicator)
+            IUserCommunicator userCommunicator, TakiGameDatabaseHolder takiGameDatabaseHolder)
         {
             _players = new(players);
             _winners = new Queue<Player>();
             _numberOfPlayerCards = numberOfPlayerCards;
             _userCommunicator = userCommunicator;
+            _takiGameDatabaseHolder = takiGameDatabaseHolder;
         }
 
         public bool DrawCards(int numberOfCards, Player playerToDraw, ICardDecksHolder cardDecksHolder)
@@ -53,18 +54,9 @@ namespace Taki.Game.Players
 
         public void NextPlayer()
         {
-            if (_isDirectionNormal)
-            {
-                Player current = CurrentPlayer;
-                _players.RemoveFirst();
-                _players.AddLast(current);
-            }
-            else
-            {
-                Player current = _players.Last();
-                _players.RemoveLast();
-                _players.AddFirst(current);
-            }
+            Player current = CurrentPlayer;
+            _players.RemoveFirst();
+            _players.AddLast(current);
         }
 
         public Player GetWinner(ICardDecksHolder cardDecksHolder, TakiGameDatabaseHolder takiGameDatabaseHolder)
@@ -132,7 +124,12 @@ namespace Taki.Game.Players
 
         public void ChangeDirection()
         {
-            _isDirectionNormal = !_isDirectionNormal;
+            var savedPlayers = _players.ToList();
+            _players.Clear();
+            savedPlayers.ForEach(player => _players.AddFirst(player));
+
+            _takiGameDatabaseHolder.DeleteAllPlayers();
+            _takiGameDatabaseHolder.CreateAllPlayers(Players);
         }
 
         public List<Card> ReturnCardsFromPlayers()

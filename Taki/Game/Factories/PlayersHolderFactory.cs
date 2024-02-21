@@ -15,10 +15,11 @@ namespace Taki.Game.Factories
         private readonly Random _random;
         private readonly IGameScore _gameScore;
         private readonly ManualPlayerAlgorithm _manualPlayerAlgorithm;
+        private readonly TakiGameDatabaseHolder _takiGameDatabaseHolder;
 
         public PlayersHolderFactory(ProgramVariables programVariables, IUserCommunicator userCommunicator,
             List<IPlayerAlgorithm> playerAlgorithms, Random random, IGameScore gameScore,
-            ManualPlayerAlgorithm manualPlayerAlgorithm)
+            ManualPlayerAlgorithm manualPlayerAlgorithm, TakiGameDatabaseHolder takiGameDatabaseHolder)
         {
             _programVariables = programVariables;
             _userCommunicator = userCommunicator;
@@ -26,6 +27,7 @@ namespace Taki.Game.Factories
             _random = random;
             _gameScore = gameScore;
             _manualPlayerAlgorithm = manualPlayerAlgorithm;
+            _takiGameDatabaseHolder = takiGameDatabaseHolder;
         }
 
         private List<Player> GeneratePlayers()
@@ -96,7 +98,7 @@ namespace Taki.Game.Factories
             List<Player> players = GeneratePlayers();
             int numberOfPlayerCards = GetNumberOfPlayerCards(players.Count, maxNumberOfCards);
 
-            return new PlayersHolder(players, numberOfPlayerCards, _userCommunicator);
+            return new PlayersHolder(players, numberOfPlayerCards, _userCommunicator, _takiGameDatabaseHolder);
         }
 
         public PlayersHolder GeneratePyramidPlayersHandler()
@@ -106,14 +108,13 @@ namespace Taki.Game.Factories
                 (Player)new PyramidPlayer(player, _programVariables.NUMBER_OF_PYRAMID_PLAYER_CARDS)).ToList();
 
             return new PyramidPlayersHolder(pyramidPlayers, _programVariables.NUMBER_OF_PYRAMID_PLAYER_CARDS, 
-                _userCommunicator);
+                _userCommunicator, _takiGameDatabaseHolder);
         }
 
         public PlayersHolder GeneratePlayersHolderFromDTO(List<PlayerDTO> playerDTOs)
         {
-            //TODO: start with reading normal players
             var players = GeneratePlayersFromDTO(playerDTOs);
-            return new PlayersHolder(players, 0, _userCommunicator);
+            return new PlayersHolder(players, 0, _userCommunicator, _takiGameDatabaseHolder);
 
             //TODO: work on reading pyramid players
         }

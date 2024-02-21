@@ -12,9 +12,9 @@ using Taki.Game.Players;
 using Taki.Game.Cards;
 
 //TODO: add check to see names are unique
-//TODO: create mongo db collection to save every detail about the game => restart from the same place you stopped before!
 //TODO: issue with restarting the top card doesnt know if there is anything before him, not being saved. save the previous if needed
-//TODO: update saving when doing special cards
+//TODO: update saving when doing special cards (Taki etc)
+//TODO: create classes to deal with restoring and maybe also saving to the database
 
 var serviceProvider = new ServiceCollection()
     .AddSingleton<IUserCommunicator, ConsoleUserCommunicator>()

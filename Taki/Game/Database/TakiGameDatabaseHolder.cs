@@ -73,5 +73,10 @@ namespace Taki.Game.Database
             _discardPileDatabase.UpdateAll(discardPile);
             _drawPileDatabase.UpdateAll(drawPile);
         }
+
+        internal void DeleteAllPlayers()
+        {
+            _playersDatabase.DeleteAll();
+        }
     }
 }

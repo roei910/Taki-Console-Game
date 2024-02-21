@@ -109,7 +109,6 @@ namespace Taki.Game.Managers
 
         private void UpdateCardDeckFromDatabase(List<PlayerDTO> players)
         {
-            //TODO: maybe give the players all the cards in the playersHolderFactory
             players.ForEach(player =>
             {
                 var cards = player.PlayerCards.Select(card =>
