@@ -88,12 +88,6 @@ namespace Taki.Game.Factories
                 return new Player(player.Name, playerAlgorithm, _userCommunicator);
             }).ToList();
 
-            _userCommunicator.SendMessageToUser("users restored are:");
-            var playersInormation = players.Select((p, i) => $"{i + 1}. {p.GetInformation()}")
-                .ToList();
-            _userCommunicator.SendMessageToUser(string.Join("\n", playersInormation));
-            _userCommunicator.SendMessageToUser();
-
             return players;
         }
 

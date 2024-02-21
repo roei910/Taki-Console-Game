@@ -82,6 +82,13 @@ namespace Taki.Game.Managers
                 var players = _takiGameDatabaseHolder.GetAllPlayers();
                 _playersHolder = _playersHolderFactory.GeneratePlayersHolderFromDTO(players);
                 UpdateCardDeckFromDatabase(players);
+
+                _userCommunicator.SendMessageToUser("users restored are:");
+                var playersInormation = _playersHolder.Players.Select((p, i) => $"{i + 1}. {p.GetInformation()}")
+                    .ToList();
+                _userCommunicator.SendMessageToUser(string.Join("\n", playersInormation));
+                _userCommunicator.SendMessageToUser();
+
                 StartSingleGame();
             }
 
