@@ -16,7 +16,6 @@ using Taki.Game.Cards;
 //TODO: create mongo db collection to save every detail about the game => restart from the same place you stopped before!
 //TODO: continue saving the players cards and card decks in database
 //TODO: issue with restarting the top card doesnt know if there is anything before him, not being saved. save the previous if needed
-//TODO: not saving which player is currently playing
 
 var serviceProvider = new ServiceCollection()
     .AddSingleton<IUserCommunicator, ConsoleUserCommunicator>()
