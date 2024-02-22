@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using Newtonsoft.Json.Linq;
+using System.Drawing;
 using Taki.Game.Cards.DTOs;
 using Taki.Game.Deck;
 using Taki.Game.Messages;
@@ -69,9 +70,8 @@ namespace Taki.Game.Cards
         public override CardDto ToCardDto()
         {
             CardDto cardDto = base.ToCardDto();
-            cardDto.CardConfigurations.Add("isPlus2Allowed", new Newtonsoft.Json.Linq.JObject(_isOnlyPlus2Allowed));
-            cardDto.CardConfigurations.Add("countPlus2", new Newtonsoft.Json.Linq.JObject(_countPlus2));
-            return cardDto;
+
+            return new Plus2Dto(cardDto, _isOnlyPlus2Allowed, _countPlus2);
         }
 
         public override void UpdateFromDto(CardDto cardDTO, ICardDecksHolder cardDecksHolder)
@@ -81,8 +81,9 @@ namespace Taki.Game.Cards
             object? isPlus2Allowed = cardDTO.CardConfigurations["isPlus2Allowed"];
             object? countPlus2 = cardDTO.CardConfigurations["countPlus2"];
 
-            _isOnlyPlus2Allowed = isPlus2Allowed is bool;
+            _isOnlyPlus2Allowed = isPlus2Allowed is bool ? (bool)isPlus2Allowed : false;
             _countPlus2 = (int)(countPlus2 is int ? countPlus2 : 0);
+
         }
     }
 }

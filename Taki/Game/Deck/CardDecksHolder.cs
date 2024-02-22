@@ -86,8 +86,6 @@ namespace Taki.Game.Deck
             _drawPile.AddMany(newDrawPile);
             var newDiscardPile = discardPile.Select(RemoveCardByDTO).ToList();
             _discardPile.AddMany(newDiscardPile);
-
-            //TODO: check which card is on top and play it??
         }
     }
 }

@@ -49,7 +49,7 @@ var serviceProvider = new ServiceCollection()
     .AddSingleton<TakiGameDatabaseHolder>()
     .BuildServiceProvider();
 
-BsonSerializer.RegisterSerializer(new DictionaryBsonSerializer());
+BsonSerializer.RegisterSerializer(new JObjectBsonSerializer());
 
 TakiGameRunner gameRunner = serviceProvider.GetRequiredService<TakiGameRunner>();
 

@@ -1,6 +1,6 @@
-﻿using MongoDB.Bson;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.ComponentModel.DataAnnotations;
 using Taki.Game.Cards.DTOs;
 using Taki.Game.Deck;
 using Taki.Game.Messages;
@@ -72,30 +72,23 @@ namespace Taki.Game.Cards
 
         public override CardDto ToCardDto()
         {
-            //TODO: create function to add object to configuration and make into JObject
             CardDto cardDto = new CardDto(base.ToCardDto());
-            if(prevCard != null)
-                cardDto.CardConfigurations.Add("prevCard", new JObject(prevCard.ToCardDto()));
-            return cardDto;
+
+            return new SwitchCardsDto(cardDto, prevCard);
         }
 
         public override void UpdateFromDto(CardDto cardDTO, ICardDecksHolder cardDecksHolder)
         {
-            base.UpdateFromDto(cardDTO, cardDecksHolder);
+            var prev = cardDTO.CardConfigurations["prevCard"];
 
-            //CardDto? prevCardDto = JsonConvert.DeserializeObject<CardDto>(str);
-            
-            //if (prevCardDto is not null)
-            //    prevCard = cardDecksHolder.GetDiscardPile().GetAllCards()
-            //        .Where(card => card.Id == prevCardDto.Id).First();
+            if (prev == null)
+                return;
 
-            //TODO: remove
-            //if(cardDTO is SwitchCardsDto switchCardsDto)
-            //    prevCard = cardDecksHolder.GetDiscardPile().GetAllCards()
-            //        .Where(card =>
-            //        {
-            //            card.Id == switchCardsDto?.previousCard?.Id;
-            //        }).First();
+            CardDto? prevCardDto = JsonConvert.DeserializeObject<CardDto>(prev.ToString());
+
+            if (prevCardDto is not null)
+                prevCard = cardDecksHolder.GetDiscardPile().GetAllCards()
+                    .Where(card => card.Id == prevCardDto.Id).First();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using Taki.Game.Cards.DTOs;
+using Taki.Game.Deck;
 using Taki.Game.Messages;
 
 namespace Taki.Game.Cards
@@ -17,9 +18,6 @@ namespace Taki.Game.Cards
         public static readonly Color DEFAULT_COLOR = Color.Empty;
         protected Color _color;
         public static List<Color> Colors = [Color.Green, Color.Red, Color.Yellow, Color.Blue];
-
-        //TODO: maybe can be removed after
-        public string CardColor { get => _color.Name; set => _color = Color.FromName(value); }
 
         public ColorCard(Color color, IUserCommunicator userCommunicator) :
             base(userCommunicator)
@@ -57,6 +55,11 @@ namespace Taki.Game.Cards
         {
             CardDto cardDto = base.ToCardDto();
             return new CardDto(cardDto, _color);
+        }
+
+        public override void UpdateFromDto(CardDto cardDTO, ICardDecksHolder cardDecksHolder)
+        {
+            _color = Color.FromName(cardDTO.CardColor);
         }
     }
 }

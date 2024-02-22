@@ -1,24 +1,15 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
 
 namespace Taki.Game.Cards.DTOs
 {
     internal class SwitchCardsDto : CardDto
     {
+        //TODO: can be moved in the card
         public SwitchCardsDto(CardDto cardDto, Card? prevCard) : 
             base(cardDto)
         {
             if (prevCard is not null)
-            {
-                //IDictionary<string, object> keyValuePairs = new Dictionary<string, object>
-                //{
-                //    { "prevCard", prevCard.ToCardDto() }
-                //};
-
-                //CardConfigurations.AddRange(keyValuePairs);
-                CardConfigurations.Add("prevCard", new JObject(prevCard.ToCardDto()));
-            }
-
-            
+                CardConfigurations["prevCard"] = JsonConvert.SerializeObject(prevCard.ToCardDto());
         }
     }
 }
