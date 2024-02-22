@@ -1,8 +1,10 @@
 ﻿using System.Xml.Linq;
-using Taki.Game.Algorithm;
 using Taki.Game.Database;
+using Taki.Game.Dto;
 using Taki.Game.GameRunner;
-using Taki.Game.Messages;
+using Taki.Game.Interfaces;
+using Taki.Game.Models.Algorithm;
+using Taki.Game.Models.Players;
 using Taki.Game.Players;
 
 namespace Taki.Game.Factories
@@ -160,7 +162,7 @@ namespace Taki.Game.Factories
             string? name = _userCommunicator.GetMessageFromUser(
                 $"Please enter a name #{index + 1}");
 
-            while(name == null)
+            while(name is null)
                 name = _userCommunicator.GetMessageFromUser(
                     $"Please enter a valid name #{index + 1}");
 

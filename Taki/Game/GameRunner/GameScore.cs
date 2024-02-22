@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System.Text.Json;
+using Taki.Game.Interfaces;
 
 namespace Taki.Game.GameRunner
 {

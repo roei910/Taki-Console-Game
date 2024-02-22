@@ -1,7 +1,8 @@
 ﻿using Taki.Game.Cards;
 using Taki.Game.Cards.NumberCards;
-using Taki.Game.Deck;
-using Taki.Game.Messages;
+using Taki.Game.Interfaces;
+using Taki.Game.Models.Cards;
+using Taki.Game.Models.Deck;
 
 namespace Taki.Game.Factories
 {

@@ -1,11 +1,10 @@
 ﻿using MongoDB.Driver;
-using Taki.Game.Cards.DTOs;
 using Taki.Game.Database;
 using Taki.Game.Deck;
+using Taki.Game.Dto;
 using Taki.Game.Factories;
-using Taki.Game.GameRunner;
-using Taki.Game.Messages;
-using Taki.Game.Players;
+using Taki.Game.Interfaces;
+using Taki.Game.Models.Players;
 
 namespace Taki.Game.Managers
 {

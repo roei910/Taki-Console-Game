@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Taki.Game.Cards.DTOs;
-using Taki.Game.Deck;
-using Taki.Game.Players;
+using Taki.Game.Dto;
+using Taki.Game.Interfaces;
+using Taki.Game.Models.Players;
 
 namespace Taki.Game.Database
 {

@@ -1,23 +1,19 @@
-﻿using Taki.Game.Communicators;
-using Taki.Game.Managers;
+﻿using Taki.Game.Managers;
 using Microsoft.Extensions.DependencyInjection;
-using Taki.Game.Algorithm;
 using Taki.Game.Factories;
-using Taki.Game.Messages;
 using Microsoft.Extensions.Configuration;
 using Taki;
 using Taki.Game.GameRunner;
 using Taki.Game.Database;
-using Taki.Game.Players;
-using Taki.Game.Cards.DTOs;
 using MongoDB.Bson.Serialization;
 using Taki.Game.Serializers;
+using Taki.Game.Dto;
+using Taki.Game.Interfaces;
+using Taki.Game.Models.Algorithm;
+using Taki.Game.Models.Messages;
 
-//TODO: add check to see names are unique
-//TODO: update saving when doing special cards (Taki etc)
-//TODO: create classes to deal with restoring and maybe also saving to the database, works with switchCards
-//TODO: create a way to save the DTO from the Card
-//TODO: the game allows to use SUPERTAKI on TAKI => check why
+//TODO: update saving while doing special cards (Taki etc)
+//TODO: create classes to deal with restoring and maybe also saving to the database
 
 var serviceProvider = new ServiceCollection()
     .AddSingleton<IUserCommunicator, ConsoleUserCommunicator>()

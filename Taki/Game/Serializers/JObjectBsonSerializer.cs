@@ -13,7 +13,7 @@ namespace Taki.Game.Serializers
             var bsonDocument = BsonDocumentSerializer.Instance.Deserialize(context);
             var json = bsonDocument.ToJson();
             JObject obj = JsonConvert.DeserializeObject<JObject>(json) ?? [];
-            //var countPlus2 = obj.GetValue("countPlus2");
+
             return JsonConvert.DeserializeObject<JObject>(json) ?? [];
         }
 

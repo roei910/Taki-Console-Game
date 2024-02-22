@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
-using Taki.Game.Players;
+using Taki.Game.Dto;
 
 namespace Taki.Game.Database
 {

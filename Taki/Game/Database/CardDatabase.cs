@@ -1,16 +1,13 @@
 ﻿using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
-using Taki.Game.Cards.DTOs;
+using Taki.Game.Dto;
 
 namespace Taki.Game.Database
 {
     internal class CardDatabase : AbstractDatabase<CardDto>
     {
         public CardDatabase(IConfiguration configuration, string collectionName) :
-            base(configuration, collectionName) 
-        {
-            //TODO: to DI
-        }
+            base(configuration, collectionName) { }
 
         public CardDatabase(string mongoUrl, string dbName, string collectionName) : 
             base(mongoUrl, dbName, collectionName) { }

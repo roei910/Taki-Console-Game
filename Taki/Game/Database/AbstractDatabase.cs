@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
+using Taki.Game.Interfaces;
 
 namespace Taki.Game.Database
 {
