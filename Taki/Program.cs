@@ -1,16 +1,15 @@
-﻿using Taki.Game.Managers;
-using Microsoft.Extensions.DependencyInjection;
-using Taki.Game.Factories;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Taki;
-using Taki.Game.GameRunner;
-using Taki.Game.Database;
 using MongoDB.Bson.Serialization;
 using Taki.Game.Serializers;
-using Taki.Game.Dto;
-using Taki.Game.Interfaces;
-using Taki.Game.Models.Algorithm;
-using Taki.Game.Models.Messages;
+using Taki.Database;
+using Taki.Dto;
+using Taki.GameRunner;
+using Taki.Factories;
+using Taki.Interfaces;
+using Taki.Models.Algorithm;
+using Taki.Models.Messages;
 
 //TODO: update saving while doing special cards (Taki etc)
 //TODO: create classes to deal with restoring and maybe also saving to the database
