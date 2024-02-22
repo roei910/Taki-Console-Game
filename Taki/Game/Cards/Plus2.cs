@@ -1,42 +1,44 @@
 ﻿using System.Drawing;
+using Taki.Game.Cards.DTOs;
 using Taki.Game.Deck;
 using Taki.Game.Messages;
 using Taki.Game.Players;
 
 namespace Taki.Game.Cards
 {
+    //TODO: need to save the count and override the update from dto
     internal class Plus2 : ColorCard
     {
-        private bool IsOnlyPlus2Allowed = false;
-        private int countPlus2 = 0;
+        private bool _isOnlyPlus2Allowed = false;
+        private int _countPlus2 = 0;
 
         public Plus2(Color color, IUserCommunicator userCommunicator) : 
             base(color, userCommunicator) { }
 
         public override bool IsStackableWith(Card other)
         {
-            if(IsOnlyPlus2Allowed)
+            if(_isOnlyPlus2Allowed)
                 return other is Plus2;
             return base.IsStackableWith(other) || other is Plus2;
         }
 
         public override int CardsToDraw()
         {
-            if (countPlus2 == 0)
+            if (_countPlus2 == 0)
                 return base.CardsToDraw();
-            return countPlus2 * 2;
+            return _countPlus2 * 2;
         }
 
         public override void Play(Card topDiscard, ICardDecksHolder cardDecksHolder, IPlayersHolder playersHolder)
         {
             if (topDiscard is Plus2 card)
             {
-                countPlus2 = card.countPlus2;
+                _countPlus2 = card._countPlus2;
                 card.FinishNoPlay();
             }
 
-            IsOnlyPlus2Allowed = true;
-            countPlus2++;
+            _isOnlyPlus2Allowed = true;
+            _countPlus2++;
 
             base.Play(topDiscard, cardDecksHolder, playersHolder);
         }
@@ -48,8 +50,8 @@ namespace Taki.Game.Cards
 
         public override void FinishNoPlay()
         {
-            IsOnlyPlus2Allowed = false;
-            countPlus2 = 0;
+            _isOnlyPlus2Allowed = false;
+            _countPlus2 = 0;
         }
 
         public override string[] GetStringArray()
@@ -62,6 +64,25 @@ namespace Taki.Game.Cards
                 "*    |    *      *",
                 "*         ****** *",
                 "******************"];
+        }
+
+        public override CardDto ToCardDto()
+        {
+            CardDto cardDto = base.ToCardDto();
+            cardDto.CardConfigurations.Add("isPlus2Allowed", new Newtonsoft.Json.Linq.JObject(_isOnlyPlus2Allowed));
+            cardDto.CardConfigurations.Add("countPlus2", new Newtonsoft.Json.Linq.JObject(_countPlus2));
+            return cardDto;
+        }
+
+        public override void UpdateFromDto(CardDto cardDTO, ICardDecksHolder cardDecksHolder)
+        {
+            base.UpdateFromDto(cardDTO, cardDecksHolder);
+
+            object? isPlus2Allowed = cardDTO.CardConfigurations["isPlus2Allowed"];
+            object? countPlus2 = cardDTO.CardConfigurations["countPlus2"];
+
+            _isOnlyPlus2Allowed = isPlus2Allowed is bool;
+            _countPlus2 = (int)(countPlus2 is int ? countPlus2 : 0);
         }
     }
 }

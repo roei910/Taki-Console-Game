@@ -1,4 +1,5 @@
-﻿using Taki.Game.Deck;
+﻿using Taki.Game.Cards.DTOs;
+using Taki.Game.Deck;
 using Taki.Game.Players;
 
 namespace Taki.Game.Cards
@@ -12,5 +13,7 @@ namespace Taki.Game.Cards
         void ResetCard();
         void PrintCard();
         string[] GetStringArray();
+        CardDto ToCardDto();
+        void UpdateFromDto(CardDto cardDTO, ICardDecksHolder cardDecksHolder);
     }
 }

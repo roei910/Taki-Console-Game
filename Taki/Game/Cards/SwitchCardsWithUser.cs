@@ -11,6 +11,8 @@ namespace Taki.Game.Cards
 
         public override void Play(Card topDiscard, ICardDecksHolder cardDecksHolder, IPlayersHolder playersHolder)
         {
+            prevCard = (topDiscard is SwitchCardsWithDirection card) ? card.prevCard : topDiscard;
+
             Player currentPlayer = playersHolder.CurrentPlayer;
             Player playerToSwitch = currentPlayer.PickOtherPlayer(playersHolder);
 

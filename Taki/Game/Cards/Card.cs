@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using Taki.Game.Cards.DTOs;
 using Taki.Game.Deck;
 using Taki.Game.Messages;
 using Taki.Game.Players;
@@ -45,5 +46,11 @@ namespace Taki.Game.Cards
         public abstract bool IsStackableWith(Card other);
         
         public abstract string[] GetStringArray();
+        public virtual CardDto ToCardDto()
+        {
+            return new CardDto(Id, GetType());
+        }
+        //TODO: update or abstract
+        public virtual void UpdateFromDto(CardDto cardDTO, ICardDecksHolder cardDecksHolder) { }
     }
 }
