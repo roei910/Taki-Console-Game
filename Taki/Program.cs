@@ -9,12 +9,15 @@ using Taki;
 using Taki.Game.GameRunner;
 using Taki.Game.Database;
 using Taki.Game.Players;
-using Taki.Game.Cards;
+using Taki.Game.Cards.DTOs;
+using MongoDB.Bson.Serialization;
+using Taki.Game.Serializers;
 
 //TODO: add check to see names are unique
-//TODO: issue with restarting the top card doesnt know if there is anything before him, not being saved. save the previous if needed
 //TODO: update saving when doing special cards (Taki etc)
-//TODO: create classes to deal with restoring and maybe also saving to the database
+//TODO: create classes to deal with restoring and maybe also saving to the database, works with switchCards
+//TODO: create a way to save the DTO from the Card
+//TODO: the game allows to use SUPERTAKI on TAKI => check why
 
 var serviceProvider = new ServiceCollection()
     .AddSingleton<IUserCommunicator, ConsoleUserCommunicator>()
@@ -32,12 +35,12 @@ var serviceProvider = new ServiceCollection()
         .Build())
     .AddSingleton<TakiGameRunner>()
     .AddSingleton<IDatabase<PlayerDTO>, PlayerDatabase>()
-    .AddKeyedSingleton<IDatabase<CardDTO>, CardDatabase>("drawPile", (serviceProvider, x) =>
+    .AddKeyedSingleton<IDatabase<CardDto>, CardDatabase>("drawPile", (serviceProvider, x) =>
         {
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
             return new CardDatabase(configuration, "DrawPile");
         })
-    .AddKeyedSingleton<IDatabase<CardDTO>, CardDatabase>(
+    .AddKeyedSingleton<IDatabase<CardDto>, CardDatabase>(
         "discardPile", (serviceProvider, x) =>
         {
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
@@ -45,6 +48,8 @@ var serviceProvider = new ServiceCollection()
         })
     .AddSingleton<TakiGameDatabaseHolder>()
     .BuildServiceProvider();
+
+BsonSerializer.RegisterSerializer(new DictionaryBsonSerializer());
 
 TakiGameRunner gameRunner = serviceProvider.GetRequiredService<TakiGameRunner>();
 
