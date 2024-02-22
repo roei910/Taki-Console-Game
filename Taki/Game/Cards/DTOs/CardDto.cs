@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
 using System.Drawing;
-using System.Text.Json;
 
 namespace Taki.Game.Cards.DTOs
 {
@@ -9,8 +8,16 @@ namespace Taki.Game.Cards.DTOs
         public int Id { get; set; }
         public string Type { get; set; }
         public string CardColor { get; set; }
-        //TODO: change to JObject
-        public Dictionary<string, JObject> CardConfigurations { get; set; } = [];
+        public JObject CardConfigurations { get; set; } = [];
+
+        [Newtonsoft.Json.JsonConstructor]
+        public CardDto(int id, string type, string cardColor, JObject cardConfigurations)
+        {
+            Type = type;
+            Id = id;
+            CardColor = cardColor;
+            CardConfigurations = cardConfigurations;
+        }
 
         public CardDto(int id, string type)
         {
@@ -33,17 +40,6 @@ namespace Taki.Game.Cards.DTOs
             Type = card.Type;
             Id = card.Id;
             CardColor = card.CardColor;
-        }
-
-        //TODO: remove
-        public static string SerializeCardDto(CardDto card)
-        {
-            return JsonSerializer.Serialize(card);
-        }
-
-        public static CardDto? DeserializeCardDto(string json)
-        {
-            return JsonSerializer.Deserialize<CardDto>(json);
         }
     }
 }
