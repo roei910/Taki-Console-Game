@@ -1,4 +1,5 @@
 ﻿using Taki.Game.Cards;
+using Taki.Game.Cards.DTOs;
 
 namespace Taki.Game.Deck
 {
@@ -11,9 +12,9 @@ namespace Taki.Game.Deck
         Card? DrawCard();
         void DrawFirstCard();
         int CountAllCards();
-        Card RemoveCardByDTO(CardDTO card);
+        Card RemoveCardByDTO(CardDto card);
         CardDeck GetDrawPile();
         CardDeck GetDiscardPile();
-        void UpdateCardsFromDB(List<CardDTO> drawPile, List<CardDTO> discardPile);
+        void UpdateCardsFromDB(List<CardDto> drawPile, List<CardDto> discardPile);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Taki.Game.Cards;
+using Taki.Game.Cards.DTOs;
 
 namespace Taki.Game.Deck
 {
@@ -11,7 +12,7 @@ namespace Taki.Game.Deck
         void ShuffleDeck();
         void CombineFromDeck(CardDeck other);
         void AddMany(List<Card> playerCards);
-        Card RemoveFirstDTO(CardDTO card);
+        Card RemoveFirstDTO(CardDto card);
         List<Card> GetAllCards();
     }
 }

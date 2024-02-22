@@ -1,4 +1,5 @@
 ﻿using Taki.Game.Cards;
+using Taki.Game.Cards.DTOs;
 using Taki.Game.Factories;
 
 namespace Taki.Game.Deck
@@ -64,7 +65,7 @@ namespace Taki.Game.Deck
             return _drawPile.Count() + _discardPile.Count();
         }
 
-        public Card RemoveCardByDTO(CardDTO card)
+        public Card RemoveCardByDTO(CardDto card)
         {
             return _drawPile.RemoveFirstDTO(card);
         }
@@ -79,12 +80,14 @@ namespace Taki.Game.Deck
             return _discardPile;
         }
 
-        public void UpdateCardsFromDB(List<CardDTO> drawPile, List<CardDTO> discardPile)
+        public void UpdateCardsFromDB(List<CardDto> drawPile, List<CardDto> discardPile)
         {
             var newDrawPile = drawPile.Select(RemoveCardByDTO).ToList();
             _drawPile.AddMany(newDrawPile);
             var newDiscardPile = discardPile.Select(RemoveCardByDTO).ToList();
             _discardPile.AddMany(newDiscardPile);
+
+            //TODO: check which card is on top and play it??
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System.Drawing;
-using Taki.Game.Cards;
+using Taki.Game.Cards.DTOs;
 
 namespace Taki.Game.Players
 {
@@ -8,10 +8,10 @@ namespace Taki.Game.Players
         public int Score { get; set; }
         public string Name { get; set; }
         public int Id { get; set; }
-        public List<CardDTO> PlayerCards { get; set; }
+        public List<CardDto> PlayerCards { get; set; }
         public string ChoosingAlgorithm { get; set; }
 
-        public PlayerDTO(int score, string name, int id, List<CardDTO> playerCards, string choosingAlgorithm)
+        public PlayerDTO(int score, string name, int id, List<CardDto> playerCards, string choosingAlgorithm)
         {
             Score = score;
             Name = name;
@@ -22,7 +22,7 @@ namespace Taki.Game.Players
 
         public static PlayerDTO PlayerToDTO(Player player)
         {
-            List<CardDTO> cards = player.PlayerCards.Select(CardDTO.CardToDTO).ToList();
+            List<CardDto> cards = player.PlayerCards.Select(card => card.ToCardDto()).ToList();
             
             return new PlayerDTO(player.Score, player.Name, player.Id, cards, player.ChoosingAlgorithm);
         }

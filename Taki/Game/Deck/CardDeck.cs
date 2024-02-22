@@ -1,4 +1,5 @@
 ﻿using Taki.Game.Cards;
+using Taki.Game.Cards.DTOs;
 
 namespace Taki.Game.Deck
 {
@@ -69,7 +70,7 @@ namespace Taki.Game.Deck
             return card;
         }
 
-        public Card RemoveFirstDTO(CardDTO card)
+        public Card RemoveFirstDTO(CardDto card)
         {
             Card foundCard = _cards.Where(c =>
             {
@@ -79,7 +80,7 @@ namespace Taki.Game.Deck
                     return false;
 
                 if (c is ColorCard colorCard)
-                    return colorCard.CardColor == card.Color;
+                    return colorCard.CardColor == card.CardColor;
 
                 return true;
             }).First();

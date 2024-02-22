@@ -1,5 +1,5 @@
 ﻿using MongoDB.Driver;
-using Taki.Game.Cards;
+using Taki.Game.Cards.DTOs;
 using Taki.Game.Database;
 using Taki.Game.Deck;
 using Taki.Game.Factories;
@@ -118,9 +118,14 @@ namespace Taki.Game.Managers
                     .PlayerCards = cards;
             });
 
-            List<CardDTO> drawPile = _takiGameDatabaseHolder.GetDrawPile();
-            List<CardDTO> discardPile = _takiGameDatabaseHolder.GetDiscardPile();
+            List<CardDto> drawPile = _takiGameDatabaseHolder.GetDrawPile();
+            List<CardDto> discardPile = _takiGameDatabaseHolder.GetDiscardPile();
             _cardDecksHolder.UpdateCardsFromDB(drawPile, discardPile);
+            _cardDecksHolder.GetDiscardPile().GetAllCards().Select((card, index) =>
+            {
+                card.UpdateFromDto(discardPile[index], _cardDecksHolder);
+                return card;
+            }).ToList();
         }
 
         private void ResetGame()
