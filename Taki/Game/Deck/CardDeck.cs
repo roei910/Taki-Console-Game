@@ -72,18 +72,7 @@ namespace Taki.Game.Deck
 
         public Card RemoveFirstDTO(CardDto card)
         {
-            Card foundCard = _cards.Where(c =>
-            {
-                var type1 = c.GetType();
-                var type2 = card.Type;
-                if (c.GetType().ToString() != card.Type)
-                    return false;
-
-                if (c is ColorCard colorCard)
-                    return colorCard.CardColor == card.CardColor;
-
-                return true;
-            }).First();
+            Card foundCard = _cards.Where(c => c.Id == card.Id).First();
 
             _cards.Remove(foundCard);
             return foundCard;
