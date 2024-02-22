@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 
 namespace Taki.Game.Database
@@ -35,7 +36,7 @@ namespace Taki.Game.Database
             return true;
         }
 
-        public bool Create(T value)
+        public virtual bool Create(T value)
         {
             _collection.InsertOne(value);
             return true;

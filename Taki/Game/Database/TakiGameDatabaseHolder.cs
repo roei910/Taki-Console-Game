@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Taki.Game.Cards;
+using Taki.Game.Cards.DTOs;
 using Taki.Game.Deck;
 using Taki.Game.Players;
 
@@ -8,13 +8,13 @@ namespace Taki.Game.Database
     internal class TakiGameDatabaseHolder
     {
         private readonly IDatabase<PlayerDTO> _playersDatabase;
-        private readonly IDatabase<CardDTO> _drawPileDatabase;
-        private readonly IDatabase<CardDTO> _discardPileDatabase;
+        private readonly IDatabase<CardDto> _drawPileDatabase;
+        private readonly IDatabase<CardDto> _discardPileDatabase;
 
         public TakiGameDatabaseHolder(IDatabase<PlayerDTO> playersDatabase, IServiceProvider serviceProvider)
         {
-            _drawPileDatabase = serviceProvider.GetRequiredKeyedService<IDatabase<CardDTO>>("drawPile");
-            _discardPileDatabase = serviceProvider.GetRequiredKeyedService<IDatabase<CardDTO>>("discardPile");
+            _drawPileDatabase = serviceProvider.GetRequiredKeyedService<IDatabase<CardDto>>("drawPile");
+            _discardPileDatabase = serviceProvider.GetRequiredKeyedService<IDatabase<CardDto>>("discardPile");
             _playersDatabase = playersDatabase;
         }
 
@@ -29,8 +29,8 @@ namespace Taki.Game.Database
             var discardCards = cardDecksHolder.GetDiscardPile();
             var drawCards = cardDecksHolder.GetDrawPile();
 
-            var discardDTOs = discardCards.GetAllCards().Select(CardDTO.CardToDTO).ToList();
-            var drawDTOs = drawCards.GetAllCards().Select(CardDTO.CardToDTO).ToList();
+            var discardDTOs = discardCards.GetAllCards().Select(card => card.ToCardDto()).ToList();
+            var drawDTOs = drawCards.GetAllCards().Select(card => card.ToCardDto()).ToList();
 
             _discardPileDatabase.CreateMany(discardDTOs);
             _drawPileDatabase.CreateMany(drawDTOs);
@@ -38,7 +38,9 @@ namespace Taki.Game.Database
 
         public bool IsEmpty()
         {
-            return _playersDatabase.IsEmpty() && _discardPileDatabase.IsEmpty() && _drawPileDatabase.IsEmpty(); 
+            return _playersDatabase.IsEmpty() && 
+                _discardPileDatabase.IsEmpty() && 
+                _drawPileDatabase.IsEmpty(); 
         }
 
         public void DeleteAll()
@@ -53,12 +55,12 @@ namespace Taki.Game.Database
            return _playersDatabase.FindAll();
         }
 
-        internal List<CardDTO> GetDrawPile()
+        internal List<CardDto> GetDrawPile()
         {
             return _drawPileDatabase.FindAll();
         }
 
-        internal List<CardDTO> GetDiscardPile()
+        internal List<CardDto> GetDiscardPile()
         {
             return _discardPileDatabase.FindAll();
         }
@@ -66,8 +68,8 @@ namespace Taki.Game.Database
         public void UpdateDatabase(IPlayersHolder playersHolder, ICardDecksHolder cardDecksHolder)
         {
             var players = playersHolder.Players.Select(PlayerDTO.PlayerToDTO).ToList();
-            var drawPile = cardDecksHolder.GetDrawPile().GetAllCards().Select(CardDTO.CardToDTO).ToList();
-            var discardPile = cardDecksHolder.GetDiscardPile().GetAllCards().Select(CardDTO.CardToDTO).ToList();
+            var drawPile = cardDecksHolder.GetDrawPile().GetAllCards().Select(card => card.ToCardDto()).ToList();
+            var discardPile = cardDecksHolder.GetDiscardPile().GetAllCards().Select(card => card.ToCardDto()).ToList();
 
             _playersDatabase.UpdateAll(players);
             _discardPileDatabase.UpdateAll(discardPile);
