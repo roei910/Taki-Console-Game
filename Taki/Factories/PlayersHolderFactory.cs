@@ -1,11 +1,8 @@
-﻿using System.Xml.Linq;
-using Taki.Database;
+﻿using Taki.Database;
 using Taki.Dto;
-using Taki.Game.Models.Players;
-using Taki.Game.Players;
-using Taki.GameRunner;
 using Taki.Interfaces;
 using Taki.Models.Algorithm;
+using Taki.Models.GameLogic;
 using Taki.Models.Players;
 
 namespace Taki.Factories
@@ -18,11 +15,11 @@ namespace Taki.Factories
         private readonly Random _random;
         private readonly IGameScore _gameScore;
         private readonly ManualPlayerAlgorithm _manualPlayerAlgorithm;
-        private readonly TakiGameDatabaseHolder _takiGameDatabaseHolder;
+        private readonly IDal<PlayerDto> _playersDatabase;
 
         public PlayersHolderFactory(ProgramVariables programVariables, IUserCommunicator userCommunicator,
             List<IPlayerAlgorithm> playerAlgorithms, Random random, IGameScore gameScore,
-            ManualPlayerAlgorithm manualPlayerAlgorithm, TakiGameDatabaseHolder takiGameDatabaseHolder)
+            ManualPlayerAlgorithm manualPlayerAlgorithm, IDal<PlayerDto> playerDatabase)
         {
             _programVariables = programVariables;
             _userCommunicator = userCommunicator;
@@ -30,7 +27,7 @@ namespace Taki.Factories
             _random = random;
             _gameScore = gameScore;
             _manualPlayerAlgorithm = manualPlayerAlgorithm;
-            _takiGameDatabaseHolder = takiGameDatabaseHolder;
+            _playersDatabase = playerDatabase;
         }
 
         private List<Player> GeneratePlayers()
@@ -74,7 +71,7 @@ namespace Taki.Factories
             return players;
         }
 
-        private List<Player> GeneratePlayersFromDTO(List<PlayerDTO> playerDTOs)
+        private List<Player> GeneratePlayersFromDTO(List<PlayerDto> playerDTOs)
         {
             var players = playerDTOs.Select(player =>
             {
@@ -101,7 +98,7 @@ namespace Taki.Factories
             List<Player> players = GeneratePlayers();
             int numberOfPlayerCards = GetNumberOfPlayerCards(players.Count, maxNumberOfCards);
 
-            return new PlayersHolder(players, numberOfPlayerCards, _userCommunicator, _takiGameDatabaseHolder);
+            return new PlayersHolder(players, numberOfPlayerCards, _userCommunicator, _playersDatabase);
         }
 
         public PlayersHolder GeneratePyramidPlayersHandler()
@@ -111,15 +108,17 @@ namespace Taki.Factories
                 (Player)new PyramidPlayer(player, _programVariables.NUMBER_OF_PYRAMID_PLAYER_CARDS)).ToList();
 
             return new PyramidPlayersHolder(pyramidPlayers, _programVariables.NUMBER_OF_PYRAMID_PLAYER_CARDS,
-                _userCommunicator, _takiGameDatabaseHolder);
+                _userCommunicator, _playersDatabase);
         }
 
-        public PlayersHolder GeneratePlayersHolderFromDTO(List<PlayerDTO> playerDTOs)
+        public PlayersHolder GeneratePlayersHolderFromDTO(List<PlayerDto> playerDTOs)
         {
-            var players = GeneratePlayersFromDTO(playerDTOs);
-            return new PlayersHolder(players, 0, _userCommunicator, _takiGameDatabaseHolder);
-
             //TODO: work on reading pyramid players
+            //if(players is List<PyramidPlayerDto>)
+                //...
+
+            var players = GeneratePlayersFromDTO(playerDTOs);
+            return new PlayersHolder(players, 0, _userCommunicator, _playersDatabase);
         }
 
         private int GetNumberOfPlayers()

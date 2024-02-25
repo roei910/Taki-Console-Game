@@ -16,6 +16,6 @@ namespace Taki.Interfaces
         Card RemoveCardByDTO(CardDto card);
         CardDeck GetDrawPile();
         CardDeck GetDiscardPile();
-        void UpdateCardsFromDB(List<CardDto> drawPile, List<CardDto> discardPile);
+        void UpdateCardDecksFromDb(List<CardDto> drawPile, List<CardDto> discardPile);
     }
 }

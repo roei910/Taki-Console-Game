@@ -1,8 +1,6 @@
-﻿using Taki.Game.Cards;
-using Taki.Game.Cards.NumberCards;
-using Taki.Game.Models.Cards;
-using Taki.Interfaces;
+﻿using Taki.Interfaces;
 using Taki.Models.Cards;
+using Taki.Models.Cards.NumberCards;
 using Taki.Models.Deck;
 
 namespace Taki.Factories

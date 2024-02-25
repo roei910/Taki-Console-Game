@@ -8,6 +8,9 @@ using Taki.Factories;
 using Taki.Interfaces;
 using Taki.Models.Algorithm;
 using Taki.Models.Messages;
+using Taki.Models.GameLogic;
+using Taki.Models.Serializers;
+using Taki.Repository;
 
 //TODO: update saving while doing special cards (Taki etc)
 //TODO: create classes to deal with restoring and maybe also saving to the database
@@ -30,17 +33,17 @@ var serviceProvider = new ServiceCollection()
         .AddJsonFile("AppConfigurations.json", false, true)
         .Build())
     .AddSingleton<TakiGameRunner>()
-    .AddSingleton<IDatabase<PlayerDTO>, PlayerDatabase>()
-    .AddKeyedSingleton<IDatabase<CardDto>, CardDatabase>("drawPile", (serviceProvider, x) =>
+    .AddSingleton<IDal<PlayerDto>, PlayerDatabase>()
+    .AddKeyedSingleton<IDal<CardDto>, CardDal>("drawPile", (serviceProvider, x) =>
         {
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
-            return new CardDatabase(configuration, "DrawPile");
+            return new CardDal(configuration, "DrawPile");
         })
-    .AddKeyedSingleton<IDatabase<CardDto>, CardDatabase>(
+    .AddKeyedSingleton<IDal<CardDto>, CardDal>(
         "discardPile", (serviceProvider, x) =>
         {
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
-            return new CardDatabase(configuration, "DiscardPile");
+            return new CardDal(configuration, "DiscardPile");
         })
     .AddSingleton<TakiGameDatabaseHolder>()
     .BuildServiceProvider();

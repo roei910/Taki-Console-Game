@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using Taki.Dto;
 using Taki.Interfaces;
 using Taki.Models.Algorithm;
 using Taki.Models.Cards;
@@ -87,6 +88,13 @@ namespace Taki.Models.Players
         public Player PickOtherPlayer(IPlayersHolder playersHolder)
         {
             return _choosingAlgorithm.ChoosePlayer(this, playersHolder);
+        }
+
+        public PlayerDto ToPlayerDto()
+        {
+            List<CardDto> cards = PlayerCards.Select(card => card.ToCardDto()).ToList();
+
+            return new PlayerDto(Score, Name, Id, cards, ChoosingAlgorithm);
         }
     }
 }

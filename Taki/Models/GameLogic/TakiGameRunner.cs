@@ -1,12 +1,12 @@
 ﻿using MongoDB.Driver;
-using Taki.Database;
+using Taki.Data;
 using Taki.Dto;
 using Taki.Factories;
-using Taki.Game.Deck;
 using Taki.Interfaces;
+using Taki.Models.Deck;
 using Taki.Models.Players;
 
-namespace Taki.GameRunner
+namespace Taki.Models.GameLogic
 {
     enum GameRunnerOptions
     {
@@ -22,21 +22,19 @@ namespace Taki.GameRunner
         protected readonly PlayersHolderFactory _playersHolderFactory;
         protected readonly IUserCommunicator _userCommunicator;
         protected readonly ICardDecksHolder _cardDecksHolder;
-        private readonly TakiGameDatabaseHolder _takiGameDatabaseHolder;
         protected readonly ProgramVariables _programVariables;
         protected readonly IGameScore _gameScore;
         protected IPlayersHolder? _playersHolder;
 
         public TakiGameRunner(PlayersHolderFactory playersHolderFactory, CardDeckFactory cardDeckFactory,
             IUserCommunicator userCommunicator, ProgramVariables programVariables, IGameScore gameScore,
-            Random random, TakiGameDatabaseHolder takiGameDatabaseHolder)
+            Random random, CardDeckDatabase cardDatabase)
         {
             _userCommunicator = userCommunicator;
             _programVariables = programVariables;
             _playersHolderFactory = playersHolderFactory;
             _gameScore = gameScore;
-            _cardDecksHolder = new CardDecksHolder(cardDeckFactory, random);
-            _takiGameDatabaseHolder = takiGameDatabaseHolder;
+            _cardDecksHolder = new CardDecksHolder(cardDeckFactory, random, cardDatabase);
         }
 
         private void StartSingleGame()
@@ -48,7 +46,7 @@ namespace Taki.GameRunner
                 totalWinners > numOfPlayers ? numOfPlayers : totalWinners)
                 .Select(i =>
                 {
-                    Player winner = _playersHolder.GetWinner(_cardDecksHolder, _takiGameDatabaseHolder);
+                    Player winner = _playersHolder.GetWinner(_cardDecksHolder);
                     _userCommunicator.GetMessageFromUser($"Winner #{i + 1} is {winner.Name}\n" +
                         $"Press enter to continue");
 
@@ -71,14 +69,14 @@ namespace Taki.GameRunner
             }).ToList();
 
             _userCommunicator.SendMessageToUser();
-            _takiGameDatabaseHolder.DeleteAll();
+            _playersDatabase.DeleteAll();
         }
 
         public void StartGameLoop()
         {
-            if (!_takiGameDatabaseHolder.IsEmpty())
+            if (!_playersDatabase.IsEmpty())
             {
-                var players = _takiGameDatabaseHolder.GetAllPlayers();
+                var players = _playersDatabase.GetAllPlayers();
                 _playersHolder = _playersHolderFactory.GeneratePlayersHolderFromDTO(players);
                 UpdateCardDeckFromDatabase(players);
 
@@ -98,15 +96,15 @@ namespace Taki.GameRunner
             {
                 ResetGame();
                 _playersHolder!.DealCards(_cardDecksHolder);
-                _takiGameDatabaseHolder.CreateAllPlayers(_playersHolder.Players);
-                _takiGameDatabaseHolder.CreateCardDecks(_cardDecksHolder);
+                _playersDatabase.CreateAllPlayers(_playersHolder.Players);
+                _playersDatabase.CreateCardDecks(_cardDecksHolder);
                 StartSingleGame();
             }
 
             StartGameLoop();
         }
 
-        private void UpdateCardDeckFromDatabase(List<PlayerDTO> players)
+        private void UpdateCardDeckFromDatabase(List<PlayerDto> players)
         {
             players.ForEach(player =>
             {
@@ -117,9 +115,9 @@ namespace Taki.GameRunner
                     .PlayerCards = cards;
             });
 
-            List<CardDto> drawPile = _takiGameDatabaseHolder.GetDrawPile();
-            List<CardDto> discardPile = _takiGameDatabaseHolder.GetDiscardPile();
-            _cardDecksHolder.UpdateCardsFromDB(drawPile, discardPile);
+            List<CardDto> drawPile = _playersDatabase.GetDrawPile();
+            List<CardDto> discardPile = _playersDatabase.GetDiscardPile();
+            _cardDecksHolder.UpdateCardDecksFromDb(drawPile, discardPile);
             _cardDecksHolder.GetDiscardPile().GetAllCards().Select((card, index) =>
             {
                 card.UpdateFromDto(discardPile[index], _cardDecksHolder);
@@ -129,7 +127,7 @@ namespace Taki.GameRunner
 
         private void ResetGame()
         {
-            _takiGameDatabaseHolder.DeleteAll();
+            _playersDatabase.DeleteAll();
 
             if (_playersHolder is null)
                 return;

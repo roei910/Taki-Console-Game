@@ -1,17 +1,16 @@
 ﻿using Microsoft.Extensions.Configuration;
-using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using Taki.Interfaces;
 
-namespace Taki.Database
+namespace Taki.Repository
 {
-    internal abstract class AbstractDatabase<T> : IDatabase<T>
+    internal abstract class MongoDal<T> : IDal<T>
     {
         protected readonly MongoClient _client;
         protected readonly IMongoDatabase _database;
         protected readonly IMongoCollection<T> _collection;
 
-        public AbstractDatabase(IConfiguration configuration, string collectionName)
+        public MongoDal(IConfiguration configuration, string collectionName)
         {
             var mongoUrl = configuration.GetSection("MongoUrl").Value ??
                 throw new NullReferenceException("please define mongoDB url");
@@ -24,7 +23,7 @@ namespace Taki.Database
             _collection = _database.GetCollection<T>(collectionName);
         }
 
-        public AbstractDatabase(string mongoUrl, string dbName, string collectionName)
+        public MongoDal(string mongoUrl, string dbName, string collectionName)
         {
             _client = new MongoClient(mongoUrl);
             _database = _client.GetDatabase(dbName);
@@ -80,5 +79,6 @@ namespace Taki.Database
         public abstract void UpdateAll(List<T> values);
         public abstract void UpdateOne(T value);
         public abstract bool DeleteAll();
+        public abstract bool Delete(int id);
     }
 }

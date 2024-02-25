@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using Taki.Dto;
 using Taki.Models.Cards;
 using Taki.Models.Players;
 
@@ -14,5 +15,6 @@ namespace Taki.Interfaces
         string GetInformation();
         bool IsManualPlayer();
         Player PickOtherPlayer(IPlayersHolder playersHolder);
+        public PlayerDto ToPlayerDto();
     }
 }

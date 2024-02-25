@@ -2,15 +2,15 @@
 using MongoDB.Driver;
 using Taki.Dto;
 
-namespace Taki.Database
+namespace Taki.Repository
 {
-    internal class CardDatabase : AbstractDatabase<CardDto>
+    internal class CardDal : MongoDal<CardDto>
     {
-        public CardDatabase(IConfiguration configuration, string collectionName) :
+        public CardDal(IConfiguration configuration, string collectionName) :
             base(configuration, collectionName)
         { }
 
-        public CardDatabase(string mongoUrl, string dbName, string collectionName) :
+        public CardDal(string mongoUrl, string dbName, string collectionName) :
             base(mongoUrl, dbName, collectionName)
         { }
 
@@ -40,6 +40,11 @@ namespace Taki.Database
         public override bool Create(CardDto value)
         {
             return base.Create(value);
+        }
+
+        public override bool Delete(int id)
+        {
+            return Delete(FilterById(id));
         }
     }
 }

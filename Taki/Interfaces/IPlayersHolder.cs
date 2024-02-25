@@ -13,7 +13,7 @@ namespace Taki.Interfaces
         void ChangeDirection();
         void DealCards(ICardDecksHolder cardsHolder);
         bool DrawCards(int numberOfCards, Player playerToDraw, ICardDecksHolder cardDecksHolder);
-        Player GetWinner(ICardDecksHolder cardDecksHolder, TakiGameDatabaseHolder takiGameDatabaseHolder);
+        Player GetWinner(ICardDecksHolder cardDecksHolder);
         List<Card> ReturnCardsFromPlayers();
         void ResetPlayers();
     }

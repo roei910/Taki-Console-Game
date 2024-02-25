@@ -1,4 +1,4 @@
-using Taki.Models.Cards;
+﻿using Taki.Models.Cards;
 
 namespace Taki.Models.Algorithm
 {

@@ -1,4 +1,5 @@
 ﻿using Taki.Database;
+using Taki.Dto;
 using Taki.Interfaces;
 using Taki.Models.Cards;
 
@@ -7,7 +8,7 @@ namespace Taki.Models.Players
     internal class PlayersHolder : IPlayersHolder
     {
         protected readonly IUserCommunicator _userCommunicator;
-        private readonly TakiGameDatabaseHolder _takiGameDatabaseHolder;
+        private readonly IDal<PlayerDto> _playersDatabase;
         protected readonly Queue<Player> _winners;
         private int _noPlayCounter = 0;
         private List<Player> players = new List<Player>();
@@ -19,13 +20,13 @@ namespace Taki.Models.Players
         public Player CurrentPlayer { get => _players.First(); }
 
         public PlayersHolder(List<Player> players, int numberOfPlayerCards,
-            IUserCommunicator userCommunicator, TakiGameDatabaseHolder takiGameDatabaseHolder)
+            IUserCommunicator userCommunicator, IDal<PlayerDto> playersDatabase)
         {
             _players = new(players);
             _winners = new Queue<Player>();
             _numberOfPlayerCards = numberOfPlayerCards;
             _userCommunicator = userCommunicator;
-            _takiGameDatabaseHolder = takiGameDatabaseHolder;
+            _playersDatabase = playersDatabase;
         }
 
         public bool DrawCards(int numberOfCards, Player playerToDraw, ICardDecksHolder cardDecksHolder)
@@ -58,12 +59,13 @@ namespace Taki.Models.Players
             _players.AddLast(current);
         }
 
-        public Player GetWinner(ICardDecksHolder cardDecksHolder, TakiGameDatabaseHolder takiGameDatabaseHolder)
+        public Player GetWinner(ICardDecksHolder cardDecksHolder)
         {
             while (!HasPlayerFinishedHand(cardDecksHolder))
             {
                 CurrentPlayerPlay(cardDecksHolder);
-                takiGameDatabaseHolder.UpdateDatabase(this, cardDecksHolder);
+                //takiGameDatabaseHolder.UpdateDatabase(this, cardDecksHolder);
+                _playersDatabase.UpdateOne(CurrentPlayer.ToPlayerDto());
             }
 
             Player playerWon = _players.FirstOrDefault(player => player.IsHandEmpty(), _players.First());
@@ -127,8 +129,9 @@ namespace Taki.Models.Players
             _players.Clear();
             savedPlayers.ForEach(player => _players.AddFirst(player));
 
-            _takiGameDatabaseHolder.DeleteAllPlayers();
-            _takiGameDatabaseHolder.CreateAllPlayers(Players);
+            _playersDatabase.DeleteAll();
+            var playerDTOs = players.Select(p => p.ToPlayerDto()).ToList();
+            _playersDatabase.CreateMany(playerDTOs);
         }
 
         public List<Card> ReturnCardsFromPlayers()

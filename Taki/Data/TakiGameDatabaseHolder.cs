@@ -7,20 +7,20 @@ namespace Taki.Database
 {
     internal class TakiGameDatabaseHolder
     {
-        private readonly IDatabase<PlayerDTO> _playersDatabase;
-        private readonly IDatabase<CardDto> _drawPileDatabase;
-        private readonly IDatabase<CardDto> _discardPileDatabase;
+        private readonly IDal<PlayerDto> _playersDatabase;
+        private readonly IDal<CardDto> _drawPileDatabase;
+        private readonly IDal<CardDto> _discardPileDatabase;
 
-        public TakiGameDatabaseHolder(IDatabase<PlayerDTO> playersDatabase, IServiceProvider serviceProvider)
+        public TakiGameDatabaseHolder(IDal<PlayerDto> playersDatabase, IServiceProvider serviceProvider)
         {
-            _drawPileDatabase = serviceProvider.GetRequiredKeyedService<IDatabase<CardDto>>("drawPile");
-            _discardPileDatabase = serviceProvider.GetRequiredKeyedService<IDatabase<CardDto>>("discardPile");
+            _drawPileDatabase = serviceProvider.GetRequiredKeyedService<IDal<CardDto>>("drawPile");
+            _discardPileDatabase = serviceProvider.GetRequiredKeyedService<IDal<CardDto>>("discardPile");
             _playersDatabase = playersDatabase;
         }
 
         public void CreateAllPlayers(List<Player> players)
         {
-            var playerDTOs = players.Select(PlayerDTO.PlayerToDTO).ToList();
+            var playerDTOs = players.Select(p => p.ToPlayerDto()).ToList();
             _playersDatabase.CreateMany(playerDTOs);
         }
 
@@ -50,7 +50,7 @@ namespace Taki.Database
             _drawPileDatabase.DeleteAll();
         }
 
-        public List<PlayerDTO> GetAllPlayers()
+        public List<PlayerDto> GetAllPlayers()
         {
             return _playersDatabase.FindAll();
         }
@@ -67,7 +67,7 @@ namespace Taki.Database
 
         public void UpdateDatabase(IPlayersHolder playersHolder, ICardDecksHolder cardDecksHolder)
         {
-            var players = playersHolder.Players.Select(PlayerDTO.PlayerToDTO).ToList();
+            var players = playersHolder.Players.Select(p => p.ToPlayerDto()).ToList();
             var drawPile = cardDecksHolder.GetDrawPile().GetAllCards().Select(card => card.ToCardDto()).ToList();
             var discardPile = cardDecksHolder.GetDiscardPile().GetAllCards().Select(card => card.ToCardDto()).ToList();
 

@@ -1,4 +1,4 @@
-﻿using Taki.Database;
+﻿using Taki.Dto;
 using Taki.Interfaces;
 
 namespace Taki.Models.Players
@@ -6,8 +6,8 @@ namespace Taki.Models.Players
     internal class PyramidPlayersHolder : PlayersHolder
     {
         public PyramidPlayersHolder(List<Player> players, int numberOfPlayerCards,
-            IUserCommunicator userCommunicator, TakiGameDatabaseHolder takiGameDatabaseHolder) :
-            base(players, numberOfPlayerCards, userCommunicator, takiGameDatabaseHolder)
+            IUserCommunicator userCommunicator, IDal<PlayerDto> playerDatabase) :
+            base(players, numberOfPlayerCards, userCommunicator, playerDatabase)
         { }
 
         protected override bool HasPlayerFinishedHand(ICardDecksHolder cardDecksHolder)

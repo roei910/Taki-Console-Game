@@ -2,7 +2,7 @@
 using System.Text.Json;
 using Taki.Interfaces;
 
-namespace Taki.GameRunner
+namespace Taki.Models.GameLogic
 {
     internal class GameScore : IGameScore
     {

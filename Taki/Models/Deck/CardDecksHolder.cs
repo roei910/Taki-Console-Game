@@ -1,4 +1,5 @@
-﻿using Taki.Dto;
+﻿using Taki.Data;
+using Taki.Dto;
 using Taki.Factories;
 using Taki.Interfaces;
 using Taki.Models.Cards;
@@ -9,11 +10,14 @@ namespace Taki.Models.Deck
     {
         private readonly CardDeck _drawPile;
         private readonly CardDeck _discardPile;
+        private readonly CardDeckDatabase _cardDeckDatabase;
 
-        public CardDecksHolder(CardDeckFactory cardDeckFactory, Random random)
+        public CardDecksHolder(CardDeckFactory cardDeckFactory, Random random,
+            CardDeckDatabase cardDeckDatabase)
         {
             _drawPile = cardDeckFactory.GenerateCardDeck();
             _discardPile = new CardDeck(random);
+            _cardDeckDatabase = cardDeckDatabase;
         }
 
         public Card GetTopDiscard()
@@ -24,12 +28,14 @@ namespace Taki.Models.Deck
         public void AddDiscardCard(Card card)
         {
             _discardPile.AddFirst(card);
+            _cardDeckDatabase.AddDiscardCard(card);
         }
 
         public void ResetCards()
         {
             _drawPile.CombineFromDeck(_discardPile);
             _drawPile.ShuffleDeck();
+            _cardDeckDatabase.UpdateAllCards(_discardPile, _drawPile);
         }
 
         public void ResetCards(List<Card> playerCards)
@@ -51,6 +57,7 @@ namespace Taki.Models.Deck
             }
 
             Card top = _drawPile.PopFirst();
+            _cardDeckDatabase.DrawCard(top);
 
             return top;
         }
@@ -81,7 +88,7 @@ namespace Taki.Models.Deck
             return _discardPile;
         }
 
-        public void UpdateCardsFromDB(List<CardDto> drawPile, List<CardDto> discardPile)
+        public void UpdateCardDecksFromDb(List<CardDto> drawPile, List<CardDto> discardPile)
         {
             var newDrawPile = drawPile.Select(RemoveCardByDTO).ToList();
             _drawPile.AddMany(newDrawPile);

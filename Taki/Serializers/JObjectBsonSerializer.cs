@@ -4,7 +4,7 @@ using MongoDB.Bson;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 
-namespace Taki.Models.Serializers
+namespace Taki.Serializers
 {
     internal class JObjectBsonSerializer : SerializerBase<JObject>
     {
