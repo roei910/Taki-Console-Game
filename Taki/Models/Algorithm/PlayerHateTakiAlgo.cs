@@ -1,4 +1,3 @@
-﻿using Taki.Game.Messages;
 using Taki.Models.Cards;
 
 namespace Taki.Models.Algorithm
