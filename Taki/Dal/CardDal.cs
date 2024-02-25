@@ -2,7 +2,7 @@
 using MongoDB.Driver;
 using Taki.Dto;
 
-namespace Taki.Repository
+namespace Taki.Dal
 {
     internal class CardDal : MongoDal<CardDto>
     {

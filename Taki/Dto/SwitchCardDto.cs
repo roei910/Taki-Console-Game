@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Taki.Dal
+namespace Taki.Dto
 {
     //TODO
-    internal class Plus2CardDal
+    internal class SwitchCardDto
     {
     }
 }

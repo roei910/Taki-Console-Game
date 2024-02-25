@@ -2,7 +2,7 @@
 using MongoDB.Driver;
 using Taki.Interfaces;
 
-namespace Taki.Repository
+namespace Taki.Dal
 {
     internal abstract class MongoDal<T> : IDal<T>
     {

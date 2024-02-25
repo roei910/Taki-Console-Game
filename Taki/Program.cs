@@ -8,13 +8,15 @@ using Taki.Interfaces;
 using Taki.Models.Algorithm;
 using Taki.Models.Messages;
 using Taki.Models.GameLogic;
-using Taki.Repository;
 using Taki.Serializers;
 using Taki.Data;
 using Taki.Models.Deck;
+using Taki.Dal;
 
 //TODO: update saving while doing special cards (Taki etc)
 //check all todo's
+//TODO: create serializers and desrializers, card dto with dictionary. 
+//TODO: create carddto for specials and serializrs for them
 
 var serviceProvider = new ServiceCollection()
     .AddSingleton<IUserCommunicator, ConsoleUserCommunicator>()
