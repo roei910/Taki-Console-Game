@@ -89,7 +89,7 @@ namespace Taki.Models.Cards
             CardDto? prevCardDto = JsonConvert.DeserializeObject<CardDto>(prev.ToString());
 
             if (prevCardDto is not null)
-                prevCard = cardDecksHolder.GetDiscardPile().GetAllCards()
+                prevCard = cardDecksHolder.GetDiscardCardDeck().GetAllCards()
                     .Where(card => card.Id == prevCardDto.Id).First();
         }
     }

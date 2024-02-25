@@ -1,5 +1,4 @@
-﻿using Taki.Database;
-using Taki.Dto;
+﻿using Taki.Dto;
 using Taki.Interfaces;
 using Taki.Models.Algorithm;
 using Taki.Models.GameLogic;
@@ -28,6 +27,24 @@ namespace Taki.Factories
             _gameScore = gameScore;
             _manualPlayerAlgorithm = manualPlayerAlgorithm;
             _playersDatabase = playerDatabase;
+        }
+
+        public PlayersHolder GeneratePlayersHandler(int maxNumberOfCards)
+        {
+            List<Player> players = GeneratePlayers();
+            int numberOfPlayerCards = GetNumberOfPlayerCards(players.Count, maxNumberOfCards);
+
+            return new PlayersHolder(players, numberOfPlayerCards, _userCommunicator, _playersDatabase);
+        }
+
+        public PlayersHolder GeneratePyramidPlayersHandler()
+        {
+            List<Player> pyramidPlayers = GeneratePlayers()
+                .Select(player =>
+                (Player)new PyramidPlayer(player, _programVariables.NUMBER_OF_PYRAMID_PLAYER_CARDS)).ToList();
+
+            return new PyramidPlayersHolder(pyramidPlayers, _programVariables.NUMBER_OF_PYRAMID_PLAYER_CARDS,
+                _userCommunicator, _playersDatabase);
         }
 
         private List<Player> GeneratePlayers()
@@ -69,56 +86,6 @@ namespace Taki.Factories
             _userCommunicator.SendMessageToUser();
 
             return players;
-        }
-
-        private List<Player> GeneratePlayersFromDTO(List<PlayerDto> playerDTOs)
-        {
-            var players = playerDTOs.Select(player =>
-            {
-                if (player.ChoosingAlgorithm == _manualPlayerAlgorithm.ToString())
-                {
-                    Player newPlayer = new(player.Name, _manualPlayerAlgorithm, _userCommunicator)
-                    {
-                        Score = player.Score
-                    };
-
-                    return newPlayer;
-                }
-
-                IPlayerAlgorithm playerAlgorithm = _playerAlgorithms.Where(algo => algo.ToString() == player.ChoosingAlgorithm).First();
-
-                return new Player(player.Name, playerAlgorithm, _userCommunicator);
-            }).ToList();
-
-            return players;
-        }
-
-        public PlayersHolder GeneratePlayersHandler(int maxNumberOfCards)
-        {
-            List<Player> players = GeneratePlayers();
-            int numberOfPlayerCards = GetNumberOfPlayerCards(players.Count, maxNumberOfCards);
-
-            return new PlayersHolder(players, numberOfPlayerCards, _userCommunicator, _playersDatabase);
-        }
-
-        public PlayersHolder GeneratePyramidPlayersHandler()
-        {
-            List<Player> pyramidPlayers = GeneratePlayers()
-                .Select(player =>
-                (Player)new PyramidPlayer(player, _programVariables.NUMBER_OF_PYRAMID_PLAYER_CARDS)).ToList();
-
-            return new PyramidPlayersHolder(pyramidPlayers, _programVariables.NUMBER_OF_PYRAMID_PLAYER_CARDS,
-                _userCommunicator, _playersDatabase);
-        }
-
-        public PlayersHolder GeneratePlayersHolderFromDTO(List<PlayerDto> playerDTOs)
-        {
-            //TODO: work on reading pyramid players
-            //if(players is List<PyramidPlayerDto>)
-                //...
-
-            var players = GeneratePlayersFromDTO(playerDTOs);
-            return new PlayersHolder(players, 0, _userCommunicator, _playersDatabase);
         }
 
         private int GetNumberOfPlayers()

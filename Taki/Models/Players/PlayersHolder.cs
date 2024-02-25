@@ -1,5 +1,4 @@
-﻿using Taki.Database;
-using Taki.Dto;
+﻿using Taki.Dto;
 using Taki.Interfaces;
 using Taki.Models.Cards;
 
@@ -11,7 +10,7 @@ namespace Taki.Models.Players
         private readonly IDal<PlayerDto> _playersDatabase;
         protected readonly Queue<Player> _winners;
         private int _noPlayCounter = 0;
-        private List<Player> players = new List<Player>();
+        private List<Player> players = [];
         protected readonly int _numberOfPlayerCards;
         public readonly LinkedList<Player> _players;
 
@@ -57,16 +56,14 @@ namespace Taki.Models.Players
             Player current = CurrentPlayer;
             _players.RemoveFirst();
             _players.AddLast(current);
+            _playersDatabase.Delete(current.Id);
+            _playersDatabase.Create(current.ToPlayerDto());
         }
 
         public Player GetWinner(ICardDecksHolder cardDecksHolder)
         {
             while (!HasPlayerFinishedHand(cardDecksHolder))
-            {
                 CurrentPlayerPlay(cardDecksHolder);
-                //takiGameDatabaseHolder.UpdateDatabase(this, cardDecksHolder);
-                _playersDatabase.UpdateOne(CurrentPlayer.ToPlayerDto());
-            }
 
             Player playerWon = _players.FirstOrDefault(player => player.IsHandEmpty(), _players.First());
 
@@ -84,43 +81,6 @@ namespace Taki.Models.Players
                 return true;
 
             return _players.Any(player => player.IsHandEmpty());
-        }
-
-        public void CurrentPlayerPlay(ICardDecksHolder cardDecksHolder)
-        {
-            _userCommunicator.SendAlertMessage($"{CurrentPlayer.Name} is playing, " +
-                $"{CurrentPlayer.PlayerCards.Count} cards in hand");
-
-            Card topDiscard = cardDecksHolder.GetTopDiscard();
-            _userCommunicator.SendAlertMessage($"Top discard: {topDiscard}");
-            topDiscard.PrintCard();
-
-            Card? playerCard = CurrentPlayer.PickCard(topDiscard.IsStackableWith);
-            _userCommunicator.SendAlertMessage($"Player picked: {playerCard?.ToString() ?? "draw card(s)"}\n");
-
-            if (playerCard == null)
-            {
-                DrawCards(topDiscard.CardsToDraw(), CurrentPlayer, cardDecksHolder);
-                topDiscard.FinishNoPlay();
-                NextPlayer();
-                _noPlayCounter++;
-
-                if (_noPlayCounter >= 2 * _players.Count && _noPlayCounter % _players.Count == 0)
-                {
-                    string message = "Too many rounds without play, consider calling a tie ;)\n" +
-                        "press enter to continue";
-                    _userCommunicator.GetMessageFromUser(message);
-                }
-
-                return;
-            }
-
-            playerCard.PrintCard();
-            _noPlayCounter = 0;
-            CurrentPlayer.PlayerCards.Remove(playerCard);
-            cardDecksHolder.AddDiscardCard(playerCard);
-
-            playerCard.Play(topDiscard, cardDecksHolder, this);
         }
 
         public void ChangeDirection()
@@ -174,7 +134,7 @@ namespace Taki.Models.Players
                     return i;
                 }).ToList();
 
-            cardsHolder.DrawFirstCard();
+            _playersDatabase.CreateMany(_players.Select(p => p.ToPlayerDto()).ToList());
         }
 
         public virtual void ResetPlayers()
@@ -185,6 +145,60 @@ namespace Taki.Models.Players
                 _players.AddLast(_winners.Dequeue());
                 return i;
             }).ToList();
+
+            _playersDatabase.CreateMany(players.Select(p => p.ToPlayerDto()).ToList());
+        }
+
+        private void CurrentPlayerPlay(ICardDecksHolder cardDecksHolder)
+        {
+            _userCommunicator.SendAlertMessage($"{CurrentPlayer.Name} is playing, " +
+                $"{CurrentPlayer.PlayerCards.Count} cards in hand");
+
+            Card topDiscard = cardDecksHolder.GetTopDiscard();
+            _userCommunicator.SendAlertMessage($"Top discard: {topDiscard}");
+            topDiscard.PrintCard();
+
+            Card? playerCard = GetCardFromCurrentPlayer(cardDecksHolder, topDiscard.IsStackableWith);
+
+            if (playerCard == null)
+            {
+                DrawCards(topDiscard.CardsToDraw(), CurrentPlayer, cardDecksHolder);
+                topDiscard.FinishNoPlay();
+                NextPlayer();
+                _noPlayCounter++;
+
+                if (_noPlayCounter >= 2 * _players.Count && _noPlayCounter % _players.Count == 0)
+                {
+                    string message = "Too many rounds without play, consider calling a tie ;)\n" +
+                        "press enter to continue";
+                    _userCommunicator.GetMessageFromUser(message);
+                }
+
+                return;
+            }
+
+            playerCard.Play(topDiscard, cardDecksHolder, this);
+        }
+
+        public Card? GetCardFromCurrentPlayer(ICardDecksHolder cardDecksHolder, Func<Card,bool> isStackableWith,
+            string? elseMessage = null)
+        {
+            _userCommunicator.SendAlertMessage($"{CurrentPlayer.Name} is playing, " +
+                $"{CurrentPlayer.PlayerCards.Count} cards in hand");
+
+            Card? playerCard = CurrentPlayer.PickCard(isStackableWith, elseMessage);
+            _userCommunicator.SendAlertMessage($"Player picked: {playerCard?.ToString() ?? "draw card(s)"}\n");
+
+            if (playerCard != null)
+            {
+                _noPlayCounter = 0;
+                playerCard.PrintCard();
+                CurrentPlayer.PlayerCards.Remove(playerCard);
+                cardDecksHolder.AddDiscardCard(playerCard);
+                _playersDatabase.UpdateOne(CurrentPlayer.ToPlayerDto());
+            }
+
+            return playerCard;
         }
     }
 }

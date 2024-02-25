@@ -74,8 +74,8 @@ namespace Taki.Models.Deck
         public Card RemoveFirstDTO(CardDto card)
         {
             Card foundCard = _cards.Where(c => c.Id == card.Id).First();
-
             _cards.Remove(foundCard);
+
             return foundCard;
         }
 

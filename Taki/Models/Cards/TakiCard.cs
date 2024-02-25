@@ -37,7 +37,8 @@ namespace Taki.Models.Cards
             _userCommunicator.SendAlertMessage($"Top discard: {topDiscard}");
             topDiscard.PrintCard();
 
-            Card? playerCard = currentPlayer.PickCard(isStackable, elseMessage: "or -1 to finish taki");
+            Card? playerCard = playersHolder.GetCardFromCurrentPlayer(
+                cardDecksHolder, isStackable, elseMessage: "or -1 to finish taki");
 
             while (playerCard is not null)
             {
@@ -46,12 +47,11 @@ namespace Taki.Models.Cards
 
                 previous = topDiscard;
                 topDiscard = playerCard;
-                currentPlayer.PlayerCards.Remove(playerCard);
-                cardDecksHolder.AddDiscardCard(playerCard);
                 _userCommunicator.SendAlertMessage($"Top discard: {topDiscard}");
                 topDiscard.PrintCard();
 
-                playerCard = currentPlayer.PickCard(isStackable, elseMessage: "or -1 to finish taki");
+                playerCard = playersHolder.GetCardFromCurrentPlayer(
+                    cardDecksHolder, isStackable, elseMessage: "or -1 to finish taki");
             }
 
             _userCommunicator.SendAlertMessage("Taki Closed!\n");

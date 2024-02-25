@@ -14,8 +14,7 @@ namespace Taki.Interfaces
         void DrawFirstCard();
         int CountAllCards();
         Card RemoveCardByDTO(CardDto card);
-        CardDeck GetDrawPile();
-        CardDeck GetDiscardPile();
-        void UpdateCardDecksFromDb(List<CardDto> drawPile, List<CardDto> discardPile);
+        CardDeck GetDrawCardDeck();
+        CardDeck GetDiscardCardDeck();
     }
 }

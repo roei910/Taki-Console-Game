@@ -19,7 +19,10 @@ namespace Taki.Data
 
         public void AddDiscardCard(Card card)
         {
+            var discardPile = _discardPileDatabase.FindAll();
+            _discardPileDatabase.DeleteAll();
             _discardPileDatabase.Create(card.ToCardDto());
+            _discardPileDatabase.CreateMany(discardPile);
         }
 
         public void UpdateAllCards(CardDeck discardPile, CardDeck drawPile)
@@ -43,6 +46,12 @@ namespace Taki.Data
         public List<CardDto> GetDrawCards()
         {
             return _drawPileDatabase.FindAll();
+        }
+
+        internal void DeleteAll()
+        {
+            _drawPileDatabase.DeleteAll();
+            _discardPileDatabase.DeleteAll();
         }
     }
 }

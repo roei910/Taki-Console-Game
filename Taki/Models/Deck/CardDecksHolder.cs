@@ -66,6 +66,7 @@ namespace Taki.Models.Deck
         {
             Card? drawCard = DrawCard();
             _discardPile.AddFirst(drawCard!);
+            _cardDeckDatabase.AddDiscardCard(drawCard!);
         }
 
         public int CountAllCards()
@@ -78,22 +79,14 @@ namespace Taki.Models.Deck
             return _drawPile.RemoveFirstDTO(card);
         }
 
-        public CardDeck GetDrawPile()
+        public CardDeck GetDrawCardDeck()
         {
             return _drawPile;
         }
 
-        public CardDeck GetDiscardPile()
+        public CardDeck GetDiscardCardDeck()
         {
             return _discardPile;
-        }
-
-        public void UpdateCardDecksFromDb(List<CardDto> drawPile, List<CardDto> discardPile)
-        {
-            var newDrawPile = drawPile.Select(RemoveCardByDTO).ToList();
-            _drawPile.AddMany(newDrawPile);
-            var newDiscardPile = discardPile.Select(RemoveCardByDTO).ToList();
-            _discardPile.AddMany(newDiscardPile);
         }
     }
 }

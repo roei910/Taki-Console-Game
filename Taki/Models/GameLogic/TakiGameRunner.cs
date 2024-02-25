@@ -1,6 +1,4 @@
 ﻿using MongoDB.Driver;
-using Taki.Data;
-using Taki.Dto;
 using Taki.Factories;
 using Taki.Interfaces;
 using Taki.Models.Deck;
@@ -24,17 +22,20 @@ namespace Taki.Models.GameLogic
         protected readonly ICardDecksHolder _cardDecksHolder;
         protected readonly ProgramVariables _programVariables;
         protected readonly IGameScore _gameScore;
+        private readonly GameRestore _gameRestore;
         protected IPlayersHolder? _playersHolder;
 
-        public TakiGameRunner(PlayersHolderFactory playersHolderFactory, CardDeckFactory cardDeckFactory,
-            IUserCommunicator userCommunicator, ProgramVariables programVariables, IGameScore gameScore,
-            Random random, CardDeckDatabase cardDatabase)
+        public TakiGameRunner(PlayersHolderFactory playersHolderFactory, 
+            IUserCommunicator userCommunicator, ProgramVariables programVariables, 
+            IGameScore gameScore, GameRestore gameRestore, 
+            CardDecksHolder cardDecksHolder)
         {
             _userCommunicator = userCommunicator;
             _programVariables = programVariables;
             _playersHolderFactory = playersHolderFactory;
             _gameScore = gameScore;
-            _cardDecksHolder = new CardDecksHolder(cardDeckFactory, random, cardDatabase);
+            _gameRestore = gameRestore;
+            _cardDecksHolder = cardDecksHolder;
         }
 
         private void StartSingleGame()
@@ -69,25 +70,13 @@ namespace Taki.Models.GameLogic
             }).ToList();
 
             _userCommunicator.SendMessageToUser();
-            _playersDatabase.DeleteAll();
+            _gameRestore.DeleteAll();
         }
 
         public void StartGameLoop()
         {
-            if (!_playersDatabase.IsEmpty())
-            {
-                var players = _playersDatabase.GetAllPlayers();
-                _playersHolder = _playersHolderFactory.GeneratePlayersHolderFromDTO(players);
-                UpdateCardDeckFromDatabase(players);
-
-                _userCommunicator.SendMessageToUser("users restored are:");
-                var playersInormation = _playersHolder.Players.Select((p, i) => $"{i + 1}. {p.GetInformation()}")
-                    .ToList();
-                _userCommunicator.SendMessageToUser(string.Join("\n", playersInormation));
-                _userCommunicator.SendMessageToUser();
-
+            if (_gameRestore.TryRestoreTakiGame(_cardDecksHolder, out _playersHolder))
                 StartSingleGame();
-            }
 
             if (!ChooseGameType())
                 return;
@@ -96,39 +85,15 @@ namespace Taki.Models.GameLogic
             {
                 ResetGame();
                 _playersHolder!.DealCards(_cardDecksHolder);
-                _playersDatabase.CreateAllPlayers(_playersHolder.Players);
-                _playersDatabase.CreateCardDecks(_cardDecksHolder);
+                _cardDecksHolder.DrawFirstCard();
                 StartSingleGame();
             }
 
             StartGameLoop();
         }
 
-        private void UpdateCardDeckFromDatabase(List<PlayerDto> players)
-        {
-            players.ForEach(player =>
-            {
-                var cards = player.PlayerCards.Select(card =>
-                    _cardDecksHolder.RemoveCardByDTO(card)).ToList();
-
-                _playersHolder!.Players.Where(p => p.Name == player.Name).First()
-                    .PlayerCards = cards;
-            });
-
-            List<CardDto> drawPile = _playersDatabase.GetDrawPile();
-            List<CardDto> discardPile = _playersDatabase.GetDiscardPile();
-            _cardDecksHolder.UpdateCardDecksFromDb(drawPile, discardPile);
-            _cardDecksHolder.GetDiscardPile().GetAllCards().Select((card, index) =>
-            {
-                card.UpdateFromDto(discardPile[index], _cardDecksHolder);
-                return card;
-            }).ToList();
-        }
-
         private void ResetGame()
         {
-            _playersDatabase.DeleteAll();
-
             if (_playersHolder is null)
                 return;
             var cards = _playersHolder!.ReturnCardsFromPlayers();
