@@ -13,16 +13,11 @@ using Taki.Data;
 using Taki.Models.Deck;
 using Taki.Dal;
 
-//TODO: update saving while doing special cards (Taki etc)
-//check all todo's
-//TODO: create serializers and desrializers, card dto with dictionary. 
-//TODO: create carddto for specials and serializrs for them
-
 var serviceProvider = new ServiceCollection()
     .AddSingleton<IUserCommunicator, ConsoleUserCommunicator>()
     .AddSingleton<IPlayerAlgorithm, PlayerAlgorithm>()
     .AddSingleton<IPlayerAlgorithm, PlayerHateTakiAlgo>()
-    .AddSingleton<List<IPlayerAlgorithm>>()
+    .AddTransient<List<IPlayerAlgorithm>>()
     .AddSingleton<IGameScore, GameScore>()
     .AddSingleton<ManualPlayerAlgorithm>()
     .AddSingleton<PlayersHolderFactory>()
