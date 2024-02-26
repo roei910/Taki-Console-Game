@@ -13,6 +13,8 @@ namespace Taki.Data
 
         public CardDeckDatabase(IServiceProvider serviceProvider)
         {
+            //TODO: make const class
+            //TODO: use nameof instead of GetType().Name
             _drawPileDatabase = serviceProvider.GetRequiredKeyedService<IDal<CardDto>>("drawPile");
             _discardPileDatabase = serviceProvider.GetRequiredKeyedService<IDal<CardDto>>("discardPile");
         }

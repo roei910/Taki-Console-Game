@@ -2,6 +2,7 @@
 
 namespace Taki
 {
+    //TODO: is it good => itzhaki
     internal class ProgramVariables
     {
         public readonly int MIN_NUMBER_OF_PLAYERS;
