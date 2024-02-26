@@ -75,14 +75,6 @@ namespace Taki.Models.Players
             return playerWon;
         }
 
-        protected virtual bool HasPlayerFinishedHand(ICardDecksHolder cardDecksHolder)
-        {
-            if (_players.Count == 1)
-                return true;
-
-            return _players.Any(player => player.IsHandEmpty());
-        }
-
         public void ChangeDirection()
         {
             var savedPlayers = _players.ToList();
@@ -149,6 +141,34 @@ namespace Taki.Models.Players
             _playersDatabase.CreateMany(players.Select(p => p.ToPlayerDto()).ToList());
         }
 
+        public Card? GetCardFromCurrentPlayer(ICardDecksHolder cardDecksHolder, Func<Card,bool> isStackableWith,
+            string? elseMessage = null)
+        {
+            _userCommunicator.SendAlertMessage($"{CurrentPlayer.Name} is playing, " +
+                $"{CurrentPlayer.PlayerCards.Count} cards in hand");
+
+            Card? playerCard = CurrentPlayer.PickCard(isStackableWith, elseMessage);
+            _userCommunicator.SendAlertMessage($"Player picked: {playerCard?.ToString() ?? "draw card(s)"}\n");
+
+            if (playerCard != null)
+            {
+                _noPlayCounter = 0;
+                CurrentPlayer.PlayerCards.Remove(playerCard);
+                cardDecksHolder.AddDiscardCard(playerCard);
+                _playersDatabase.UpdateOne(CurrentPlayer.ToPlayerDto());
+            }
+
+            return playerCard;
+        }
+
+        protected virtual bool HasPlayerFinishedHand(ICardDecksHolder cardDecksHolder)
+        {
+            if (_players.Count == 1)
+                return true;
+
+            return _players.Any(player => player.IsHandEmpty());
+        }
+
         private void CurrentPlayerPlay(ICardDecksHolder cardDecksHolder)
         {
             _userCommunicator.SendAlertMessage($"{CurrentPlayer.Name} is playing, " +
@@ -178,27 +198,6 @@ namespace Taki.Models.Players
             }
 
             playerCard.Play(topDiscard, cardDecksHolder, this);
-        }
-
-        public Card? GetCardFromCurrentPlayer(ICardDecksHolder cardDecksHolder, Func<Card,bool> isStackableWith,
-            string? elseMessage = null)
-        {
-            _userCommunicator.SendAlertMessage($"{CurrentPlayer.Name} is playing, " +
-                $"{CurrentPlayer.PlayerCards.Count} cards in hand");
-
-            Card? playerCard = CurrentPlayer.PickCard(isStackableWith, elseMessage);
-            _userCommunicator.SendAlertMessage($"Player picked: {playerCard?.ToString() ?? "draw card(s)"}\n");
-
-            if (playerCard != null)
-            {
-                _noPlayCounter = 0;
-                playerCard.PrintCard();
-                CurrentPlayer.PlayerCards.Remove(playerCard);
-                cardDecksHolder.AddDiscardCard(playerCard);
-                _playersDatabase.UpdateOne(CurrentPlayer.ToPlayerDto());
-            }
-
-            return playerCard;
         }
     }
 }
