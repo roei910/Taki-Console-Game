@@ -38,6 +38,25 @@ namespace Taki.Models.GameLogic
             _cardDecksHolder = cardDecksHolder;
         }
 
+        public void StartGameLoop()
+        {
+            if (_gameRestore.TryRestoreTakiGame(_cardDecksHolder, out _playersHolder))
+                StartSingleGame();
+
+            if (!ChooseGameType())
+                return;
+
+            if (_playersHolder is not null)
+            {
+                ResetGame();
+                _playersHolder!.DealCards(_cardDecksHolder);
+                _cardDecksHolder.DrawFirstCard();
+                StartSingleGame();
+            }
+
+            StartGameLoop();
+        }
+
         private void StartSingleGame()
         {
             int numOfPlayers = _playersHolder!.Players.Count;
@@ -71,25 +90,6 @@ namespace Taki.Models.GameLogic
 
             _userCommunicator.SendMessageToUser();
             _gameRestore.DeleteAll();
-        }
-
-        public void StartGameLoop()
-        {
-            if (_gameRestore.TryRestoreTakiGame(_cardDecksHolder, out _playersHolder))
-                StartSingleGame();
-
-            if (!ChooseGameType())
-                return;
-
-            if (_playersHolder is not null)
-            {
-                ResetGame();
-                _playersHolder!.DealCards(_cardDecksHolder);
-                _cardDecksHolder.DrawFirstCard();
-                StartSingleGame();
-            }
-
-            StartGameLoop();
         }
 
         private void ResetGame()
