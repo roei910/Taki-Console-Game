@@ -17,7 +17,7 @@ namespace Taki.Models.GameLogic
         private readonly CardDeckDatabase _cardDeckDatabase;
 
         public GameRestore(IUserCommunicator userCommunicator, List<IPlayerAlgorithm> playerAlgorithms,
-            ManualPlayerAlgorithm manualPlayerAlgorithm, IDal<PlayerDto> playersDatabase, CardDeckDatabase cardDeckDatabase,
+            IManualPlayerAlgorithm manualPlayerAlgorithm, IDal<PlayerDto> playersDatabase, CardDeckDatabase cardDeckDatabase,
             IServiceProvider serviceProvider)
         {
             _userCommunicator = userCommunicator;

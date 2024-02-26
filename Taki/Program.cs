@@ -15,18 +15,15 @@ using Taki.Shared.Models;
 using Taki.Shared.Models.Dto;
 
 var serviceProvider = new ServiceCollection()
-
     .AddSingleton<IConfiguration>(x => new ConfigurationBuilder()
         .AddJsonFile("AppConfigurations.json", false, true)
         .Build())
-
     .AddSingleton<IUserCommunicator, ConsoleUserCommunicator>()
+    .AddSingleton<IManualPlayerAlgorithm, ManualPlayerAlgorithm>()
     .AddSingleton<IPlayerAlgorithm, PlayerAlgorithm>()
     .AddSingleton<IPlayerAlgorithm, PlayerHateTakiAlgo>()
     .AddTransient<List<IPlayerAlgorithm>>()
     .AddSingleton<IGameScore, GameScore>()
-    //TODO: extract interface for manual based on IPlayerAlgo
-    .AddSingleton<ManualPlayerAlgorithm>()
     .AddSingleton<PlayersHolderFactory>()
     .AddSingleton<CardDeckFactory>()
     .AddSingleton<ProgramVariables>()
