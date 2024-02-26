@@ -25,13 +25,6 @@ namespace Taki.Dal
             return true;
         }
 
-        //TODO: make better, remove the ones deleted only or add the ones need adding in the end
-        public override void UpdateAll(List<CardDto> values)
-        {
-            DeleteAll();
-            CreateMany(values);
-        }
-
         public override void UpdateOne(CardDto value)
         {
             throw new NotImplementedException();

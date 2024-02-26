@@ -31,15 +31,14 @@ namespace Taki.Dal
             return true;
         }
 
-        public override void UpdateAll(List<PlayerDto> players)
-        {
-            players.ForEach(UpdateOne);
-        }
-
         public override void UpdateOne(PlayerDto playerToUpdate)
         {
-            Delete(FilterById(playerToUpdate.Id));
-            Create(playerToUpdate);
+            var filter = Builders<PlayerDto>.Filter.Eq(player => player.Id, playerToUpdate.Id);
+            var update = Builders<PlayerDto>.Update
+                .Set(p => p.PlayerCards, playerToUpdate.PlayerCards)
+                .Set(p => p.CurrentNumberOfCards, playerToUpdate.CurrentNumberOfCards);
+
+            _collection.FindOneAndUpdate(filter, update);
         }
     }
 }

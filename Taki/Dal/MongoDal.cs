@@ -55,8 +55,7 @@ namespace Taki.Dal
 
         public List<T> FindAll()
         {
-            var filter = Builders<T>.Filter.Empty;
-            var result = _collection.Find(filter).ToList();
+            var result = _collection.Find(_ => true).ToList();
             return result;
         }
 
@@ -76,7 +75,6 @@ namespace Taki.Dal
             return _collection.DeleteOne(filterDefinition).IsAcknowledged;
         }
 
-        public abstract void UpdateAll(List<T> values);
         public abstract void UpdateOne(T value);
         public abstract bool DeleteAll();
         public abstract bool Delete(int id);
