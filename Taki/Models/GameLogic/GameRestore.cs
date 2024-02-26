@@ -69,8 +69,27 @@ namespace Taki.Models.GameLogic
         {
             var playersDto = _playersDatabase.FindAll();
             var players = GeneratePlayersFromDTO(playersDto);
-            var playersHolder = new PlayersHolder(players, 0, _userCommunicator, _playersDatabase);
+            IPlayersHolder playersHolder;
 
+            if (playersDto.Where(p => p.CurrentNumberOfCards != -1).Any())
+            {
+                players = players.Select((player, index) =>
+                    (Player)new PyramidPlayer(player, playersDto[index].CurrentNumberOfCards)).ToList();
+
+                playersHolder = new PyramidPlayersHolder(players, 0, _userCommunicator, _playersDatabase);
+                DealCardsToDtoPlayers(cardDecksHolder, playersDto, playersHolder);
+
+                return playersHolder;
+            }
+
+            playersHolder = new PlayersHolder(players, 0, _userCommunicator, _playersDatabase);
+            DealCardsToDtoPlayers(cardDecksHolder, playersDto, playersHolder);
+
+            return playersHolder;
+        }
+
+        private static void DealCardsToDtoPlayers(ICardDecksHolder cardDecksHolder, List<PlayerDto> playersDto, IPlayersHolder playersHolder)
+        {
             playersDto.ForEach(player =>
             {
                 var cards = player.PlayerCards.Select(card =>
@@ -79,12 +98,6 @@ namespace Taki.Models.GameLogic
                 playersHolder!.Players.Where(p => p.Name == player.Name).First()
                     .PlayerCards = cards;
             });
-
-            //TODO: work on reading pyramid players
-            //if(players is List<PyramidPlayerDto>)
-            //...
-
-            return playersHolder;
         }
 
         private void UpdateCardDeckFromDatabase(ICardDecksHolder cardDecksHolder)
