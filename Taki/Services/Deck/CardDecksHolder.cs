@@ -1,6 +1,6 @@
 ﻿using Taki.Data;
 using Taki.Factories;
-using Taki.Models.Cards;
+using Taki.Shared.Abstract;
 using Taki.Shared.Interfaces;
 using Taki.Shared.Models.Dto;
 

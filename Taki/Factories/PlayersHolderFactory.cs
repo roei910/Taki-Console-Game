@@ -13,12 +13,12 @@ namespace Taki.Factories
         private readonly List<IPlayerAlgorithm> _playerAlgorithms;
         private readonly Random _random;
         private readonly IGameScore _gameScore;
-        private readonly ManualPlayerAlgorithm _manualPlayerAlgorithm;
+        private readonly IManualPlayerAlgorithm _manualPlayerAlgorithm;
         private readonly IDal<PlayerDto> _playersDatabase;
 
         public PlayersHolderFactory(ProgramVariables programVariables, IUserCommunicator userCommunicator,
             List<IPlayerAlgorithm> playerAlgorithms, Random random, IGameScore gameScore,
-            ManualPlayerAlgorithm manualPlayerAlgorithm, IDal<PlayerDto> playerDatabase)
+            IManualPlayerAlgorithm manualPlayerAlgorithm, IDal<PlayerDto> playerDatabase)
         {
             _programVariables = programVariables;
             _userCommunicator = userCommunicator;

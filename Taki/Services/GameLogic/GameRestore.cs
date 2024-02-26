@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Taki.Data;
-using Taki.Models.Algorithm;
 using Taki.Models.Deck;
 using Taki.Models.Players;
 using Taki.Shared.Interfaces;

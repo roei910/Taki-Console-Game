@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.ComponentModel.DataAnnotations;
+using Taki.Shared.Abstract;
 using Taki.Shared.Interfaces;
 using Taki.Shared.Models.Dto;
 

@@ -1,5 +1,5 @@
-﻿using Taki.Models.Cards;
-using Taki.Models.Deck;
+﻿using Taki.Models.Deck;
+using Taki.Shared.Abstract;
 using Taki.Shared.Models.Dto;
 
 namespace Taki.Shared.Interfaces

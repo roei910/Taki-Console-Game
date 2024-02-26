@@ -1,12 +1,13 @@
 ﻿using System.Drawing;
 using Taki.Models.Cards;
 using Taki.Models.Players;
+using Taki.Shared.Abstract;
 using Taki.Shared.Enums;
 using Taki.Shared.Interfaces;
 
 namespace Taki.Models.Algorithm
 {
-    internal class ManualPlayerAlgorithm : IPlayerAlgorithm
+    internal class ManualPlayerAlgorithm : IManualPlayerAlgorithm
     {
         private readonly IUserCommunicator _userCommunicator;
 

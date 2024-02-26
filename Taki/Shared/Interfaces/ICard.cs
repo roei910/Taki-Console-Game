@@ -1,4 +1,4 @@
-﻿using Taki.Models.Cards;
+﻿using Taki.Shared.Abstract;
 using Taki.Shared.Models.Dto;
 
 namespace Taki.Shared.Interfaces

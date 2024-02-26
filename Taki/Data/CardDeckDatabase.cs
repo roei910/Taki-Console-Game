@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Taki.Models.Cards;
 using Taki.Models.Deck;
+using Taki.Shared.Abstract;
 using Taki.Shared.Interfaces;
 using Taki.Shared.Models.Dto;
 
@@ -14,7 +14,6 @@ namespace Taki.Data
         public CardDeckDatabase(IServiceProvider serviceProvider)
         {
             //TODO: make const class
-            //TODO: use nameof instead of GetType().Name
             _drawPileDatabase = serviceProvider.GetRequiredKeyedService<IDal<CardDto>>("drawPile");
             _discardPileDatabase = serviceProvider.GetRequiredKeyedService<IDal<CardDto>>("discardPile");
         }

@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 using Taki.Models.Algorithm;
-using Taki.Models.Cards;
+using Taki.Shared.Abstract;
 using Taki.Shared.Interfaces;
 using Taki.Shared.Models.Dto;
 

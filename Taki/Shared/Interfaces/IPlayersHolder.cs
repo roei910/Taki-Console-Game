@@ -1,5 +1,5 @@
-﻿using Taki.Models.Cards;
-using Taki.Models.Players;
+﻿using Taki.Models.Players;
+using Taki.Shared.Abstract;
 
 namespace Taki.Shared.Interfaces
 {
@@ -17,5 +17,6 @@ namespace Taki.Shared.Interfaces
         void ResetPlayers();
         Card? GetCardFromCurrentPlayer(ICardDecksHolder cardDecksHolder, Func<Card, bool> isStackableWith,
             string? elseMessage = null);
+        void UpdateWinnersFromDb();
     }
 }

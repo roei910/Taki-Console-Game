@@ -2,7 +2,7 @@
 using Taki.Shared.Interfaces;
 using Taki.Shared.Models.Dto;
 
-namespace Taki.Models.Cards
+namespace Taki.Shared.Abstract
 {
     internal abstract class Card : ICard, IEquatable<Card>
     {

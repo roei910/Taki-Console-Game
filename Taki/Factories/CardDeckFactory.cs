@@ -1,6 +1,7 @@
 ﻿using Taki.Models.Cards;
 using Taki.Models.Cards.NumberCards;
 using Taki.Models.Deck;
+using Taki.Shared.Abstract;
 using Taki.Shared.Interfaces;
 
 namespace Taki.Factories

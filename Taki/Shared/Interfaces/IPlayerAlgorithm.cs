@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
-using Taki.Models.Cards;
 using Taki.Models.Players;
+using Taki.Shared.Abstract;
 
 namespace Taki.Shared.Interfaces
 {

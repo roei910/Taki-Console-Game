@@ -1,5 +1,5 @@
 ﻿using System.Drawing;
-using Taki.Models.Cards;
+using Taki.Shared.Abstract;
 using Taki.Shared.Interfaces;
 
 namespace Taki.Models.Cards.NumberCards
