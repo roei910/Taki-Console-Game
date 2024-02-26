@@ -90,7 +90,7 @@ namespace Taki.Models.Players
             savedPlayers.ForEach(player => _players.AddFirst(player));
 
             _playersDatabase.DeleteAll();
-            var playerDTOs = players.Select(p => p.ToPlayerDto()).ToList();
+            var playerDTOs = _players.Select(p => p.ToPlayerDto()).ToList();
             _playersDatabase.CreateMany(playerDTOs);
         }
 
