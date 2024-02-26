@@ -22,7 +22,7 @@ namespace Taki.Models.Cards
 
         public override bool IsStackableWith(Card other)
         {
-            if (_color == DEFAULT_COLOR)
+            if (_color.Name == DEFAULT_COLOR.Name)
                 return true;
             if (other is ColorCard colorCard)
                 return _color.Equals(colorCard.GetColor());
