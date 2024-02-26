@@ -7,6 +7,7 @@ namespace Taki.Interfaces
     {
         Player CurrentPlayer { get; }
         List<Player> Players { get; }
+        int NumberOfPlayerCards { get; }
         void NextPlayer();
         void ChangeDirection();
         void DealCards(ICardDecksHolder cardsHolder);

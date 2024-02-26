@@ -48,6 +48,14 @@ namespace Taki.Models.GameLogic
 
             if (_playersHolder is not null)
             {
+                GameSettings gameSettings = new GameSettings()
+                {
+                    NumberOfPlayerCards = _playersHolder.NumberOfPlayerCards,
+                    TypeOfGame = _playersHolder.GetType().Name
+                };
+
+                _gameRestore.CreateGameSettings(gameSettings);
+
                 ResetGame();
                 _playersHolder!.DealCards(_cardDecksHolder);
                 _cardDecksHolder.DrawFirstCard();

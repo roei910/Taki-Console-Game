@@ -51,15 +51,16 @@ namespace Taki.Factories
         {
             int numberOfPlayers = GetNumberOfPlayers();
             int numberOfManualPlayers = GetNumberOfManualPlayer(numberOfPlayers);
+            int algoPlayers = 0;
 
             List<Player> players = Enumerable
                 .Range(0, numberOfPlayers)
                 .Select(i =>
                 {
-                    string name = GetNameFromUser(i);
-
                     if (numberOfManualPlayers-- > 0)
                     {
+                        string name = GetNameFromUser(i);
+
                         Player player = new Player(name, _manualPlayerAlgorithm, _userCommunicator);
                         int score = _gameScore.GetScoreByName(name);
 
@@ -76,7 +77,7 @@ namespace Taki.Factories
 
                     int algoRandomIndex = _random.Next(_playerAlgorithms.Count);
 
-                    return new Player(name, _playerAlgorithms[algoRandomIndex], _userCommunicator);
+                    return new Player($"Player {++algoPlayers}", _playerAlgorithms[algoRandomIndex], _userCommunicator);
                 }).ToList();
 
             _userCommunicator.SendMessageToUser("users created are:");

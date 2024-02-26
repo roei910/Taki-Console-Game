@@ -6,17 +6,21 @@ namespace Taki.Models.Players
 {
     internal class PlayersHolder : IPlayersHolder
     {
-        protected readonly IUserCommunicator _userCommunicator;
-        private readonly IDal<PlayerDto> _playersDatabase;
-        protected readonly Queue<Player> _winners;
-        private int _noPlayCounter = 0;
-        private List<Player> players = [];
-        protected readonly int _numberOfPlayerCards;
         public readonly LinkedList<Player> _players;
+
+        protected readonly IUserCommunicator _userCommunicator;
+        //TODO: save this field
+        protected readonly Queue<Player> _winners;
+        protected readonly int _numberOfPlayerCards;
+
+        private readonly IDal<PlayerDto> _playersDatabase;
+        private int _noPlayCounter = 0;
 
         public List<Player> Players { get => _players.ToList(); }
 
         public Player CurrentPlayer { get => _players.First(); }
+
+        public int NumberOfPlayerCards => _numberOfPlayerCards;
 
         public PlayersHolder(List<Player> players, int numberOfPlayerCards,
             IUserCommunicator userCommunicator, IDal<PlayerDto> playersDatabase)
@@ -128,7 +132,7 @@ namespace Taki.Models.Players
                     return i;
                 }).ToList();
 
-            _playersDatabase.CreateMany(_players.Select(p => p.ToPlayerDto()).ToList());
+            _players.ToList().ForEach(p => _playersDatabase.UpdateOne(p.ToPlayerDto()));
         }
 
         public virtual void ResetPlayers()
@@ -140,7 +144,7 @@ namespace Taki.Models.Players
                 return i;
             }).ToList();
 
-            _playersDatabase.CreateMany(players.Select(p => p.ToPlayerDto()).ToList());
+            _playersDatabase.CreateMany(_players.Select(p => p.ToPlayerDto()).ToList());
         }
 
         public Card? GetCardFromCurrentPlayer(ICardDecksHolder cardDecksHolder, Func<Card,bool> isStackableWith,

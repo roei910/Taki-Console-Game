@@ -40,6 +40,12 @@ var serviceProvider = new ServiceCollection()
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
             return new CardDal(configuration, "DiscardPile");
         })
+    .AddKeyedSingleton<IDal<GameSettings>, GameSettingsDal>(
+        "gameSettings", (serviceProvider, x) =>
+        {
+            var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+            return new GameSettingsDal(configuration, "GameSettings");
+        })
     .AddSingleton<CardDeckDatabase>()
     .AddSingleton<GameRestore>()
     .AddSingleton<CardDecksHolder>()

@@ -1,4 +1,5 @@
-﻿using Taki.Data;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Taki.Data;
 using Taki.Dto;
 using Taki.Interfaces;
 using Taki.Models.Algorithm;
@@ -12,16 +13,19 @@ namespace Taki.Models.GameLogic
         private readonly IUserCommunicator _userCommunicator;
         private readonly List<IPlayerAlgorithm> _playerAlgorithms;
         private readonly IDal<PlayerDto> _playersDatabase;
+        private readonly IDal<GameSettings> _gameSettingsDatabase;
         private readonly CardDeckDatabase _cardDeckDatabase;
 
         public GameRestore(IUserCommunicator userCommunicator, List<IPlayerAlgorithm> playerAlgorithms,
-            ManualPlayerAlgorithm manualPlayerAlgorithm, IDal<PlayerDto> playersDatabase, CardDeckDatabase cardDeckDatabase)
+            ManualPlayerAlgorithm manualPlayerAlgorithm, IDal<PlayerDto> playersDatabase, CardDeckDatabase cardDeckDatabase,
+            IServiceProvider serviceProvider)
         {
             _userCommunicator = userCommunicator;
             _playerAlgorithms = playerAlgorithms;
             _playersDatabase = playersDatabase;
             _cardDeckDatabase = cardDeckDatabase;
             _playerAlgorithms.Add(manualPlayerAlgorithm);
+            _gameSettingsDatabase = serviceProvider.GetRequiredKeyedService<IDal<GameSettings>>("gameSettings");
         }
 
         public bool TryRestoreTakiGame(ICardDecksHolder cardDecksHolder, out IPlayersHolder? _playersHolder)
@@ -32,7 +36,9 @@ namespace Taki.Models.GameLogic
                 return false;
             }
 
-            _playersHolder = GeneratePlayersHolder(cardDecksHolder);
+            var numberOfPlayerCards = _gameSettingsDatabase.FindAll().First().NumberOfPlayerCards;
+
+            _playersHolder = GeneratePlayersHolder(cardDecksHolder, numberOfPlayerCards);
             UpdateCardDeckFromDatabase(cardDecksHolder);
 
             _userCommunicator.SendMessageToUser("users restored are:");
@@ -50,6 +56,12 @@ namespace Taki.Models.GameLogic
             _cardDeckDatabase.DeleteAll();
         }
 
+        public void CreateGameSettings(GameSettings gameSettings)
+        {
+            _gameSettingsDatabase.DeleteAll();
+            _gameSettingsDatabase.Create(gameSettings);
+        }
+
         private List<Player> GeneratePlayersFromDTO(List<PlayerDto> playerDTOs)
         {
             var players = playerDTOs.Select(player =>
@@ -65,7 +77,7 @@ namespace Taki.Models.GameLogic
             return players;
         }
 
-        private IPlayersHolder GeneratePlayersHolder(ICardDecksHolder cardDecksHolder)
+        private IPlayersHolder GeneratePlayersHolder(ICardDecksHolder cardDecksHolder, int numberOfPlayerCards)
         {
             var playersDto = _playersDatabase.FindAll();
             var players = GeneratePlayersFromDTO(playersDto);
@@ -76,13 +88,13 @@ namespace Taki.Models.GameLogic
                 players = players.Select((player, index) =>
                     (Player)new PyramidPlayer(player, playersDto[index].CurrentNumberOfCards)).ToList();
 
-                playersHolder = new PyramidPlayersHolder(players, 0, _userCommunicator, _playersDatabase);
+                playersHolder = new PyramidPlayersHolder(players, numberOfPlayerCards, _userCommunicator, _playersDatabase);
                 DealCardsToDtoPlayers(cardDecksHolder, playersDto, playersHolder);
 
                 return playersHolder;
             }
 
-            playersHolder = new PlayersHolder(players, 0, _userCommunicator, _playersDatabase);
+            playersHolder = new PlayersHolder(players, numberOfPlayerCards, _userCommunicator, _playersDatabase);
             DealCardsToDtoPlayers(cardDecksHolder, playersDto, playersHolder);
 
             return playersHolder;
