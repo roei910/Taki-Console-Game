@@ -5,13 +5,6 @@ namespace Taki.Models.Messages
 {
     internal class ConsoleUserCommunicator : IUserCommunicator
     {
-        private void SendColorMessageToUser(ConsoleColor color, object? message)
-        {
-            Console.ForegroundColor = color;
-            SendMessageToUser(message);
-            Console.ForegroundColor = ConsoleColor.White;
-        }
-
         public void SendErrorMessage(object? message)
         {
             SendColorMessageToUser(ConsoleColor.Red, message?.ToString() ?? "");
@@ -88,6 +81,29 @@ namespace Taki.Models.Messages
             return GetUserEnumFromArray(values.Where(value => !excludedOptions.Contains(value)).ToArray());
         }
 
+        public void SendColorMessageToUser(Color color, object? message)
+        {
+            SendColorMessageToUser(ColorToConsoleColor(color), message);
+            Console.WriteLine();
+        }
+
+        private ConsoleColor ColorToConsoleColor(Color color)
+        {
+            if (color.Equals(Color.Red))
+                return ConsoleColor.Red;
+
+            if (color.Equals(Color.Green))
+                return ConsoleColor.Green;
+
+            if (color.Equals(Color.Blue))
+                return ConsoleColor.Blue;
+
+            if (color.Equals(Color.Yellow))
+                return ConsoleColor.Yellow;
+
+            return ConsoleColor.White;
+        }
+        
         private T GetUserEnumFromArray<T>(T[] values)
         {
             SendMessageToUser("Please choose the type by index:");
@@ -111,23 +127,11 @@ namespace Taki.Models.Messages
             return values[index];
         }
 
-        public void SendColorMessageToUser(Color color, object? message)
+        private void SendColorMessageToUser(ConsoleColor color, object? message)
         {
-            SendColorMessageToUser(ColorToConsoleColor(color), message);
-            Console.WriteLine();
-        }
-
-        private ConsoleColor ColorToConsoleColor(Color color)
-        {
-            if (color.Equals(Color.Red))
-                return ConsoleColor.Red;
-            if (color.Equals(Color.Green))
-                return ConsoleColor.Green;
-            if (color.Equals(Color.Blue))
-                return ConsoleColor.Blue;
-            if (color.Equals(Color.Yellow))
-                return ConsoleColor.Yellow;
-            return ConsoleColor.White;
+            Console.ForegroundColor = color;
+            SendMessageToUser(message);
+            Console.ForegroundColor = ConsoleColor.White;
         }
     }
 }

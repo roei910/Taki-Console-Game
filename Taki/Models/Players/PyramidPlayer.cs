@@ -1,4 +1,5 @@
-﻿using Taki.Interfaces;
+﻿using Taki.Dto;
+using Taki.Interfaces;
 
 namespace Taki.Models.Players
 {
@@ -30,6 +31,19 @@ namespace Taki.Models.Players
         public override string ToString()
         {
             return $"Pyramid player: current hand is {_currentNumberOfCards}\n" + base.ToString();
+        }
+
+        public override PlayerDto ToPlayerDto()
+        {
+            var player = base.ToPlayerDto();
+
+            return new PlayerDto(player.Score, player.Name, player.Id, player.PlayerCards,
+                player.ChoosingAlgorithm, _currentNumberOfCards);
+        }
+
+        public override string GetInformation()
+        {
+            return $"Pyramid Player Name: {Name}, {PlayerCards.Count} cards in hand\ncurrent number of cards: {_currentNumberOfCards}, Algo: {_choosingAlgorithm}";
         }
     }
 }

@@ -7,8 +7,26 @@ namespace Taki.Models.Players
     {
         public PyramidPlayersHolder(List<Player> players, int numberOfPlayerCards,
             IUserCommunicator userCommunicator, IDal<PlayerDto> playerDatabase) :
-            base(players, numberOfPlayerCards, userCommunicator, playerDatabase)
-        { }
+            base(players, numberOfPlayerCards, userCommunicator, playerDatabase) { }
+
+        public override void ResetPlayers()
+        {
+            _ = _players.Select(player =>
+            {
+                PyramidPlayer pyramidPlayer = (PyramidPlayer)player;
+                pyramidPlayer.ResetPyramidPlayerCards(_numberOfPlayerCards);
+                return player;
+            }).ToList();
+
+            _ = _winners.ToList().Select(w =>
+            {
+                PyramidPlayer pyramidPlayer = (PyramidPlayer)w;
+                pyramidPlayer.ResetPyramidPlayerCards(_numberOfPlayerCards);
+                return w;
+            }).ToList();
+
+            base.ResetPlayers();
+        }
 
         protected override bool HasPlayerFinishedHand(ICardDecksHolder cardDecksHolder)
         {
@@ -30,25 +48,6 @@ namespace Taki.Models.Players
             }
 
             return false;
-        }
-
-        public override void ResetPlayers()
-        {
-            _ = _players.Select(player =>
-            {
-                PyramidPlayer pyramidPlayer = (PyramidPlayer)player;
-                pyramidPlayer.ResetPyramidPlayerCards(_numberOfPlayerCards);
-                return player;
-            }).ToList();
-
-            _ = _winners.ToList().Select(w =>
-            {
-                PyramidPlayer pyramidPlayer = (PyramidPlayer)w;
-                pyramidPlayer.ResetPyramidPlayerCards(_numberOfPlayerCards);
-                return w;
-            }).ToList();
-
-            base.ResetPlayers();
         }
     }
 }

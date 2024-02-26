@@ -10,7 +10,7 @@ namespace Taki.Models.Players
     {
         private static int id = 0;
 
-        private readonly IPlayerAlgorithm _choosingAlgorithm;
+        protected readonly IPlayerAlgorithm _choosingAlgorithm;
         private readonly IUserCommunicator _userCommunicator;
         public int Score { get; set; } = 0;
         public string Name { get; set; }
@@ -75,7 +75,7 @@ namespace Taki.Models.Players
             return _choosingAlgorithm.ChooseCard(IsStackableWith, PlayerCards, elseMessage);
         }
 
-        public string GetInformation()
+        public virtual string GetInformation()
         {
             return $"Name: {Name}, {PlayerCards.Count} cards in hand, Algo: {_choosingAlgorithm}";
         }
@@ -90,7 +90,7 @@ namespace Taki.Models.Players
             return _choosingAlgorithm.ChoosePlayer(this, playersHolder);
         }
 
-        public PlayerDto ToPlayerDto()
+        public virtual PlayerDto ToPlayerDto()
         {
             List<CardDto> cards = PlayerCards.Select(card => card.ToCardDto()).ToList();
 

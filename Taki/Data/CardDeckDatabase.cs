@@ -48,7 +48,7 @@ namespace Taki.Data
             return _drawPileDatabase.FindAll();
         }
 
-        internal void DeleteAll()
+        public void DeleteAll()
         {
             _drawPileDatabase.DeleteAll();
             _discardPileDatabase.DeleteAll();
