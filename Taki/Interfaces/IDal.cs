@@ -14,7 +14,6 @@ namespace Taki.Interfaces
         bool CloseDB();
         bool DeleteAll();
         bool IsEmpty();
-        void UpdateAll(List<T> values);
         void UpdateOne(T value);
     }
 }
