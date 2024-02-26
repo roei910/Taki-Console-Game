@@ -1,6 +1,4 @@
-﻿using Taki.Models.Players;
-
-namespace Taki.Dto
+﻿namespace Taki.Dto
 {
     internal class PlayerDto
     {
@@ -9,14 +7,18 @@ namespace Taki.Dto
         public int Id { get; set; }
         public List<CardDto> PlayerCards { get; set; }
         public string ChoosingAlgorithm { get; set; }
+        public int CurrentNumberOfCards { get; set; }
 
-        public PlayerDto(int score, string name, int id, List<CardDto> playerCards, string choosingAlgorithm)
+        [Newtonsoft.Json.JsonConstructor]
+        public PlayerDto(int score, string name, int id, List<CardDto> playerCards, 
+            string choosingAlgorithm, int currentNumberOfCards = -1)
         {
             Score = score;
             Name = name;
             Id = id;
             PlayerCards = playerCards;
             ChoosingAlgorithm = choosingAlgorithm;
+            CurrentNumberOfCards = currentNumberOfCards;
         }
     }
 }
