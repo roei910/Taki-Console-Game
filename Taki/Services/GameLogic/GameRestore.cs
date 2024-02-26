@@ -39,6 +39,7 @@ namespace Taki.Models.GameLogic
             var numberOfPlayerCards = _gameSettingsDatabase.FindAll().First().NumberOfPlayerCards;
 
             _playersHolder = GeneratePlayersHolder(cardDecksHolder, numberOfPlayerCards);
+            _playersHolder.UpdateWinnersFromDb();
             UpdateCardDeckFromDatabase(cardDecksHolder);
 
             _userCommunicator.SendMessageToUser("users restored are:");

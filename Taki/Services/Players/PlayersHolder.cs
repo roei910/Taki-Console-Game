@@ -4,13 +4,11 @@ using Taki.Shared.Models.Dto;
 
 namespace Taki.Models.Players
 {
-    //TODO: after winning need to handle the remove and save of the winners
     internal class PlayersHolder : IPlayersHolder
     {
         public readonly LinkedList<Player> _players;
 
         protected readonly IUserCommunicator _userCommunicator;
-        //TODO: try to make the game work without deleting players at all!
         protected readonly Queue<Player> _winners;
         protected readonly int _numberOfPlayerCards;
 
@@ -65,10 +63,6 @@ namespace Taki.Models.Players
             _players.AddLast(current);
             _playersDatabase.Delete(current.Id);
             _playersDatabase.Create(current.ToPlayerDto());
-
-            //TODO: remove later after checking everything is okay
-            if(_playersDatabase.FindAll().Count != 5)
-                ;
         }
 
         public Player GetWinner(ICardDecksHolder cardDecksHolder)
@@ -96,8 +90,8 @@ namespace Taki.Models.Players
             savedPlayers.ForEach(player => _players.AddFirst(player));
 
             _playersDatabase.DeleteAll();
-            var playerDTOs = _players.Select(p => p.ToPlayerDto()).ToList();
-            _playersDatabase.CreateMany(playerDTOs);
+            _playersDatabase.CreateMany(_players.Select(p => p.ToPlayerDto()).ToList());
+            _playersDatabase.CreateMany(_winners.ToList().Select(w => w.ToPlayerDto()).ToList());
         }
 
         public List<Card> ReturnCardsFromPlayers()
@@ -212,6 +206,19 @@ namespace Taki.Models.Players
             }
 
             playerCard.Play(topDiscard, cardDecksHolder, this);
+        }
+
+        public void UpdateWinnersFromDb()
+        {
+            var winners = _players.Where(p => p.PlayerCards.Count == 0).ToList();
+            if (winners.Any())
+            {
+                winners.ForEach(p =>
+                {
+                    var winner = _players.Where(player => player.Id == p.Id).First();
+                    _winners.Enqueue(winner);
+                });
+            }
         }
     }
 }
