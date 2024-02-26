@@ -30,7 +30,7 @@ var serviceProvider = new ServiceCollection()
     .AddSingleton<Random>()
     .AddSingleton<TakiGameRunner>()
     .AddSingleton<IDal<PlayerDto>, PlayerDal>()
-    //TODO: move to config
+    //TODO: move names to config
     .AddKeyedSingleton<IDal<CardDto>, CardDal>("drawPile", (serviceProvider, x) =>
         {
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
