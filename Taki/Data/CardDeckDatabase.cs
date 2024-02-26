@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Taki.Dto;
-using Taki.Interfaces;
 using Taki.Models.Cards;
 using Taki.Models.Deck;
+using Taki.Shared.Interfaces;
+using Taki.Shared.Models.Dto;
 
 namespace Taki.Data
 {

@@ -1,8 +1,8 @@
-﻿using Taki.Dto;
-using Taki.Interfaces;
-using Taki.Models.Algorithm;
+﻿using Taki.Models.Algorithm;
 using Taki.Models.GameLogic;
 using Taki.Models.Players;
+using Taki.Shared.Interfaces;
+using Taki.Shared.Models.Dto;
 
 namespace Taki.Factories
 {

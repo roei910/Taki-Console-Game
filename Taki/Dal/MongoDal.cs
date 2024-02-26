@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
-using Taki.Interfaces;
+using Taki.Shared.Interfaces;
 
 namespace Taki.Dal
 {
