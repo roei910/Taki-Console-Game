@@ -48,6 +48,8 @@ namespace Taki.Models.Players
             _userCommunicator.SendErrorMessage(
                 $"Player: {playerToDraw.Name}, drew {cardsDraw} card(s)\n");
 
+            _playersDatabase.UpdateOne(playerToDraw.ToPlayerDto());
+
             return true;
         }
 
