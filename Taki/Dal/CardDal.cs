@@ -45,7 +45,7 @@ namespace Taki.Dal
             return Delete(FilterById(id));
         }
 
-        //TODO: get only Id and Type
+        //TODO: task from tomer: get only Id and Type
         public CardDto GetIdAndType()
         {
             throw new NotImplementedException();

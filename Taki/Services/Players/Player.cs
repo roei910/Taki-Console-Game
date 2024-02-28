@@ -6,7 +6,6 @@ using Taki.Shared.Models.Dto;
 
 namespace Taki.Models.Players
 {
-    //TODO: extract models from services
     public class Player : IPlayer, IEquatable<Player>
     {
         private static int id = 0;

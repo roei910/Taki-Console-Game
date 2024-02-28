@@ -13,12 +13,12 @@ using Taki.Shared.Interfaces;
 using Taki.Shared.Models;
 using Taki.Shared.Models.Dto;
 
-//TODO: extract models from services
+//TODO: task from amit: need to add a way to communicate from other computers.
 
+
+//TODO: from tomer: extract models from services
 //TODO: check what happends when the program closes and try close MONGO connection
 //TODO: use objectId everywhere
-
-//TODO: need to add a way to communicate from other computers.
 
 var serviceProvider = new ServiceCollection()
     .AddSingleton<IConfiguration>(x => new ConfigurationBuilder()

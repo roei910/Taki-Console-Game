@@ -2,7 +2,7 @@
 
 namespace Taki
 {
-    //TODO: is it good => itzhaki
+    //TODO: from tomer: is it good => itzhaki
     public class AppSettings
     {
         public ConstantVariables ConstantVariables { get; set; }

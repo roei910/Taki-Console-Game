@@ -3,7 +3,7 @@ using Taki.Shared.Abstract;
 
 namespace Taki.Shared.Models
 {
-    public class Player
+    public class PlayerMODEL
     {
         public ObjectId Id { get; set; } = new ObjectId();
         public int Score { get; set; }

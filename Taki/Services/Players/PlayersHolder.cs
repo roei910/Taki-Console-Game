@@ -4,7 +4,7 @@ using Taki.Shared.Models.Dto;
 
 namespace Taki.Models.Players
 {
-    //TODO: add action from cards instead of using the playersHolder
+    //TODO: from tomer: try to use action from cards instead of using the playersHolder
     public class PlayersHolder : IPlayersHolder
     {
         public readonly LinkedList<Player> _players;

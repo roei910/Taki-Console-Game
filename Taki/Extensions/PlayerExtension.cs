@@ -1,5 +1,5 @@
-﻿using Taki.Shared.Models.Dto;
-using Taki.Shared.Models;
+﻿using Taki.Models.Players;
+using Taki.Shared.Models.Dto;
 
 namespace Taki.Extensions
 {
