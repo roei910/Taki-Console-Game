@@ -5,7 +5,7 @@ using Taki.Shared.Models.Dto;
 namespace Taki.Models.Players
 {
     //TODO: add action from cards instead of using the playersHolder
-    internal class PlayersHolder : IPlayersHolder
+    public class PlayersHolder : IPlayersHolder
     {
         public readonly LinkedList<Player> _players;
 
@@ -211,7 +211,9 @@ namespace Taki.Models.Players
 
         public void UpdateWinnersFromDb()
         {
-            var winners = _players.Where(p => p.PlayerCards.Count == 0).ToList();
+            //TODO: check this is wrong! should get from db...
+            var winners = Players.Where(p => p.PlayerCards.Count == 0).ToList();
+
             if (winners.Any())
             {
                 winners.ForEach(p =>

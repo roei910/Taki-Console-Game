@@ -3,7 +3,7 @@
 namespace Taki
 {
     //TODO: is it good => itzhaki
-    internal class AppSettings
+    public class AppSettings
     {
         public ConstantVariables ConstantVariables { get; set; }
         public MongoDbConfig MongoDbConfig { get; set; }
