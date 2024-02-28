@@ -7,16 +7,15 @@ namespace Taki.Models.Players
     //TODO: from tomer: try to use action from cards instead of using the playersHolder
     public class PlayersHolder : IPlayersHolder
     {
-        public readonly LinkedList<Player> _players;
-
+        protected readonly List<Player> _players;
         protected readonly IUserCommunicator _userCommunicator;
-        protected readonly Queue<Player> _winners;
+        protected readonly List<Player> _winners = [];
         protected readonly int _numberOfPlayerCards;
 
         private readonly IDal<PlayerDto> _playersDatabase;
         private int _noPlayCounter = 0;
         
-        public List<Player> Players { get => _players.ToList(); }
+        public List<Player> Players { get => _players; }
 
         public Player CurrentPlayer { get => _players.First(); }
 
@@ -25,8 +24,7 @@ namespace Taki.Models.Players
         public PlayersHolder(List<Player> players, int numberOfPlayerCards,
             IUserCommunicator userCommunicator, IDal<PlayerDto> playersDatabase)
         {
-            _players = new(players);
-            _winners = new Queue<Player>();
+            _players = players;
             _numberOfPlayerCards = numberOfPlayerCards;
             _userCommunicator = userCommunicator;
             _playersDatabase = playersDatabase;
@@ -60,8 +58,8 @@ namespace Taki.Models.Players
         public void NextPlayer()
         {
             Player current = CurrentPlayer;
-            _players.RemoveFirst();
-            _players.AddLast(current);
+            _players.Remove(current);
+            _players.Add(current);
             _playersDatabase.Delete(current.Id);
             _playersDatabase.Create(current.ToPlayerDto());
         }
@@ -76,7 +74,7 @@ namespace Taki.Models.Players
             if (!_players.Remove(playerWon))
                 throw new Exception("error removing the player");
 
-            _winners.Enqueue(playerWon);
+            _winners.Add(playerWon);
 
             _playersDatabase.Delete(playerWon.Id);
             _playersDatabase.Create(playerWon.ToPlayerDto());
@@ -86,9 +84,7 @@ namespace Taki.Models.Players
 
         public void ChangeDirection()
         {
-            var savedPlayers = _players.ToList();
-            _players.Clear();
-            savedPlayers.ForEach(player => _players.AddFirst(player));
+            _players.Reverse();
 
             _playersDatabase.DeleteAll();
             _playersDatabase.CreateMany(_players.Select(p => p.ToPlayerDto()).ToList());
@@ -140,13 +136,7 @@ namespace Taki.Models.Players
 
         public virtual void ResetPlayers()
         {
-            _ = Enumerable.Range(0, _winners.Count)
-            .Select(i =>
-            {
-                _players.AddLast(_winners.Dequeue());
-                return i;
-            }).ToList();
-
+            _players.AddRange(_winners);
             _playersDatabase.CreateMany(_players.Select(p => p.ToPlayerDto()).ToList());
         }
 
@@ -211,16 +201,20 @@ namespace Taki.Models.Players
 
         public void UpdateWinnersFromDb()
         {
-            //TODO: check this is wrong! should get from db...
-            var winners = Players.Where(p => p.PlayerCards.Count == 0).ToList();
+            //TODO: roei: check this is wrong! should get from db...
+            var playerDtos = _playersDatabase.FindAll();
+            var winners = playerDtos.Where(p => p.PlayerCards.Count == 0).ToList();
 
             if (winners.Any())
             {
-                winners.ForEach(p =>
+                _winners.Clear();
+                _winners.AddRange(winners.Select(player =>
                 {
-                    var winner = _players.Where(player => player.Id == p.Id).First();
-                    _winners.Enqueue(winner);
-                });
+                    var found = _players.Where(p => p.Id == player.Id).First();
+                    _players.Remove(found);
+
+                    return found;
+                }).ToList());
             }
         }
     }
