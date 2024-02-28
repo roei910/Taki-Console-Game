@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
-using Taki;
 using MongoDB.Bson.Serialization;
 using Taki.Factories;
 using Taki.Models.Algorithm;
@@ -14,11 +13,17 @@ using Taki.Shared.Interfaces;
 using Taki.Shared.Models;
 using Taki.Shared.Models.Dto;
 
+//TODO: check what happends when the program closes and try close MONGO connection
+//TODO: use objectId everywhere
+//TODO: need to add a way to communicate from other computers.
+
 var serviceProvider = new ServiceCollection()
     .AddSingleton<IConfiguration>(x => new ConfigurationBuilder()
-        .AddJsonFile("AppConfigurations.json", false, true)
+        .AddJsonFile("appsettings.json", false, true)
         .Build())
+    .AddSingleton<ConstantVariables>()
     .AddSingleton<MongoDbConfig>()
+
     .AddSingleton<IUserCommunicator, ConsoleUserCommunicator>()
     .AddSingleton<IManualPlayerAlgorithm, ManualPlayerAlgorithm>()
     .AddSingleton<IPlayerAlgorithm, PlayerAlgorithm>()
@@ -27,14 +32,13 @@ var serviceProvider = new ServiceCollection()
     .AddSingleton<IGameScore, GameScore>()
     .AddSingleton<PlayersHolderFactory>()
     .AddSingleton<CardDeckFactory>()
-    .AddSingleton<ProgramVariables>()
     .AddSingleton<Random>()
     .AddSingleton<TakiGameRunner>()
     .AddSingleton<IDal<PlayerDto>, PlayerDal>()
     .AddSingleton<DrawPileDal>()
     .AddSingleton<DiscardPileDal>()
     .AddSingleton<IDal<GameSettings>, GameSettingsDal>()
-    .AddSingleton<CardDeckDatabase>()
+    .AddSingleton<ICardDeckRepository, CardDeckRepository>()
     .AddSingleton<GameRestore>()
     .AddSingleton<CardDecksHolder>()
     .BuildServiceProvider();

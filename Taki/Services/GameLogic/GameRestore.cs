@@ -1,5 +1,4 @@
-﻿using Taki.Data;
-using Taki.Models.Deck;
+﻿using Taki.Models.Deck;
 using Taki.Models.Players;
 using Taki.Shared.Interfaces;
 using Taki.Shared.Models;
@@ -13,10 +12,10 @@ namespace Taki.Models.GameLogic
         private readonly List<IPlayerAlgorithm> _playerAlgorithms;
         private readonly IDal<PlayerDto> _playersDatabase;
         private readonly IDal<GameSettings> _gameSettingsDatabase;
-        private readonly CardDeckDatabase _cardDeckDatabase;
+        private readonly ICardDeckRepository _cardDeckDatabase;
 
         public GameRestore(IUserCommunicator userCommunicator, List<IPlayerAlgorithm> playerAlgorithms,
-            IManualPlayerAlgorithm manualPlayerAlgorithm, IDal<PlayerDto> playersDatabase, CardDeckDatabase cardDeckDatabase,
+            IManualPlayerAlgorithm manualPlayerAlgorithm, IDal<PlayerDto> playersDatabase, ICardDeckRepository cardDeckDatabase,
             IDal<GameSettings> gameSettingsDatabase)
         {
             _userCommunicator = userCommunicator;
@@ -86,7 +85,7 @@ namespace Taki.Models.GameLogic
             if (playersDto.Where(p => p.CurrentNumberOfCards != -1).Any())
             {
                 players = players.Select((player, index) =>
-                    (Player)new PyramidPlayer(player, playersDto[index].CurrentNumberOfCards)).ToList();
+                    (Player)new Players.PyramidPlayer(player, playersDto[index].CurrentNumberOfCards)).ToList();
 
                 playersHolder = new PyramidPlayersHolder(players, numberOfPlayerCards, _userCommunicator, _playersDatabase);
                 DealCardsToDtoPlayers(cardDecksHolder, playersDto, playersHolder);

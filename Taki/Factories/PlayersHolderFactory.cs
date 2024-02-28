@@ -1,14 +1,14 @@
-﻿using Taki.Models.Algorithm;
-using Taki.Models.GameLogic;
+﻿using Taki.Models.GameLogic;
 using Taki.Models.Players;
 using Taki.Shared.Interfaces;
+using Taki.Shared.Models;
 using Taki.Shared.Models.Dto;
 
 namespace Taki.Factories
 {
     internal class PlayersHolderFactory
     {
-        private readonly ProgramVariables _programVariables;
+        private readonly ConstantVariables _constantVariables;
         private readonly IUserCommunicator _userCommunicator;
         private readonly List<IPlayerAlgorithm> _playerAlgorithms;
         private readonly Random _random;
@@ -16,11 +16,11 @@ namespace Taki.Factories
         private readonly IManualPlayerAlgorithm _manualPlayerAlgorithm;
         private readonly IDal<PlayerDto> _playersDatabase;
 
-        public PlayersHolderFactory(ProgramVariables programVariables, IUserCommunicator userCommunicator,
+        public PlayersHolderFactory(ConstantVariables constantVariables, IUserCommunicator userCommunicator,
             List<IPlayerAlgorithm> playerAlgorithms, Random random, IGameScore gameScore,
             IManualPlayerAlgorithm manualPlayerAlgorithm, IDal<PlayerDto> playerDatabase)
         {
-            _programVariables = programVariables;
+            _constantVariables = constantVariables;
             _userCommunicator = userCommunicator;
             _playerAlgorithms = playerAlgorithms;
             _random = random;
@@ -41,9 +41,9 @@ namespace Taki.Factories
         {
             List<Player> pyramidPlayers = GeneratePlayers()
                 .Select(player =>
-                (Player)new PyramidPlayer(player, _programVariables.NUMBER_OF_PYRAMID_PLAYER_CARDS)).ToList();
+                (Player)new PyramidPlayer(player, _constantVariables.NumberOfPyramidPlayerCards)).ToList();
 
-            return new PyramidPlayersHolder(pyramidPlayers, _programVariables.NUMBER_OF_PYRAMID_PLAYER_CARDS,
+            return new PyramidPlayersHolder(pyramidPlayers, _constantVariables.NumberOfPyramidPlayerCards,
                 _userCommunicator, _playersDatabase);
         }
 
@@ -92,20 +92,20 @@ namespace Taki.Factories
         private int GetNumberOfPlayers()
         {
             string message = $"Please enter number of players," +
-                $" a number between {_programVariables.MIN_NUMBER_OF_PLAYERS} and {_programVariables.MAX_NUMBER_OF_PLAYERS}";
+                $" a number between {_constantVariables.MinNumberOfPlayers} and {_constantVariables.MaxNumberOfPlayers}";
             int numberOfPlayers = _userCommunicator.GetNumberFromUser(message);
 
-            if (numberOfPlayers < _programVariables.MIN_NUMBER_OF_PLAYERS)
+            if (numberOfPlayers < _constantVariables.MinNumberOfPlayers)
             {
-                _userCommunicator.SendMessageToUser($"Not enough players, setting as min value {_programVariables.MIN_NUMBER_OF_PLAYERS}");
+                _userCommunicator.SendMessageToUser($"Not enough players, setting as min value {_constantVariables.MinNumberOfPlayers}");
 
-                numberOfPlayers = _programVariables.MIN_NUMBER_OF_PLAYERS;
+                numberOfPlayers = _constantVariables.MinNumberOfPlayers;
             }
-            else if (numberOfPlayers > _programVariables.MAX_NUMBER_OF_PLAYERS)
+            else if (numberOfPlayers > _constantVariables.MaxNumberOfPlayers)
             {
-                _userCommunicator.SendMessageToUser($"Too many players for the game, setting as max value {_programVariables.MAX_NUMBER_OF_PLAYERS}");
+                _userCommunicator.SendMessageToUser($"Too many players for the game, setting as max value {_constantVariables.MaxNumberOfPlayers}");
 
-                numberOfPlayers = _programVariables.MAX_NUMBER_OF_PLAYERS;
+                numberOfPlayers = _constantVariables.MaxNumberOfPlayers;
             }
 
             return numberOfPlayers;
@@ -141,8 +141,8 @@ namespace Taki.Factories
         {
             int maxNumberOfPlayerCards = maxNumberOfCards / numberOfPlayers - 1;
 
-            if (maxNumberOfPlayerCards > _programVariables.MAX_NUMBER_OF_PLAYER_CARDS)
-                maxNumberOfPlayerCards = _programVariables.MAX_NUMBER_OF_PLAYER_CARDS;
+            if (maxNumberOfPlayerCards > _constantVariables.MaxNumberOfPlayerCards)
+                maxNumberOfPlayerCards = _constantVariables.MaxNumberOfPlayerCards;
 
             int numberOfPlayerCards = _userCommunicator.GetNumberFromUser(
                 "please enter a number of player cards");
@@ -155,12 +155,12 @@ namespace Taki.Factories
                 return maxNumberOfPlayerCards;
             }
 
-            if (numberOfPlayerCards < _programVariables.MIN_NUMBER_OF_PLAYER_CARDS)
+            if (numberOfPlayerCards < _constantVariables.MinNumberOfPlayerCards)
             {
                 _userCommunicator.SendMessageToUser($"Not enough cards per player, " +
-                    $"min is {_programVariables.MIN_NUMBER_OF_PLAYER_CARDS} setting as min value");
+                    $"min is {_constantVariables.MinNumberOfPlayerCards} setting as min value");
 
-                return _programVariables.MIN_NUMBER_OF_PLAYER_CARDS;
+                return _constantVariables.MinNumberOfPlayerCards;
             }
 
             return numberOfPlayerCards;

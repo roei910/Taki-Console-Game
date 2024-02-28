@@ -12,12 +12,10 @@ namespace Taki.Dal
 
         public MongoDal(MongoDbConfig configuration, string collectionName)
         {
-            var mongoUrl = configuration.MongoUrl ??
-                throw new NullReferenceException("please define mongoDB url");
+            var mongoUrl = configuration.MongoUrl;
             _client = new MongoClient(mongoUrl);
 
-            var dbName = configuration.MongoDatabaseName ??
-                throw new NullReferenceException("please define mongoDB url");
+            var dbName = configuration.MongoDatabaseName;
             _database = _client.GetDatabase(dbName);
 
             _collection = _database.GetCollection<T>(collectionName);
@@ -28,12 +26,6 @@ namespace Taki.Dal
             _client = new MongoClient(mongoUrl);
             _database = _client.GetDatabase(dbName);
             _collection = _database.GetCollection<T>(collectionName);
-        }
-
-        public bool CloseDB()
-        {
-            _client.Cluster.Dispose();
-            return true;
         }
 
         public virtual bool Create(T value)

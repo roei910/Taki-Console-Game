@@ -43,7 +43,7 @@ namespace Taki.Shared.Abstract
 
         public virtual CardDto ToCardDto()
         {
-            return new CardDto(Id, GetType());
+            return new CardDto(Id, GetType().ToString());
         }
 
         public virtual void UpdateFromDto(CardDto cardDTO, ICardDecksHolder cardDecksHolder) { }

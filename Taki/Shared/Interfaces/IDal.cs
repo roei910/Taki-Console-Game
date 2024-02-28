@@ -11,7 +11,6 @@ namespace Taki.Shared.Interfaces
         void ReplaceOne(FilterDefinition<T> filterDefinition, T newValue);
         bool Delete(FilterDefinition<T> filterDefinition);
         bool Delete(int id);
-        bool CloseDB();
         bool DeleteAll();
         bool IsEmpty();
         void UpdateOne(T value);

@@ -6,7 +6,7 @@ namespace Taki.Dal
     internal class GameSettingsDal : MongoDal<GameSettings>
     {
         public GameSettingsDal(MongoDbConfig configuration) : 
-            base(configuration, configuration.GameSettingsCollectionName) { }
+            base(configuration, configuration.GameSettingsCollectionName!) { }
 
         public override bool Delete(int id)
         {

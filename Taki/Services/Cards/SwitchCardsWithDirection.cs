@@ -72,7 +72,7 @@ namespace Taki.Models.Cards
 
         public override CardDto ToCardDto()
         {
-            CardDto cardDto = new CardDto(base.ToCardDto());
+            CardDto cardDto = base.ToCardDto();
 
             if (prevCard is not null)
                 cardDto.CardConfigurations["prevCard"] = JsonConvert.SerializeObject(prevCard.ToCardDto());

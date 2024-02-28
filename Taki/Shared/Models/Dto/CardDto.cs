@@ -27,21 +27,10 @@ namespace Taki.Shared.Models.Dto
             CardColor = ColorCard.DEFAULT_COLOR.Name;
         }
 
-        public CardDto(int id, Type type) :
-            this(id, type.ToString())
-        { }
-
         public CardDto(CardDto cardDto, Color color) :
             this(cardDto.Id, cardDto.Type)
         {
             CardColor = color.Name;
-        }
-
-        public CardDto(CardDto card)
-        {
-            Type = card.Type;
-            Id = card.Id;
-            CardColor = card.CardColor;
         }
     }
 }

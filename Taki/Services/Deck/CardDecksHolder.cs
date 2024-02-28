@@ -10,10 +10,10 @@ namespace Taki.Models.Deck
     {
         private readonly CardDeck _drawPile;
         private readonly CardDeck _discardPile;
-        private readonly CardDeckDatabase _cardDeckDatabase;
+        private readonly ICardDeckRepository _cardDeckDatabase;
 
         public CardDecksHolder(CardDeckFactory cardDeckFactory, Random random,
-            CardDeckDatabase cardDeckDatabase)
+            ICardDeckRepository cardDeckDatabase)
         {
             _drawPile = cardDeckFactory.GenerateCardDeck();
             _discardPile = new CardDeck(random);

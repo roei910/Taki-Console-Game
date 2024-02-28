@@ -13,18 +13,18 @@ namespace Taki.Models.GameLogic
         protected readonly PlayersHolderFactory _playersHolderFactory;
         protected readonly IUserCommunicator _userCommunicator;
         protected readonly ICardDecksHolder _cardDecksHolder;
-        protected readonly ProgramVariables _programVariables;
+        protected readonly ConstantVariables _constantVariables;
         protected readonly IGameScore _gameScore;
         private readonly GameRestore _gameRestore;
         protected IPlayersHolder? _playersHolder;
 
         public TakiGameRunner(PlayersHolderFactory playersHolderFactory, 
-            IUserCommunicator userCommunicator, ProgramVariables programVariables, 
+            IUserCommunicator userCommunicator, ConstantVariables constantVariables, 
             IGameScore gameScore, GameRestore gameRestore, 
             CardDecksHolder cardDecksHolder)
         {
             _userCommunicator = userCommunicator;
-            _programVariables = programVariables;
+            _constantVariables = constantVariables;
             _playersHolderFactory = playersHolderFactory;
             _gameScore = gameScore;
             _gameRestore = gameRestore;
@@ -61,7 +61,7 @@ namespace Taki.Models.GameLogic
         private void StartSingleGame()
         {
             int numOfPlayers = _playersHolder!.Players.Count;
-            int totalWinners = _programVariables.NUMBER_OF_TOTAL_WINNERS;
+            int totalWinners = _constantVariables.NumberOfTotalWinners;
 
             var winners = Enumerable.Range(0,
                 totalWinners > numOfPlayers ? numOfPlayers : totalWinners)
