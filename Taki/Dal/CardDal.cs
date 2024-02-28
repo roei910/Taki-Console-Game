@@ -27,7 +27,12 @@ namespace Taki.Dal
 
         public override void UpdateOne(CardDto value)
         {
-            throw new NotImplementedException();
+            var filter = Builders<CardDto>.Filter.Eq(card => card.Id, value.Id);
+            var update = Builders<CardDto>.Update
+                .Set(card => card.CardColor, value.CardColor)
+                .Set(card => card.CardConfigurations, value.CardConfigurations);
+
+            _collection.UpdateOne(filter, update);
         }
 
         public override bool Create(CardDto value)

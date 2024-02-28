@@ -35,6 +35,7 @@ namespace Taki.Models.Cards
             while (!Colors.Contains(_color))
                 _color = playersHolder.CurrentPlayer.ChooseColor();
 
+            cardDecksHolder.UpdateTopDiscardInDB();
             base.Play(topDiscard, cardDecksHolder, playersHolder);
         }
 

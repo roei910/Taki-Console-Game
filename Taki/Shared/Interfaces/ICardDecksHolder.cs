@@ -16,5 +16,6 @@ namespace Taki.Shared.Interfaces
         Card RemoveCardByDTO(CardDto card);
         CardDeck GetDrawCardDeck();
         CardDeck GetDiscardCardDeck();
+        void UpdateTopDiscardInDB();
     }
 }

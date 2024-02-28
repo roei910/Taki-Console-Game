@@ -88,5 +88,10 @@ namespace Taki.Models.Deck
         {
             return _discardPile;
         }
+
+        public void UpdateTopDiscardInDB()
+        {
+            _cardDeckDatabase.UpdateTopDiscard(_discardPile.GetFirst().ToCardDto());
+        }
     }
 }

@@ -53,5 +53,10 @@ namespace Taki.Data
             _drawPileDatabase.DeleteAll();
             _discardPileDatabase.DeleteAll();
         }
+
+        public void UpdateTopDiscard(CardDto card)
+        {
+            _discardPileDatabase.UpdateOne(card);
+        }
     }
 }

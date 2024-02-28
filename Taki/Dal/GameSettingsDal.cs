@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using Taki.Shared.Models;
 
 namespace Taki.Dal
@@ -24,7 +23,11 @@ namespace Taki.Dal
 
         public override void UpdateOne(GameSettings value)
         {
-            throw new NotImplementedException();
+            var filter = Builders<GameSettings>.Filter.Eq(g => g.Id, value.Id);
+            var update = Builders<GameSettings>.Update
+                .Set(g => g.NumberOfPlayerCards, value.NumberOfPlayerCards);
+
+            _collection.UpdateOne(filter, update);
         }
     }
 }
