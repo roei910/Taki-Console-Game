@@ -8,7 +8,7 @@ using Taki.Shared.Models;
 
 namespace Taki.Models.GameLogic
 {
-    internal class TakiGameRunner : ITakiGameRunner
+    public class TakiGameRunner : ITakiGameRunner
     {
         protected readonly PlayersHolderFactory _playersHolderFactory;
         protected readonly IUserCommunicator _userCommunicator;

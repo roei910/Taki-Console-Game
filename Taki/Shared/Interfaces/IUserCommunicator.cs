@@ -2,7 +2,7 @@
 
 namespace Taki.Shared.Interfaces
 {
-    internal interface IUserCommunicator
+    public interface IUserCommunicator
     {
         void SendColorMessageToUser(Color color, object? message);
         void SendMessageToUser(object? message = null);

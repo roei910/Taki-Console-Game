@@ -3,7 +3,7 @@ using Taki.Shared.Models.Dto;
 
 namespace Taki.Shared.Interfaces
 {
-    internal interface ICard
+    public interface ICard
     {
         int CardsToDraw();
         bool IsStackableWith(Card other);

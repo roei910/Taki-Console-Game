@@ -2,7 +2,7 @@
 
 namespace Taki.Dal
 {
-    internal class DrawPileDal : CardDal
+    public class DrawPileDal : CardDal
     {
         public DrawPileDal(MongoDbConfig configuration) : 
             base(configuration, configuration.DrawPileCollectionName) { }

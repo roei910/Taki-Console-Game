@@ -3,7 +3,7 @@ using Taki.Shared.Models.Dto;
 
 namespace Taki.Models.Players
 {
-    internal class PyramidPlayer : Player
+    public class PyramidPlayer : Player
     {
         private int _currentNumberOfCards;
 

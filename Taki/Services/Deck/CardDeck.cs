@@ -4,7 +4,7 @@ using Taki.Shared.Models.Dto;
 
 namespace Taki.Models.Deck
 {
-    internal class CardDeck : ICardDeck
+    public class CardDeck : ICardDeck
     {
         private LinkedList<Card> _cards;
         private readonly Random _random;

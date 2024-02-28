@@ -1,6 +1,6 @@
 ﻿namespace Taki.Shared.Interfaces
 {
-    internal interface IGameScore
+    public interface IGameScore
     {
         int GetScoreByName(string name);
         void SetScoreByName(string name, int score);

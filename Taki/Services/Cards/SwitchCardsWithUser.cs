@@ -4,7 +4,7 @@ using Taki.Shared.Interfaces;
 
 namespace Taki.Models.Cards
 {
-    internal class SwitchCardsWithUser : SwitchCardsWithDirection
+    public class SwitchCardsWithUser : SwitchCardsWithDirection
     {
         public SwitchCardsWithUser(IUserCommunicator userCommunicator) :
             base(userCommunicator)

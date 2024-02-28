@@ -4,7 +4,7 @@ using Taki.Shared.Models.Dto;
 
 namespace Taki.Shared.Interfaces
 {
-    internal interface ICardDeck
+    public interface ICardDeck
     {
         Card PopFirst();
         Card GetFirst();

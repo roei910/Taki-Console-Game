@@ -5,7 +5,7 @@ using Taki.Shared.Models.Dto;
 
 namespace Taki.Models.Cards
 {
-    internal abstract class ColorCard : Card
+    public abstract class ColorCard : Card
     {
         public static readonly Color DEFAULT_COLOR = Color.Empty;
         protected Color _color;

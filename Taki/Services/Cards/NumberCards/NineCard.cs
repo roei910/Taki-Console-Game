@@ -3,7 +3,7 @@ using Taki.Shared.Interfaces;
 
 namespace Taki.Models.Cards.NumberCards
 {
-    internal class NineCard : NumberCard
+    public class NineCard : NumberCard
     {
         public NineCard(Color color, IUserCommunicator userCommunicator) :
             base(9, color, userCommunicator)

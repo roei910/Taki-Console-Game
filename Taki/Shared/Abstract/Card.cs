@@ -4,7 +4,7 @@ using Taki.Shared.Models.Dto;
 
 namespace Taki.Shared.Abstract
 {
-    internal abstract class Card : ICard, IEquatable<Card>
+    public abstract class Card : ICard, IEquatable<Card>
     {
         private static int idsCounter = 0;
         protected readonly IUserCommunicator _userCommunicator;

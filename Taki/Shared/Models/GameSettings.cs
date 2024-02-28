@@ -2,7 +2,7 @@
 
 namespace Taki.Shared.Models
 {
-    internal class GameSettings
+    public class GameSettings
     {
         public ObjectId Id { get; set; }
 

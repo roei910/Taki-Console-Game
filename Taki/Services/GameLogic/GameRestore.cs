@@ -6,7 +6,7 @@ using Taki.Shared.Models.Dto;
 
 namespace Taki.Models.GameLogic
 {
-    internal class GameRestore
+    public class GameRestore
     {
         private readonly IUserCommunicator _userCommunicator;
         private readonly List<IPlayerAlgorithm> _playerAlgorithms;

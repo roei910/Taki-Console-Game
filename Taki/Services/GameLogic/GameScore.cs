@@ -4,7 +4,7 @@ using Taki.Shared.Interfaces;
 
 namespace Taki.Models.GameLogic
 {
-    internal class GameScore : IGameScore
+    public class GameScore : IGameScore
     {
         private readonly Dictionary<string, int> scoresDictionary;
         private readonly string scoresPath;

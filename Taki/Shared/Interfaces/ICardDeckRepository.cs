@@ -4,7 +4,7 @@ using Taki.Shared.Models.Dto;
 
 namespace Taki.Shared.Interfaces
 {
-    internal interface ICardDeckRepository
+    public interface ICardDeckRepository
     {
         void AddDiscardCard(Card card);
         void DeleteAll();

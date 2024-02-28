@@ -3,7 +3,7 @@ using Taki.Extensions;
 
 namespace Taki.Shared.Models
 {
-    internal class ConstantVariables
+    public class ConstantVariables
     {
         public int MinNumberOfPlayers { get; set; }
         public int MaxNumberOfPlayers { get; set; }

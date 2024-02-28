@@ -1,6 +1,6 @@
 ﻿namespace Taki.Shared.Enums
 {
-    internal enum CardColorsEnum
+    public enum CardColorsEnum
     {
         Green,
         Red,

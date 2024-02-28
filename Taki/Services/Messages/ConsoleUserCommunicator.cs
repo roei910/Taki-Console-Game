@@ -3,7 +3,7 @@ using Taki.Shared.Interfaces;
 
 namespace Taki.Models.Messages
 {
-    internal class ConsoleUserCommunicator : IUserCommunicator
+    public class ConsoleUserCommunicator : IUserCommunicator
     {
         public void SendErrorMessage(object? message)
         {

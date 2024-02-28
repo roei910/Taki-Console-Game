@@ -4,7 +4,7 @@ using Taki.Models.Cards;
 
 namespace Taki.Shared.Models.Dto
 {
-    internal class CardDto
+    public class CardDto
     {
         public int Id { get; set; }
         public string Type { get; set; }

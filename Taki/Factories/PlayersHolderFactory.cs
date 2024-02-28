@@ -6,7 +6,7 @@ using Taki.Shared.Models.Dto;
 
 namespace Taki.Factories
 {
-    internal class PlayersHolderFactory
+    public class PlayersHolderFactory
     {
         private readonly ConstantVariables _constantVariables;
         private readonly IUserCommunicator _userCommunicator;

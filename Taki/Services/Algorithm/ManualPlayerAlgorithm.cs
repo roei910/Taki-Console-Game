@@ -7,7 +7,7 @@ using Taki.Shared.Interfaces;
 
 namespace Taki.Models.Algorithm
 {
-    internal class ManualPlayerAlgorithm : IManualPlayerAlgorithm
+    public class ManualPlayerAlgorithm : IManualPlayerAlgorithm
     {
         private readonly IUserCommunicator _userCommunicator;
 

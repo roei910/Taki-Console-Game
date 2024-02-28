@@ -5,7 +5,7 @@ using Taki.Shared.Models.Dto;
 
 namespace Taki.Shared.Interfaces
 {
-    internal interface IPlayer
+    public interface IPlayer
     {
         string Name { get; }
         Color ChooseColor();

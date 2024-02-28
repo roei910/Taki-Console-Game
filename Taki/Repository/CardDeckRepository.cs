@@ -6,7 +6,7 @@ using Taki.Shared.Models.Dto;
 
 namespace Taki.Data
 {
-    internal class CardDeckRepository : ICardDeckRepository
+    public class CardDeckRepository : ICardDeckRepository
     {
         private readonly IDal<CardDto> _drawPileDal;
         private readonly IDal<CardDto> _discardPileDal;

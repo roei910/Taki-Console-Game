@@ -3,7 +3,7 @@ using Taki.Extensions;
 
 namespace Taki.Shared.Models
 {
-    internal class MongoDbConfig
+    public class MongoDbConfig
     {
         public string MongoUrl { get; set; }
         public string MongoDatabaseName { get; set; }

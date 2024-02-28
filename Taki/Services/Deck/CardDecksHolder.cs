@@ -6,7 +6,7 @@ using Taki.Shared.Models.Dto;
 
 namespace Taki.Models.Deck
 {
-    internal class CardDecksHolder : ICardDecksHolder
+    public class CardDecksHolder : ICardDecksHolder
     {
         private readonly CardDeck _drawPile;
         private readonly CardDeck _discardPile;

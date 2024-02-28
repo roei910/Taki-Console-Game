@@ -3,7 +3,7 @@ using Taki.Shared.Abstract;
 
 namespace Taki.Shared.Interfaces
 {
-    internal interface IPlayersHolder
+    public interface IPlayersHolder
     {
         Player CurrentPlayer { get; }
         List<Player> Players { get; }

@@ -2,7 +2,7 @@
 
 namespace Taki.Shared.Interfaces
 {
-    internal interface IDal<T>
+    public interface IDal<T>
     {
         bool Create(T value);
         bool CreateMany(List<T> values);

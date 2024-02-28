@@ -4,7 +4,7 @@ using Taki.Shared.Interfaces;
 
 namespace Taki.Models.Cards
 {
-    internal class ChangeDirection : ColorCard
+    public class ChangeDirection : ColorCard
     {
         public ChangeDirection(Color color, IUserCommunicator userCommunicator) :
             base(color, userCommunicator)

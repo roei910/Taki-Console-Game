@@ -7,7 +7,7 @@ using Taki.Shared.Models.Dto;
 
 namespace Taki.Models.Cards
 {
-    internal class SwitchCardsWithDirection : Card
+    public class SwitchCardsWithDirection : Card
     {
         public Card? prevCard = null;
 

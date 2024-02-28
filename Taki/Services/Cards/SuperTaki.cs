@@ -4,7 +4,7 @@ using Taki.Shared.Interfaces;
 
 namespace Taki.Models.Cards
 {
-    internal class SuperTaki : TakiCard
+    public class SuperTaki : TakiCard
     {
         public SuperTaki(IUserCommunicator userCommunicator) :
             base(Color.Empty, userCommunicator)

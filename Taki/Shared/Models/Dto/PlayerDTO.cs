@@ -1,6 +1,6 @@
 ﻿namespace Taki.Shared.Models.Dto
 {
-    internal class PlayerDto
+    public class PlayerDto
     {
         public int Score { get; set; }
         public string Name { get; set; }

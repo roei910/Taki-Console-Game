@@ -3,7 +3,7 @@ using Taki.Shared.Models.Dto;
 
 namespace Taki.Models.Players
 {
-    internal class PyramidPlayersHolder : PlayersHolder
+    public class PyramidPlayersHolder : PlayersHolder
     {
         public PyramidPlayersHolder(List<Player> players, int numberOfPlayerCards,
             IUserCommunicator userCommunicator, IDal<PlayerDto> playerDatabase) :

@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace Taki.Serializers
 {
-    internal class JObjectBsonSerializer : SerializerBase<JObject>
+    public class JObjectBsonSerializer : SerializerBase<JObject>
     {
         public override JObject Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
         {

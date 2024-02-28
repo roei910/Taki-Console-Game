@@ -4,7 +4,7 @@ using Taki.Shared.Interfaces;
 
 namespace Taki.Models.Cards.NumberCards
 {
-    internal abstract class NumberCard : ColorCard
+    public abstract class NumberCard : ColorCard
     {
         private readonly int _number;
 

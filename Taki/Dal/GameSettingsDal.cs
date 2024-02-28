@@ -3,7 +3,7 @@ using Taki.Shared.Models;
 
 namespace Taki.Dal
 {
-    internal class GameSettingsDal : MongoDal<GameSettings>
+    public class GameSettingsDal : MongoDal<GameSettings>
     {
         public GameSettingsDal(MongoDbConfig configuration) : 
             base(configuration, configuration.GameSettingsCollectionName!) { }

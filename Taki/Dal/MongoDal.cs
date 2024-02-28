@@ -4,7 +4,7 @@ using Taki.Shared.Models;
 
 namespace Taki.Dal
 {
-    internal abstract class MongoDal<T> : IDal<T>
+    public abstract class MongoDal<T> : IDal<T>
     {
         protected readonly MongoClient _client;
         protected readonly IMongoDatabase _database;

@@ -1,5 +1,5 @@
 ﻿namespace Taki.Shared.Interfaces
 {
-    internal interface IManualPlayerAlgorithm : 
+    public interface IManualPlayerAlgorithm : 
         IPlayerAlgorithm { }
 }

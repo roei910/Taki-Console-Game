@@ -6,7 +6,7 @@ using Taki.Shared.Interfaces;
 
 namespace Taki.Models.Algorithm
 {
-    internal class PlayerAlgorithm : IPlayerAlgorithm
+    public class PlayerAlgorithm : IPlayerAlgorithm
     {
         public virtual Card? ChooseCard(Func<Card, bool> isSimilarTo, List<Card> playerCards, string? elseMessage = null)
         {

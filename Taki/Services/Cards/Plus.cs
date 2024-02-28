@@ -5,7 +5,7 @@ using Taki.Shared.Interfaces;
 
 namespace Taki.Models.Cards
 {
-    internal class Plus : ColorCard
+    public class Plus : ColorCard
     {
         public Plus(Color color, IUserCommunicator userCommunicator) :
             base(color, userCommunicator)

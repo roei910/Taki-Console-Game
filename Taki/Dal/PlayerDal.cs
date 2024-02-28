@@ -4,7 +4,7 @@ using Taki.Shared.Models.Dto;
 
 namespace Taki.Dal
 {
-    internal class PlayerDal : MongoDal<PlayerDto>
+    public class PlayerDal : MongoDal<PlayerDto>
     {
         public Func<int, FilterDefinition<PlayerDto>> FilterById =
             (id) => Builders<PlayerDto>.Filter.Eq(player => player.Id, id);

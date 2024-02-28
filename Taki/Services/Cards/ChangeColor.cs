@@ -3,7 +3,7 @@ using Taki.Shared.Interfaces;
 
 namespace Taki.Models.Cards
 {
-    internal class ChangeColor : ColorCard
+    public class ChangeColor : ColorCard
     {
         public ChangeColor(IUserCommunicator userCommunicator) :
             base(DEFAULT_COLOR, userCommunicator)

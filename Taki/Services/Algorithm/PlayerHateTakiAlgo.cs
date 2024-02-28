@@ -3,7 +3,7 @@ using Taki.Shared.Abstract;
 
 namespace Taki.Models.Algorithm
 {
-    internal class PlayerHateTakiAlgo : PlayerAlgorithm
+    public class PlayerHateTakiAlgo : PlayerAlgorithm
     {
         bool IsTaki = false;
 

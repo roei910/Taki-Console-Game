@@ -4,7 +4,7 @@ using Taki.Shared.Models.Dto;
 
 namespace Taki.Dal
 {
-    internal class CardDal : MongoDal<CardDto>
+    public class CardDal : MongoDal<CardDto>
     {
         public CardDal(MongoDbConfig configuration, string collectionName) :
             base(configuration, collectionName)

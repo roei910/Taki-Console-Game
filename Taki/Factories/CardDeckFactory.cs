@@ -6,7 +6,7 @@ using Taki.Shared.Interfaces;
 
 namespace Taki.Factories
 {
-    internal class CardDeckFactory
+    public class CardDeckFactory
     {
         private readonly IUserCommunicator _userCommunicator;
         private readonly Random _random;

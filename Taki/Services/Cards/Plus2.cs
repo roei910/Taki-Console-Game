@@ -5,7 +5,7 @@ using Taki.Shared.Models.Dto;
 
 namespace Taki.Models.Cards
 {
-    internal class Plus2 : ColorCard
+    public class Plus2 : ColorCard
     {
         private bool _isOnlyPlus2Allowed = false;
         private int _countPlus2 = 0;
