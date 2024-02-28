@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
+using Taki.Shared.Models;
 using Taki.Shared.Models.Dto;
 
 namespace Taki.Dal
@@ -12,13 +12,11 @@ namespace Taki.Dal
         public Func<string, FilterDefinition<PlayerDto>> FilterByName =
             (name) => Builders<PlayerDto>.Filter.Eq(player => player.Name, name);
 
-        public PlayerDal(IConfiguration configuration) :
-            base(configuration, "Players")
-        { }
+        public PlayerDal(MongoDbConfig configuration) :
+            base(configuration, configuration.PlayersCollectionName) { }
 
         public PlayerDal(string mongoUrl, string dbName, string collectionName) :
-            base(mongoUrl, dbName, collectionName)
-        { }
+            base(mongoUrl, dbName, collectionName) { }
 
         public override bool Delete(int id)
         {

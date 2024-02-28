@@ -18,6 +18,7 @@ var serviceProvider = new ServiceCollection()
     .AddSingleton<IConfiguration>(x => new ConfigurationBuilder()
         .AddJsonFile("AppConfigurations.json", false, true)
         .Build())
+    .AddSingleton<MongoDbConfig>()
     .AddSingleton<IUserCommunicator, ConsoleUserCommunicator>()
     .AddSingleton<IManualPlayerAlgorithm, ManualPlayerAlgorithm>()
     .AddSingleton<IPlayerAlgorithm, PlayerAlgorithm>()
@@ -30,24 +31,9 @@ var serviceProvider = new ServiceCollection()
     .AddSingleton<Random>()
     .AddSingleton<TakiGameRunner>()
     .AddSingleton<IDal<PlayerDto>, PlayerDal>()
-    //TODO: move names to config
-    .AddKeyedSingleton<IDal<CardDto>, CardDal>("drawPile", (serviceProvider, x) =>
-        {
-            var configuration = serviceProvider.GetRequiredService<IConfiguration>();
-            return new CardDal(configuration, "DrawPile");
-        })
-    .AddKeyedSingleton<IDal<CardDto>, CardDal>(
-        "discardPile", (serviceProvider, x) =>
-        {
-            var configuration = serviceProvider.GetRequiredService<IConfiguration>();
-            return new CardDal(configuration, "DiscardPile");
-        })
-    .AddKeyedSingleton<IDal<GameSettings>, GameSettingsDal>(
-        "gameSettings", (serviceProvider, x) =>
-        {
-            var configuration = serviceProvider.GetRequiredService<IConfiguration>();
-            return new GameSettingsDal(configuration, "GameSettings");
-        })
+    .AddSingleton<DrawPileDal>()
+    .AddSingleton<DiscardPileDal>()
+    .AddSingleton<IDal<GameSettings>, GameSettingsDal>()
     .AddSingleton<CardDeckDatabase>()
     .AddSingleton<GameRestore>()
     .AddSingleton<CardDecksHolder>()

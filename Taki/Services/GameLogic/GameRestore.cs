@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Taki.Data;
+﻿using Taki.Data;
 using Taki.Models.Deck;
 using Taki.Models.Players;
 using Taki.Shared.Interfaces;
@@ -18,14 +17,14 @@ namespace Taki.Models.GameLogic
 
         public GameRestore(IUserCommunicator userCommunicator, List<IPlayerAlgorithm> playerAlgorithms,
             IManualPlayerAlgorithm manualPlayerAlgorithm, IDal<PlayerDto> playersDatabase, CardDeckDatabase cardDeckDatabase,
-            IServiceProvider serviceProvider)
+            IDal<GameSettings> gameSettingsDatabase)
         {
             _userCommunicator = userCommunicator;
             _playerAlgorithms = playerAlgorithms;
             _playersDatabase = playersDatabase;
             _cardDeckDatabase = cardDeckDatabase;
             _playerAlgorithms.Add(manualPlayerAlgorithm);
-            _gameSettingsDatabase = serviceProvider.GetRequiredKeyedService<IDal<GameSettings>>("gameSettings");
+            _gameSettingsDatabase = gameSettingsDatabase;
         }
 
         public bool TryRestoreTakiGame(ICardDecksHolder cardDecksHolder, out IPlayersHolder? _playersHolder)

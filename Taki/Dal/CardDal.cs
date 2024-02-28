@@ -1,12 +1,12 @@
-﻿using Microsoft.Extensions.Configuration;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
+using Taki.Shared.Models;
 using Taki.Shared.Models.Dto;
 
 namespace Taki.Dal
 {
     internal class CardDal : MongoDal<CardDto>
     {
-        public CardDal(IConfiguration configuration, string collectionName) :
+        public CardDal(MongoDbConfig configuration, string collectionName) :
             base(configuration, collectionName)
         { }
 

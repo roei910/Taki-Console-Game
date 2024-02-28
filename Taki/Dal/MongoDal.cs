@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using Taki.Shared.Interfaces;
+using Taki.Shared.Models;
 
 namespace Taki.Dal
 {
@@ -10,13 +10,13 @@ namespace Taki.Dal
         protected readonly IMongoDatabase _database;
         protected readonly IMongoCollection<T> _collection;
 
-        public MongoDal(IConfiguration configuration, string collectionName)
+        public MongoDal(MongoDbConfig configuration, string collectionName)
         {
-            var mongoUrl = configuration.GetSection("MongoUrl").Value ??
+            var mongoUrl = configuration.MongoUrl ??
                 throw new NullReferenceException("please define mongoDB url");
             _client = new MongoClient(mongoUrl);
 
-            var dbName = configuration.GetSection("MongoDatabaseName").Value ??
+            var dbName = configuration.MongoDatabaseName ??
                 throw new NullReferenceException("please define mongoDB url");
             _database = _client.GetDatabase(dbName);
 
