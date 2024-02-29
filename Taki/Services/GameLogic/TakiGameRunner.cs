@@ -57,6 +57,8 @@ namespace Taki.Models.GameLogic
             //TODO: create a function to know which card it needs to use (MatchCardService??)
 
             //TODO: mongo acces will be async now
+            //TODO: the GameSettings need to be updated to know what is happening in the game
+
             if (_gameRestore.TryRestoreTakiGame(_cardDecksHolder, out _playersHolder))
                 StartSingleGame();
 
