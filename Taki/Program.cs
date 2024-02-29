@@ -1,31 +1,49 @@
-﻿using Taki.Game.Communicators;
-using Taki.Game.Managers;
-using Microsoft.Extensions.DependencyInjection;
-using Taki.Game.Algorithm;
-using Taki.Game.Factories;
-using Taki.Game.Messages;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
-using Taki;
-using Taki.Game.GameRunner;
+using MongoDB.Bson.Serialization;
+using Taki.Factories;
+using Taki.Models.Algorithm;
+using Taki.Models.Messages;
+using Taki.Models.GameLogic;
+using Taki.Serializers;
+using Taki.Data;
+using Taki.Models.Deck;
+using Taki.Dal;
+using Taki.Shared.Interfaces;
+using Taki.Shared.Models;
+using Taki.Shared.Models.Dto;
 
-//TODO: make it possible to print many cards in a row of same color for manual choose, use the get stringArray method and add the strings
+//TODO: task from amit: need to add a way to communicate from other computers.
+
+//TODO: from tomer: extract models from services
 
 var serviceProvider = new ServiceCollection()
+    .AddSingleton<IConfiguration>(x => new ConfigurationBuilder()
+        .AddJsonFile("appsettings.json", false, true)
+        .Build())
+    .AddSingleton<ConstantVariables>()
+    .AddSingleton<MongoDbConfig>()
+
     .AddSingleton<IUserCommunicator, ConsoleUserCommunicator>()
+    .AddSingleton<IManualPlayerAlgorithm, ManualPlayerAlgorithm>()
     .AddSingleton<IPlayerAlgorithm, PlayerAlgorithm>()
     .AddSingleton<IPlayerAlgorithm, PlayerHateTakiAlgo>()
-    .AddSingleton<List<IPlayerAlgorithm>>()
+    .AddTransient<List<IPlayerAlgorithm>>()
     .AddSingleton<IGameScore, GameScore>()
-    .AddSingleton<ManualPlayerAlgorithm>()
     .AddSingleton<PlayersHolderFactory>()
     .AddSingleton<CardDeckFactory>()
-    .AddSingleton<ProgramVariables>()
     .AddSingleton<Random>()
-    .AddSingleton<IConfiguration>(x => new ConfigurationBuilder()
-        .AddJsonFile("AppConfigurations.json", false, true)
-        .Build())
     .AddSingleton<TakiGameRunner>()
+    .AddSingleton<IDal<PlayerDto>, PlayerDal>()
+    .AddSingleton<DrawPileDal>()
+    .AddSingleton<DiscardPileDal>()
+    .AddSingleton<IDal<GameSettings>, GameSettingsDal>()
+    .AddSingleton<ICardDeckRepository, CardDeckRepository>()
+    .AddSingleton<GameRestore>()
+    .AddSingleton<CardDecksHolder>()
     .BuildServiceProvider();
+
+BsonSerializer.RegisterSerializer(new JObjectBsonSerializer());
 
 TakiGameRunner gameRunner = serviceProvider.GetRequiredService<TakiGameRunner>();
 
