@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TakiApp", "TakiApp\TakiApp.csproj", "{68FF6B5E-3A40-4986-8D94-22B05D6608B0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +22,10 @@ Global
 		{D118ACDD-839E-493B-80A8-11F84CA363EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D118ACDD-839E-493B-80A8-11F84CA363EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D118ACDD-839E-493B-80A8-11F84CA363EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68FF6B5E-3A40-4986-8D94-22B05D6608B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68FF6B5E-3A40-4986-8D94-22B05D6608B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68FF6B5E-3A40-4986-8D94-22B05D6608B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68FF6B5E-3A40-4986-8D94-22B05D6608B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

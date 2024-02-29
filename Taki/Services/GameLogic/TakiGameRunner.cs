@@ -39,7 +39,7 @@ namespace Taki.Models.GameLogic
             //TODO: if there isnt a game already open the computer asks to create a new local or multi computer game
             //TODO: when someone connects to the game other people will get a message saying someone joined the game
 
-            //TODO: Class to hanle turns
+            //TODO: Class to handle turns
             //TODO: we need to handle the turns for the players, check the first person in the list to know if it is our turn or not.
             //TODO: if a player finished his play we need to add in our screen what happened.
             //TODO: when someone plays the mongo gets updated from that person and he goes to the next player.
@@ -61,7 +61,7 @@ namespace Taki.Models.GameLogic
 
             //TODO: in the cardService we need to add how many cards of the type in a single deck for the creation of the decks
 
-            //TODO: check to see if mongo can update me back => watch function on the collection
+            //TODO: check to see if mongo can update me back => Watch method on the collection
 
             //TODO: the player will send CheckIns to see if he is still connected. if he doesnt reconnect for 10 secs it gets deleted, cards go back.
             
