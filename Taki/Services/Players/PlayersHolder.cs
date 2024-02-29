@@ -4,7 +4,6 @@ using Taki.Shared.Models.Dto;
 
 namespace Taki.Models.Players
 {
-    //TODO: from tomer: try to use action from cards instead of using the playersHolder
     public class PlayersHolder : IPlayersHolder
     {
         protected readonly List<Player> _players;
@@ -201,7 +200,6 @@ namespace Taki.Models.Players
 
         public void UpdateWinnersFromDb()
         {
-            //TODO: roei: check this is wrong! should get from db...
             var playerDtos = _playersDatabase.FindAll();
             var winners = playerDtos.Where(p => p.PlayerCards.Count == 0).ToList();
 

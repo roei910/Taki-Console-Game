@@ -15,10 +15,7 @@ using Taki.Shared.Models.Dto;
 
 //TODO: task from amit: need to add a way to communicate from other computers.
 
-
 //TODO: from tomer: extract models from services
-//TODO: check what happends when the program closes and try close MONGO connection
-//TODO: use objectId everywhere
 
 var serviceProvider = new ServiceCollection()
     .AddSingleton<IConfiguration>(x => new ConfigurationBuilder()
