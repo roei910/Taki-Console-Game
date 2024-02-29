@@ -54,6 +54,7 @@ namespace Taki.Models.GameLogic
 
             //TODO: handle the cards with services that get the card from the db and know how to handle the next turn
             //TODO: the card service will get the information to know what to do next, if taki is open or something.
+            //TODO: create a function to know which card it needs to use (MatchCardService??)
 
             //TODO: mongo acces will be async now
             if (_gameRestore.TryRestoreTakiGame(_cardDecksHolder, out _playersHolder))
