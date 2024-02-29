@@ -1,6 +1,0 @@
-@TakiApi_HostAddress = http://localhost:5126
-
-GET {{TakiApi_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

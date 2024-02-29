@@ -14,6 +14,7 @@ using Taki.Shared.Models;
 using Taki.Shared.Models.Dto;
 
 //TODO: task from amit: need to add a way to communicate from other computers.
+//TODO: create an option to connect many players using the local mongo connection, if a game is already on connect to it?
 
 //TODO: from tomer: extract models from services
 
