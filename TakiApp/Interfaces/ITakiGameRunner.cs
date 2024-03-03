@@ -2,6 +2,6 @@
 {
     internal interface ITakiGameRunner
     {
-        void Run();
+        Task Run();
     }
 }

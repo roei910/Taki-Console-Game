@@ -8,5 +8,7 @@ namespace TakiApp.Models
         public List<Card> Cards { get; set; } = [];
         public string? Name { get; set; }
         public string? PlayerAlgorithm { get; set; }
+        public DateTime? LastCheckIn { get; set; }
+        public bool IsPlaying { get; set; } = false;
     }
 }

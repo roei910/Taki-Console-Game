@@ -1,13 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TakiApp.Interfaces;
+﻿using TakiApp.Interfaces;
 
 namespace TakiApp.Services.Players
 {
     internal class PlayerService : IPlayerService
     {
+        public void PickCard()
+        {
+
+        }
+
+        public void AddCard()
+        {
+
+        }
+
+        public void ChooseCard()
+        {
+
+        }
+
+        public void PickOtherPlayer()
+        {
+
+        }
     }
 }

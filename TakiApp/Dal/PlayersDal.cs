@@ -5,10 +5,11 @@ using TakiApp.Models;
 
 namespace TakiApp.Dal
 {
-    internal class PlayersDal : MongoDal<Player>
+    internal class PlayersDal : MongoDal<Player>, IPlayersDal
     {
-        public PlayersDal(MongoDbConfig configuration) : 
-            base(configuration, configuration.PlayersCollectionName) { }
+        public PlayersDal(MongoDbConfig configuration) :
+            base(configuration, configuration.PlayersCollectionName)
+        { }
 
         public async override Task DeleteAsync(Player value)
         {
@@ -27,6 +28,18 @@ namespace TakiApp.Dal
         public async override Task UpdateOneAsync(Player valueToUpdate)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task WaitTurn(ObjectId playerId)
+        {
+            while (true)
+            {
+                var player = await FindOneAsync(playerId);
+
+                if (player != null && player.IsPlaying)
+                    return;
+                await Task.Run(async() => await Task.Delay(3000));
+            }
         }
     }
 }

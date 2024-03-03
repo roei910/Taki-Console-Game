@@ -59,7 +59,6 @@ namespace Taki.Factories
                 return new List<Card>()
                 {
                     new ChangeDirection(color, _userCommunicator),
-                    new ChangeDirection(color, _userCommunicator),
                     new Plus(color, _userCommunicator),
                     new Plus2(color, _userCommunicator),
                     new TakiCard(color, _userCommunicator),
