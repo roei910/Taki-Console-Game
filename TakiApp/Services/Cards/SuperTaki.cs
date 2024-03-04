@@ -3,12 +3,12 @@ using TakiApp.Models;
 
 namespace TakiApp.Services.Cards
 {
-    internal class SuperTaki : ICardService
+    public class SuperTaki : TakiCard
     {
-        public List<Card> GenerateCardsForDeck()
+        public override List<Card> GenerateCardsForDeck()
         {
             return Enumerable.Range(0, 2)
-                .Select(j => new Card(typeof(ChangeColor).ToString(), Color.Empty.Name)).ToList();
+                .Select(j => new Card(typeof(SuperTaki).ToString(), Color.Empty.Name)).ToList();
         }
     }
 }

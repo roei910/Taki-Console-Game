@@ -3,8 +3,16 @@ using TakiApp.Models;
 
 namespace TakiApp.Services.Cards
 {
-    internal class ChangeColor : ICardService
+    public class ChangeColor : ICardService
     {
+        public bool CanStackOnOther(Card topDiscard, Card otherCard)
+        {
+            if (topDiscard.CardColor == Color.Empty.Name)
+                return true;
+
+            return topDiscard.CardColor == otherCard.CardColor;
+        }
+
         public List<Card> GenerateCardsForDeck()
         {
             return Enumerable.Range(0, 2)

@@ -3,9 +3,10 @@ using TakiApp.Models;
 
 namespace TakiApp.Services.Cards
 {
-    internal class Plus2 : ICardService
+    public class Plus2 : ColorCard
     {
-        public List<Card> GenerateCardsForDeck()
+        //TODO: check if prev was plus 2
+        public override List<Card> GenerateCardsForDeck()
         {
             var cards = new List<Color>() { Color.Blue, Color.Yellow, Color.Green, Color.Red }
                 .Select(color => new Card(typeof(Plus2).ToString(), color.Name)).ToList();

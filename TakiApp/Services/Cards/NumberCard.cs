@@ -3,9 +3,9 @@ using TakiApp.Models;
 
 namespace TakiApp.Services.Cards
 {
-    internal class NumberCard : ICardService
+    public class NumberCard : ColorCard
     {
-        public List<Card> GenerateCardsForDeck()
+        public override List<Card> GenerateCardsForDeck()
         {
             var cards = Enumerable.Range(3, 7)
                 .SelectMany(number => new List<Color>() { Color.Blue, Color.Yellow, Color.Green, Color.Red }

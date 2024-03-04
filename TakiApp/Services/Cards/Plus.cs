@@ -3,9 +3,9 @@ using TakiApp.Models;
 
 namespace TakiApp.Services.Cards
 {
-    internal class Plus : ICardService
+    public class Plus : ColorCard
     {
-        public List<Card> GenerateCardsForDeck()
+        public override List<Card> GenerateCardsForDeck()
         {
             var cards = new List<Color>() { Color.Blue, Color.Yellow, Color.Green, Color.Red }
                 .Select(color => new Card(typeof(Plus).ToString(), color.Name)).ToList();
