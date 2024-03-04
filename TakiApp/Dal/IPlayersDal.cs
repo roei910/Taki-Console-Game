@@ -4,7 +4,7 @@ using TakiApp.Models;
 
 namespace TakiApp.Dal
 {
-    internal interface IPlayersDal : IDal<Player>
+    public interface IPlayersDal : IDal<Player>
     {
         Task WaitTurn(ObjectId playerId);
     }

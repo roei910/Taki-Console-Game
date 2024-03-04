@@ -5,7 +5,7 @@ using TakiApp.Models;
 
 namespace TakiApp.Dal
 {
-    internal class CardDal : MongoDal<Card>
+    public class CardDal : MongoDal<Card>
     {
         public CardDal(MongoDbConfig configuration, string collectionName) :
             base(configuration, collectionName) { }

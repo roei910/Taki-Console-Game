@@ -5,7 +5,7 @@ using TakiApp.Models;
 
 namespace TakiApp.Dal
 {
-    internal class PlayersDal : MongoDal<Player>, IPlayersDal
+    public class PlayersDal : MongoDal<Player>, IPlayersDal
     {
         public PlayersDal(MongoDbConfig configuration) :
             base(configuration, configuration.PlayersCollectionName)

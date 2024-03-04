@@ -1,8 +1,9 @@
-﻿using TakiApp.Models;
+﻿using TakiApp.Interfaces;
+using TakiApp.Models;
 
 namespace TakiApp.Dal
 {
-    internal class DrawPileDal : CardDal
+    public class DrawPileDal : CardDal, IDrawPileDal
     {
         public DrawPileDal(MongoDbConfig configuration) : 
             base(configuration, configuration.DrawPileCollectionName) { }
