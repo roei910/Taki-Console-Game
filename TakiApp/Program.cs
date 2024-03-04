@@ -16,7 +16,6 @@ using TakiApp.Services.Players;
 //TODO: task from amit: need to add a way to communicate from other computers.
 //TODO: create an option to connect many players using the local mongo connection, if a game is already on connect to it?
 
-
 //TODO: check if a game exists in mongodb locally
 //TODO: if the game exists then choose a name and connect the user.
 //TODO: check what happends when someone exists and doesnt come back to the game
@@ -63,15 +62,15 @@ var serviceProvider = new ServiceCollection()
     .AddSingleton<ICardService, TakiCard>()
     .AddSingleton<CardsFactory>()
 
+    .AddSingleton<IDiscardPileDal, DiscardPileDal>()
+    .AddSingleton<IDrawPileDal, DrawPileDal>()
+    .AddSingleton<IDal<Player>, PlayersDal>()
+    .AddSingleton<IDal<GameSettings>, GameSettingsDal>()
+
     .AddSingleton<IGameSettingsRepository, GameSettingsRepository>()
     .AddSingleton<IDrawPileRepository, DrawPileRepository>()
     .AddSingleton<IDiscardPileRepository, DiscardPileRepository>()
     .AddSingleton<IPlayersRepository, PlayersRepository>()
-
-    .AddSingleton<IPlayersDal, PlayersDal>()
-    .AddSingleton<IDiscardPileDal, DiscardPileDal>()
-    .AddSingleton<IDrawPileDal, DrawPileDal>()
-    .AddSingleton<IDal<GameSettings>, GameSettingsDal>()
 
     .AddSingleton<IUserCommunicator, ConsoleUserCommunicator>()
     .AddSingleton<IGameInitializer, GameInitializer>()
@@ -80,8 +79,6 @@ var serviceProvider = new ServiceCollection()
     .BuildServiceProvider();
 
 BsonSerializer.RegisterSerializer(new JObjectBsonSerializer());
-
-var cardFac = serviceProvider.GetRequiredService<CardsFactory>().GenerateDeck();
 
 var gameRunner = serviceProvider.GetRequiredService<ITakiGameRunner>();
 
