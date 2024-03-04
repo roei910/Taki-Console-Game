@@ -1,8 +1,7 @@
 ﻿using MongoDB.Bson;
-using TakiApp.Interfaces;
 using TakiApp.Models;
 
-namespace TakiApp.Dal
+namespace TakiApp.Interfaces
 {
     public interface IPlayersDal : IDal<Player>
     {

@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
 using Taki.Dal;
+using TakiApp.Interfaces;
 using TakiApp.Models;
 
 namespace TakiApp.Dal
