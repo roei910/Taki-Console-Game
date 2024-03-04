@@ -1,17 +1,13 @@
 ﻿using TakiApp.Interfaces;
+using TakiApp.Models;
 
 namespace TakiApp.Services.Players
 {
-    internal class PlayerService : IPlayerService
+    public class PlayerService : IPlayerService
     {
-        public void PickCard()
+        public Card PickCard(Player currentPlayer, Card topDiscard)
         {
-
-        }
-
-        public void AddCard()
-        {
-
+            throw new NotImplementedException();
         }
 
         public void ChooseCard()
@@ -19,9 +15,14 @@ namespace TakiApp.Services.Players
 
         }
 
-        public void PickOtherPlayer()
+        public void AddCard(Card card)
         {
+            throw new NotImplementedException();
+        }
 
+        public Player PickOtherPlayer(List<Player> players)
+        {
+            throw new NotImplementedException();
         }
     }
 }
