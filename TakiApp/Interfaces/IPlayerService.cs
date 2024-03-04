@@ -1,12 +1,14 @@
-﻿using TakiApp.Models;
+﻿using System.Drawing;
+using TakiApp.Models;
 
 namespace TakiApp.Interfaces
 {
     public interface IPlayerService
     {
-        Card PickCard(Player currentPlayer, Card topDiscard);
-        void AddCard(Card card);
-        void ChooseCard();
-        Player PickOtherPlayer(List<Player> players);
+        Card? PickCard(Player currentPlayer, Card topDiscard);
+        void AddCard(Player player, Card card);
+        Player PickOtherPlayer(Player current, List<Player> players);
+        void PlayCard(Player player, Card card);
+        Color ChooseColor(Player player);
     }
 }

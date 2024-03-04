@@ -8,5 +8,6 @@ namespace TakiApp.Interfaces
         Task DeleteAllAsync();
         Task<Card> GetTopDiscard();
         Task<List<Card>> RemoveCardsForShuffle();
+        Task UpdateCard(Card cardToUpdate);
     }
 }

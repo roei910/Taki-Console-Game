@@ -1,4 +1,5 @@
-﻿using TakiApp.Models;
+﻿using MongoDB.Bson;
+using TakiApp.Models;
 
 namespace TakiApp.Interfaces
 {
@@ -8,5 +9,8 @@ namespace TakiApp.Interfaces
         Task<List<Player>> GetAllAsync();
         Task CreateManyAsync(List<Player> players);
         Task<Player> PlayerDrawCardAsync(Player player);
+        Task WaitTurn(ObjectId playerId);
+        Task NextPlayer(Player player);
+        Task<Player> GetCurrentPlayer();
     }
 }

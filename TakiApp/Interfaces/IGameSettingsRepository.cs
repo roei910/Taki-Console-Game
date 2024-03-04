@@ -6,6 +6,6 @@ namespace TakiApp.Interfaces
     {
         Task CreateGameSettings(GameSettings gameSettings);
         Task<GameSettings?> GetGameSettingsAsync();
-        Task WaitGameStart(int numberOfCurrentPlayers);
+        Task WaitGameStartAsync(int numberOfCurrentPlayers);
     }
 }

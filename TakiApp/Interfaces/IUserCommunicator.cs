@@ -6,10 +6,8 @@ namespace TakiApp.Interfaces
     {
         string? AlertGetMessageFromUser(object? message);
         int GetCharFromUser(object? message);
-        Color GetColorFromUserEnum<EnumType>();
-        EnumType GetEnumFromUser<EnumType>();
-        T GetEnumFromUser<T>(List<T> excludedOptions);
-        string? GetMessageFromUser(object? message);
+        T GetTypeFromUser<T>(List<T> values, Func<T, string>? toString = null);
+        string? GetMessageFromUser(object? message = null);
         int GetNumberFromUser(object? message);
         void SendAlertMessage(object? message);
         void SendColorMessageToUser(Color color, object? message);

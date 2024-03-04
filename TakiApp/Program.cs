@@ -39,12 +39,7 @@ using TakiApp.Services.Players;
 
 //TODO: in the cardService we need to add how many cards of the type in a single deck for the creation of the decks
 
-//TODO: check to see if mongo can update me back => Watch method on the collection
-
 //TODO: the player will send CheckIns to see if he is still connected. if he doesnt reconnect for 10 secs it gets deleted, cards go back.
-
-
-
 
 var serviceProvider = new ServiceCollection()
     .AddSingleton<IConfiguration>(x => new ConfigurationBuilder()
