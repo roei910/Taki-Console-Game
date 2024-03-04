@@ -9,8 +9,8 @@ namespace TakiApp.Interfaces
         Task<List<Player>> GetAllAsync();
         Task CreateManyAsync(List<Player> players);
         Task<Player> PlayerDrawCardAsync(Player player);
-        Task WaitTurn(ObjectId playerId);
-        Task NextPlayer(Player player);
-        Task<Player> GetCurrentPlayer();
+        Task WaitTurnAsync(ObjectId playerId);
+        Task NextPlayerAsync(Player player);
+        Task<Player> GetCurrentPlayerAsync();
     }
 }

@@ -5,10 +5,9 @@ namespace TakiApp.Interfaces
 {
     public interface IPlayerService
     {
-        Card? PickCard(Player currentPlayer, Card topDiscard);
+        Card? PickCard(Player currentPlayer, Func<Card, bool> canStackOnTopDiscard);
         void AddCard(Player player, Card card);
         Player PickOtherPlayer(Player current, List<Player> players);
-        void PlayCard(Player player, Card card);
         Color ChooseColor(Player player);
     }
 }
