@@ -1,12 +1,11 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
 using Taki.Dal;
-using TakiApp.Interfaces;
 using TakiApp.Models;
 
 namespace TakiApp.Dal
 {
-    public class PlayersDal : MongoDal<Player>, IPlayersDal
+    public class PlayersDal : MongoDal<Player>
     {
         public PlayersDal(MongoDbConfig configuration) :
             base(configuration, configuration.PlayersCollectionName)
@@ -28,19 +27,13 @@ namespace TakiApp.Dal
 
         public async override Task UpdateOneAsync(Player valueToUpdate)
         {
-            throw new NotImplementedException();
-        }
+            var filter = Builders<Player>.Filter.Eq(x => x.Id, valueToUpdate.Id);
+            var update = Builders<Player>.Update
+                .Set(x => x.LastCheckIn, DateTime.UtcNow)
+                .Set(x => x.Cards, valueToUpdate.Cards)
+                .Set(x => x.IsPlaying, valueToUpdate.IsPlaying);
 
-        public async Task WaitTurn(ObjectId playerId)
-        {
-            while (true)
-            {
-                var player = await FindOneAsync(playerId);
-
-                if (player != null && player.IsPlaying)
-                    return;
-                await Task.Run(async() => await Task.Delay(3000));
-            }
+            await _collection.UpdateOneAsync(filter, update);
         }
     }
 }
