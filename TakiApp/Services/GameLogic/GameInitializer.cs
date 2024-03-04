@@ -3,7 +3,7 @@ using TakiApp.Models;
 
 namespace TakiApp.Services.GameLogic
 {
-    internal class GameInitializer : IGameInitializer
+    public class GameInitializer : IGameInitializer
     {
         private readonly IDal<GameSettings> _gameSettingsDal;
         private readonly IUserCommunicator _userCommunicator;

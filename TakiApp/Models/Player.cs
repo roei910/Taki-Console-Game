@@ -2,7 +2,7 @@
 
 namespace TakiApp.Models
 {
-    internal class Player
+    public class Player
     {
         public ObjectId Id { get; set; }
         public List<Card> Cards { get; set; } = [];

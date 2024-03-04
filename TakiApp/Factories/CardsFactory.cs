@@ -2,7 +2,7 @@
 
 namespace TakiApp.Factories
 {
-    internal class CardsFactory
+    public class CardsFactory
     {
         private readonly List<ICardService> _cards;
 

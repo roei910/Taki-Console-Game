@@ -5,7 +5,7 @@ using TakiApp.Models;
 
 namespace TakiApp.Services.GameLogic
 {
-    internal class GameTurnService : IGameTurnService
+    public class GameTurnService : IGameTurnService
     {
         private readonly IPlayersDal _playersDal;
         private readonly IDal<Card> _drawPile;

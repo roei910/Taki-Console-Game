@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 
 namespace TakiApp.Models
 {
-    internal class Card
+    public class Card
     {
         public ObjectId Id { get; set; }
         public string Type { get; set; }
