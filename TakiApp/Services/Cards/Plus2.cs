@@ -1,10 +1,14 @@
 ﻿using System.Drawing;
+using TakiApp.Interfaces;
 using TakiApp.Models;
 
 namespace TakiApp.Services.Cards
 {
     public class Plus2 : ColorCard
     {
+        public Plus2(IDiscardPileRepository discardPileRepository, IPlayersRepository playersRepository) : 
+            base(discardPileRepository, playersRepository) { }
+
         //TODO: check if prev was plus 2
         public override List<Card> GenerateCardsForDeck()
         {
