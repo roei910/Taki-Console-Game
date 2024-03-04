@@ -8,6 +8,7 @@ using TakiApp.Dal;
 using TakiApp.Factories;
 using TakiApp.Interfaces;
 using TakiApp.Models;
+using TakiApp.Repositories;
 using TakiApp.Services.Cards;
 using TakiApp.Services.GameLogic;
 using TakiApp.Services.Players;
@@ -67,15 +68,17 @@ var serviceProvider = new ServiceCollection()
     .AddSingleton<ICardService, TakiCard>()
     .AddSingleton<CardsFactory>()
 
+    .AddSingleton<IGameSettingsRepository, GameSettingsRepository>()
+    .AddSingleton<IDrawPileRepository, DrawPileRepository>()
+    .AddSingleton<IDiscardPileRepository, DiscardPileRepository>()
+    .AddSingleton<IPlayersRepository, PlayersRepository>()
 
     .AddSingleton<IPlayersDal, PlayersDal>()
-    .AddSingleton<IDal<Card>, DiscardPileDal>()
-    .AddSingleton<IDal<Card>, DrawPileDal>()
+    .AddSingleton<IDiscardPileDal, DiscardPileDal>()
+    .AddSingleton<IDrawPileDal, DrawPileDal>()
     .AddSingleton<IDal<GameSettings>, GameSettingsDal>()
-    .AddSingleton<List<IDal<Card>>>()
 
     .AddSingleton<IUserCommunicator, ConsoleUserCommunicator>()
-    .AddSingleton<IUserConnectionService, UserConnectionService>()
     .AddSingleton<IGameInitializer, GameInitializer>()
     .AddSingleton<IGameTurnService, GameTurnService>()
     .AddSingleton<ITakiGameRunner, TakiGameRunner>()

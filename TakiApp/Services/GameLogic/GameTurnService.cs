@@ -8,29 +8,29 @@ namespace TakiApp.Services.GameLogic
     public class GameTurnService : IGameTurnService
     {
         private readonly IPlayersDal _playersDal;
-        private readonly IDal<Card> _drawPile;
-        private readonly IDal<Card> _discardPile;
         private readonly IPlayerService _playersService;
+        private readonly IDiscardPileRepository _discardPileRepository;
+        private readonly IDrawPileRepository _drawPileRepository;
 
         public GameTurnService(IPlayersDal playersDal, IPlayerService playerService,
-            List<IDal<Card>> cardDals)
+            IDiscardPileRepository discardPileRepository, IDrawPileRepository drawPileRepository)
         {
             _playersDal = playersDal;
             _playersService = playerService;
-            _drawPile = cardDals.Where(dal => dal.GetType() == typeof(DrawPileDal)).First();
-            _discardPile = cardDals.Where(dal => dal.GetType() == typeof(DiscardPileDal)).First();
+            _discardPileRepository = discardPileRepository;
+            _drawPileRepository = drawPileRepository;
         }
 
         public async void PlayTurnById(ObjectId playerId)
         {
             //TODO: choose card from hand
-            var cards = await _discardPile.FindAsync();
-            var topDiscard = cards.First();
+            var topDiscard = await _discardPileRepository.GetTopDiscard();
 
             var players = await _playersDal.FindAsync();
-            var first = players.First();
+            var currentPlayer = players.First();
 
             //TODO: play the card
+            Card card = _playersService.PickCard(currentPlayer, topDiscard);
         }
 
         public async Task WaitTurnById(ObjectId playerId)
