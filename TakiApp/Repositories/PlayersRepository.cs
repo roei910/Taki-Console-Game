@@ -1,12 +1,9 @@
-﻿using MongoDB.Bson;
-using Taki.Models.Algorithm;
-using TakiApp.Dal;
-using TakiApp.Interfaces;
+﻿using TakiApp.Interfaces;
 using TakiApp.Models;
 
 namespace TakiApp.Repositories
 {
-    internal class PlayersRepository : IPlayersRepository
+    public class PlayersRepository : IPlayersRepository
     {
         private readonly IPlayersDal _playersDal;
         private readonly IDrawPileRepository _drawPileRepository;

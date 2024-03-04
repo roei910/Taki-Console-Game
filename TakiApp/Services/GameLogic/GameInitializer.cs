@@ -1,6 +1,5 @@
 ﻿using MongoDB.Bson;
 using Taki.Models.Algorithm;
-using TakiApp.Dal;
 using TakiApp.Factories;
 using TakiApp.Interfaces;
 using TakiApp.Models;
