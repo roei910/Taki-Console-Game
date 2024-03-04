@@ -15,6 +15,9 @@ namespace TakiApp.Services.GameLogic
         private readonly IDrawPileRepository _drawPileRepository;
         private readonly IDiscardPileRepository _discardPileRepository;
         private GameSettings? _gameSettings;
+        private Player? _onlinePlayer;
+
+        public Player GetPlayer => _onlinePlayer!;
 
         public GameInitializer(IUserCommunicator userCommunicator, IGameSettingsRepository gameSettingsRepository,
             IPlayersRepository playersRepository, CardsFactory cardsFactory, IDrawPileRepository drawPileRepository, 
@@ -57,13 +60,25 @@ namespace TakiApp.Services.GameLogic
 
                 await _gameSettingsRepository.CreateGameSettings(_gameSettings);
 
-                var cards = _cardsFactory.GenerateDeck();
-
-                await _drawPileRepository.AddManyRandomAsync(cards);
                 await InitializeCards();
+
+                await GenerateOnlinePlayer();
+
+                await _gameSettingsRepository.WaitGameStartAsync(1);
+
+                await DrawCards();
+
+                return;
             }
 
-            //TODO: game already setting up in the background we need to check if we can enter or not.
+            if (_gameSettings!.HasGameStarted)
+            {
+                _userCommunicator.SendErrorMessage("the game already started without you, GoodBye!");
+
+                throw new Exception("already started remove previous game");
+                return;
+            }
+
             if (!_gameSettings.IsOnline)
             {
                 await InitializeNormal();
@@ -71,11 +86,59 @@ namespace TakiApp.Services.GameLogic
                 return;
             }
 
+            await InitializeOnline();
+        }
+
+        private async Task DrawCards()
+        {
+            var players = await _playersRepository.GetAllAsync();
+
+            //TODO: use the cards repository instead and update the players after
+            foreach (var player in players)
+            {
+                while (player.Cards.Count < _gameSettings!.NumberOfPlayerCards)
+                    await _playersRepository.PlayerDrawCardAsync(player);
+            }
+        }
+
+        private async Task InitializeCards()
+        {
+            await _drawPileRepository.DeleteAllAsync();
+            await _discardPileRepository.DeleteAllAsync();
+
+            await _drawPileRepository.AddManyRandomAsync(_cardsFactory.GenerateDeck());
+            var drawCard = await _drawPileRepository.DrawCardAsync();
+
+            await _discardPileRepository.AddCardAsync(drawCard!);
+        }
+
+        private async Task InitializeOnline()
+        {
+            await GenerateOnlinePlayer();
+
+            var players = await _playersRepository.GetAllAsync();
+
+            await _gameSettingsRepository.WaitGameStartAsync(players.Count);
+        }
+
+        private async Task GenerateOnlinePlayer()
+        {
+            _onlinePlayer = new()
+            {
+                Id = ObjectId.GenerateNewId(),
+                Name = _userCommunicator.GetMessageFromUser("Please enter a name for your player"),
+                LastCheckIn = DateTime.UtcNow,
+                PlayerAlgorithm = typeof(ManualPlayerAlgorithm).ToString(),
+                Cards = [],
+                IsPlaying = false
+            };
+
+            await _playersRepository.CreateNewAsync(_onlinePlayer);
         }
 
         private async Task InitializeNormal()
         {
-            var players =  Enumerable.Range(0, _gameSettings!.NumberOfPlayers)
+            var players = Enumerable.Range(0, _gameSettings!.NumberOfPlayers)
                 .Select(x =>
                 {
                     Player player = new Player()
@@ -92,24 +155,8 @@ namespace TakiApp.Services.GameLogic
                 }).ToList();
 
             await _playersRepository.CreateManyAsync(players);
-            await InitializeCards();
 
-            players.ForEach(async p =>
-            {
-                while (p.Cards.Count < _gameSettings.NumberOfPlayerCards)
-                    await _playersRepository.PlayerDrawCardAsync(p);
-            });
-        }
-
-        private async Task InitializeCards()
-        {
-            await _drawPileRepository.DeleteAllAsync();
-            await _discardPileRepository.DeleteAllAsync();
-
-            await _drawPileRepository.AddManyRandomAsync(_cardsFactory.GenerateDeck());
-            var drawCard = await _drawPileRepository.DrawCardAsync();
-
-            await _discardPileRepository.AddCard(drawCard);
+            await DrawCards();
         }
     }
 }
