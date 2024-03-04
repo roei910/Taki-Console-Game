@@ -1,6 +1,6 @@
 ﻿namespace TakiApp.Interfaces
 {
-    internal interface ITakiGameRunner
+    public interface ITakiGameRunner
     {
         Task Run();
     }

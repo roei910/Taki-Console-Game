@@ -2,9 +2,9 @@
 
 namespace TakiApp.Interfaces
 {
-    internal interface IGameInitializer
+    public interface IGameInitializer
     {
         GameSettings GetGameSettings();
-        void InitializeGame();
+        Task InitializeGame();
     }
 }

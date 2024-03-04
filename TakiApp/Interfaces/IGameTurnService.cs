@@ -2,7 +2,7 @@
 
 namespace TakiApp.Interfaces
 {
-    internal interface IGameTurnService
+    public interface IGameTurnService
     {
         void PlayTurnById(ObjectId playerId);
         Task WaitTurnById(ObjectId playerId);

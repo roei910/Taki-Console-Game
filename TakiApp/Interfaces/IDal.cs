@@ -2,7 +2,7 @@
 
 namespace TakiApp.Interfaces
 {
-    internal interface IDal<T>
+    public interface IDal<T>
     {
         Task CreateOneAsync(T value);
         Task CreateManyAsync(List<T> values);

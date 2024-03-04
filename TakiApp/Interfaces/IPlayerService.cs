@@ -1,6 +1,12 @@
-﻿namespace TakiApp.Interfaces
+﻿using TakiApp.Models;
+
+namespace TakiApp.Interfaces
 {
-    internal interface IPlayerService
+    public interface IPlayerService
     {
+        Card PickCard(Player currentPlayer, Card topDiscard);
+        void AddCard(Card card);
+        void ChooseCard();
+        Player PickOtherPlayer(List<Player> players);
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TakiApp.Interfaces
 {
-    internal interface IUserConnectionService
+    public interface IUserConnectionService
     {
     }
 }
