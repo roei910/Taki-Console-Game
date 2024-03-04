@@ -12,10 +12,13 @@ namespace TakiApp.Repositories
             _drawPileDal = drawPileDal;
         }
 
-        public async Task<Card> DrawCardAsync()
+        public async Task<Card?> DrawCardAsync()
         {
             var cards = await _drawPileDal.FindAsync();
-            var first = cards.First();
+            var first = cards.FirstOrDefault();
+
+            if(first is null)
+                return null;
 
             await _drawPileDal.DeleteAsync(first);
 
@@ -26,7 +29,7 @@ namespace TakiApp.Repositories
         {
             var cardsShuffled = cards.OrderBy(x => Guid.NewGuid()).ToList();
 
-            await _drawPileDal.CreateManyAsync(cards);
+            await _drawPileDal.CreateManyAsync(cardsShuffled);
         }
 
         public async Task DeleteAllAsync()

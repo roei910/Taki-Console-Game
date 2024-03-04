@@ -12,7 +12,7 @@ namespace TakiApp.Repositories
             _discardPileDal = discardPileDal;
         }
 
-        public async Task AddCard(Card card)
+        public async Task AddCardAsync(Card card)
         {
             var cards = await _discardPileDal.FindAsync();
 
@@ -50,6 +50,11 @@ namespace TakiApp.Repositories
             cards.RemoveAt(0);
 
             return cards;
+        }
+
+        public async Task UpdateCard(Card cardToUpdate)
+        {
+            await _discardPileDal.UpdateOneAsync(cardToUpdate);
         }
     }
 }
