@@ -20,21 +20,6 @@ namespace Taki.Models.Messages
             Console.WriteLine(message);
         }
 
-        public EnumType GetEnumFromUser<EnumType>()
-        {
-            EnumType[] values = (EnumType[])Enum.GetValues(typeof(EnumType));
-
-            return GetUserEnumFromArray(values);
-        }
-
-        public Color GetColorFromUserEnum<EnumType>()
-        {
-            string? enumString = (GetEnumFromUser<EnumType>()?.ToString()) ?? throw
-                new ArgumentNullException("error trying to get color");
-            Color color = Color.FromName(enumString);
-            return color;
-        }
-
         public string? GetMessageFromUser(object? message)
         {
             if (message != null)
@@ -55,9 +40,10 @@ namespace Taki.Models.Messages
             return answer;
         }
 
-        public int GetNumberFromUser(object? message)
+        public int GetNumberFromUser(object? message = null)
         {
-            Console.WriteLine(message);
+            if(message is not null)
+                Console.WriteLine(message);
 
             int number;
 
@@ -73,12 +59,6 @@ namespace Taki.Models.Messages
         {
             SendAlertMessage(message);
             return Console.ReadLine();
-        }
-
-        public T GetEnumFromUser<T>(List<T> excludedOptions)
-        {
-            T[] values = (T[])Enum.GetValues(typeof(T));
-            return GetUserEnumFromArray(values.Where(value => !excludedOptions.Contains(value)).ToArray());
         }
 
         public void SendColorMessageToUser(Color color, object? message)
@@ -104,34 +84,26 @@ namespace Taki.Models.Messages
             return ConsoleColor.White;
         }
 
-        private T GetUserEnumFromArray<T>(T[] values)
-        {
-            SendMessageToUser("Please choose the type by index:");
-
-            _ = values
-                .Select((i, value) =>
-                {
-                    SendMessageToUser($"{i}. {value}");
-
-                    return i;
-                }).ToList();
-
-            if (!int.TryParse(Console.ReadLine(), out int index) ||
-                index >= values.Length || index < 0)
-            {
-                SendErrorMessage("please choose valid index\n");
-                return GetUserEnumFromArray(values);
-            }
-
-            Console.WriteLine();
-            return values[index];
-        }
-
         private void SendColorMessageToUser(ConsoleColor color, object? message)
         {
             Console.ForegroundColor = color;
             SendMessageToUser(message);
             Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        public T GetTypeFromUser<T>(List<T> values, Func<T, string>? toString = null)
+        {
+            string message = string.Join('\n', values.Select((val, i) => $"{i + 1}. {toString?.Invoke(val) ?? val?.ToString()}"));
+
+            SendAlertMessage("Please pick by index from list by index:");
+            SendAlertMessage(message);
+
+            int number = GetNumberFromUser();
+
+            while(number > values.Count || number < 1)
+                number = GetNumberFromUser("Please choose an index from the list");
+
+            return values[number - 1];
         }
     }
 }
