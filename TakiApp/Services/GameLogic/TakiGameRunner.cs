@@ -1,7 +1,4 @@
-﻿using MongoDB.Bson;
-using Taki.Models.Algorithm;
-using TakiApp.Interfaces;
-using TakiApp.Models;
+﻿using TakiApp.Interfaces;
 
 namespace TakiApp.Services.GameLogic
 {
@@ -38,42 +35,23 @@ namespace TakiApp.Services.GameLogic
 
             if (gameSettings!.IsOnline)
             {
-                await StartOnlineGame(gameSettings);
+                await StartOnlineGame();
                 return;
             }
 
             await StartNormal();
         }
 
-        private async Task StartOnlineGame(GameSettings gameSettings)
+        private async Task StartOnlineGame()
         {
-            if(gameSettings.HasGameStarted)
-            {
-                _userCommunicator.SendErrorMessage("the game already started without you, GoodBye!");
-                return;
-            }
-
-            Player player = new()
-            {
-                Id = ObjectId.GenerateNewId(),
-                Name = _userCommunicator.GetMessageFromUser("Please enter a name for your player"),
-                LastCheckIn = DateTime.UtcNow,
-                PlayerAlgorithm = typeof(ManualPlayerAlgorithm).ToString(),
-                Cards = [],
-                IsPlaying = false
-            };
-
-            await _playersRepository.CreateNewAsync(player);
-            var players = await _playersRepository.GetAllAsync();
-
-            await _gameSettingsRepository.WaitGameStart(players.Count);
+            var player = _gameInitializer.GetPlayer;
 
             while (true)
             {
                 _userCommunicator.SendAlertMessage("waiting for your turn!");
 
-                await _gameTurnService.WaitTurnById(player.Id);
-                _gameTurnService.PlayTurnById(player.Id);
+                await _gameTurnService.WaitTurnByIdAsync(player.Id);
+                await _gameTurnService.PlayTurnByIdAsync(player.Id);
             }
         }
 
@@ -81,7 +59,7 @@ namespace TakiApp.Services.GameLogic
         {
             var players = await _playersRepository.GetAllAsync();
 
-            await _gameSettingsRepository.WaitGameStart(players.Count);
+            await _gameSettingsRepository.WaitGameStartAsync(players.Count);
         }
     }
 }
