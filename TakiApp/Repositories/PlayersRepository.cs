@@ -1,5 +1,4 @@
 ﻿using MongoDB.Bson;
-using MongoDB.Driver;
 using TakiApp.Interfaces;
 using TakiApp.Models;
 
@@ -20,12 +19,29 @@ namespace TakiApp.Repositories
 
         public async Task CreateManyAsync(List<Player> players)
         {
+            int count = 0;
+            foreach(Player player in players)
+                player.Order = count++;
+
             await _playersDal.CreateManyAsync(players);
         }
 
-        public async Task CreateNewAsync(Player player)
+        public async Task CreatePlayerAsync(Player player)
         {
             await _playersDal.CreateOneAsync(player);
+        }
+
+        public async Task DeleteAllAsync()
+        {
+            await _playersDal.DeleteAllAsync();
+        }
+
+        public async Task DrawCards(Player player, int cardsToDraw)
+        {
+            List<Card> cards = await _drawPileRepository.DrawCardsAsync(cardsToDraw);
+
+            player.Cards.AddRange(cards);
+            await _playersDal.UpdateOneAsync(player);
         }
 
         public async Task<List<Player>> GetAllAsync()
@@ -68,6 +84,11 @@ namespace TakiApp.Repositories
             await _playersDal.UpdateOneAsync(player);
 
             return player;
+        }
+
+        public async Task UpdatePlayer(Player player)
+        {
+            await _playersDal.UpdateOneAsync(player);
         }
 
         public async Task WaitTurnAsync(ObjectId playerId)
