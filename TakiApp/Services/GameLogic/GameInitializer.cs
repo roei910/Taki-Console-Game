@@ -133,7 +133,7 @@ namespace TakiApp.Services.GameLogic
                 IsPlaying = false
             };
 
-            await _playersRepository.CreateNewAsync(_onlinePlayer);
+            await _playersRepository.CreatePlayerAsync(_onlinePlayer);
         }
 
         private async Task InitializeNormal()

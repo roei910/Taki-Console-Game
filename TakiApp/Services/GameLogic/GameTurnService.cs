@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson;
+using System.Drawing;
 using TakiApp.Interfaces;
 using TakiApp.Models;
 
@@ -11,18 +12,18 @@ namespace TakiApp.Services.GameLogic
         private readonly IDiscardPileRepository _discardPileRepository;
         private readonly IDrawPileRepository _drawPileRepository;
         private readonly IUserCommunicator _userCommunicator;
-        private readonly List<ICardService> _cardServices;
+        private readonly ICardPlayService _cardPlayService;
 
         public GameTurnService(IPlayersRepository playerRepository, IPlayerService playerService,
             IDiscardPileRepository discardPileRepository, IDrawPileRepository drawPileRepository,
-            IUserCommunicator userCommunicator, List<ICardService> cardServices)
+            IUserCommunicator userCommunicator, List<ICardService> cardServices, ICardPlayService cardPlayService)
         {
             _playerRepository = playerRepository;
             _playersService = playerService;
             _discardPileRepository = discardPileRepository;
             _drawPileRepository = drawPileRepository;
             _userCommunicator = userCommunicator;
-            _cardServices = cardServices;
+            _cardPlayService = cardPlayService;
         }
 
         public async Task PlayTurnByIdAsync(ObjectId playerId)
@@ -30,25 +31,24 @@ namespace TakiApp.Services.GameLogic
             var topDiscard = await _discardPileRepository.GetTopDiscard();
             var currentPlayer = await _playerRepository.GetCurrentPlayerAsync();
 
-            _userCommunicator.SendAlertMessage($"Top discard: {topDiscard.Type}, {topDiscard.CardColor}");
+            _userCommunicator.SendAlertMessage($"Top discard: {topDiscard.Type}, {Color.FromName(topDiscard.CardColor)}");
             _userCommunicator.SendAlertMessage($"Current player: {currentPlayer.Name}");
 
-            Func<Card, bool> canStack = (Card card) => MatchCardService(card).CanStackOtherOnThis(topDiscard, card);
+            var canStack = _cardPlayService.CanStack(topDiscard);
             Card? card = _playersService.PickCard(currentPlayer, canStack);
             
             if (card is null)
             {
-                Card? drawCard = await _drawPileRepository.DrawCardAsync();
-
-                if (drawCard is null)
-                    return;
-
-                _playersService.AddCard(currentPlayer, drawCard);
+                await _playersService.DrawCard(currentPlayer);
 
                 return;
             }
 
-            await MatchCardService(card).PlayAsync(currentPlayer, card, topDiscard);
+            currentPlayer.Cards.Remove(card);
+            await _playerRepository.UpdatePlayer(currentPlayer);
+            await _discardPileRepository.AddCardAsync(card);
+
+            await _cardPlayService.PlayCardAsync(currentPlayer, card);
         }
 
         public async Task WaitTurnByIdAsync(ObjectId playerId)
@@ -56,13 +56,5 @@ namespace TakiApp.Services.GameLogic
             //TODO: update the screen from here when changes to the topdiscard is happening, maybe with is completed on the task
             await _playerRepository.WaitTurnAsync(playerId);
         }
-
-        private ICardService MatchCardService(Card card)
-        {
-            var found = _cardServices.Where(service => service.ToString() == card.Type.Split(':')[0]).FirstOrDefault();
-
-            return found ?? throw new Exception("couldnt find the card service in the list");
-        }
-
     }
 }
