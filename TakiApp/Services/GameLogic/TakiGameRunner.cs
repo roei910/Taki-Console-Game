@@ -8,24 +8,18 @@ namespace TakiApp.Services.GameLogic
 
         private readonly IPlayersRepository _playersRepository;
         private readonly IGameSettingsRepository _gameSettingsRepository;
-        private readonly IDiscardPileRepository _discardPileRepository;
-        private readonly IDrawPileRepository _drawPileRepository;
-
         private readonly IGameInitializer _gameInitializer;
         private readonly IGameTurnService _gameTurnService;
 
         public TakiGameRunner(IGameInitializer gameInitializer, 
             IGameTurnService gameTurnService, IUserCommunicator userCommunicator,
-            IPlayersRepository playersRepository, IDiscardPileRepository discardPileRepository,
-            IDrawPileRepository drawPileRepository, IGameSettingsRepository gameSettingsRepository)
+            IPlayersRepository playersRepository, IGameSettingsRepository gameSettingsRepository)
         {
             _gameInitializer = gameInitializer;
             _gameTurnService = gameTurnService;
             _userCommunicator = userCommunicator;
             _playersRepository = playersRepository;
             _gameSettingsRepository = gameSettingsRepository;
-            _discardPileRepository = discardPileRepository;
-            _drawPileRepository = drawPileRepository;
         }
 
         public async Task Run()
