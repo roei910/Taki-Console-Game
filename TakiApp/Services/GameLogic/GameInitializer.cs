@@ -75,7 +75,7 @@ namespace TakiApp.Services.GameLogic
             {
                 _userCommunicator.SendErrorMessage("the game already started without you, GoodBye!");
 
-                throw new Exception("already started remove previous game");
+                //TODO: check if the game is playing or can be removed
                 return;
             }
 
