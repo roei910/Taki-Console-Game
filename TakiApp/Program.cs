@@ -68,6 +68,7 @@ var serviceProvider = new ServiceCollection()
     .AddSingleton<ICardService, Plus2>()
     .AddSingleton<ICardService, SuperTaki>()
     .AddSingleton<ICardService, TakiCard>()
+    .AddSingleton<ICardService, Stop>()
     .AddSingleton<CardsFactory>()
 
     .AddSingleton<IDiscardPileDal, DiscardPileDal>()
