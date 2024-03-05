@@ -21,7 +21,7 @@ namespace TakiApp.Services.Cards
 
         public bool CanStackOtherOnThis(Card topDiscard, Card otherCard)
         {
-            if (Color.FromName(topDiscard.CardColor).Equals(Color.Empty))
+            if (topDiscard.CardColor == Color.Empty.ToString())
                 return true;
 
             return topDiscard.CardColor == otherCard.CardColor;
