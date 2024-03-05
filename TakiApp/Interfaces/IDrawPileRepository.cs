@@ -7,5 +7,6 @@ namespace TakiApp.Interfaces
         Task AddManyRandomAsync(List<Card> cards);
         Task DeleteAllAsync();
         Task<Card?> DrawCardAsync();
+        Task<List<Card>> DrawCardsAsync(int cardsToDraw);
     }
 }

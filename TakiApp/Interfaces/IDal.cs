@@ -10,6 +10,7 @@ namespace TakiApp.Interfaces
         Task<List<T>> FindAsync();
         Task<T> FindOneAsync(ObjectId objectId);
         Task DeleteAsync(T value);
+        Task DeleteManyAsync(List<T> values);
         Task DeleteAllAsync();
     }
 }
