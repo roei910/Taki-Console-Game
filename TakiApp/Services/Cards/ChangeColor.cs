@@ -20,13 +20,16 @@ namespace TakiApp.Services.Cards
             if (topDiscard.CardColor == Color.Empty.ToString())
                 return true;
 
+            if (topDiscard.CardColor == otherCard.CardColor)
+                return true;
+
             return base.CanStackOtherOnThis(topDiscard, otherCard);
         }
 
         public override List<Card> GenerateCardsForDeck()
         {
             return Enumerable.Range(0, 2)
-                .Select(j => new Card(typeof(ChangeColor).ToString(), Color.Empty.Name)).ToList();
+                .Select(j => new Card(typeof(ChangeColor).ToString(), Color.Empty.ToString())).ToList();
         }
 
         public async override Task PlayAsync(Player player, Card cardPlayed, ICardPlayService cardPlayService)

@@ -26,7 +26,7 @@ namespace TakiApp.Services.Cards
         }
 
         public override async Task PlayAsync(Player player, Card cardPlayed, ICardPlayService cardPlayService)
-        {
+        {//TODO: test
             _userCommunicator.SendAlertMessage("please choose one more card or draw");
 
             _userCommunicator.SendAlertMessage($"Top discard: {this}");
