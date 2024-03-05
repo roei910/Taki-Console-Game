@@ -23,7 +23,6 @@ namespace TakiApp.Services.Cards
             return cards;
         }
 
-        //TODO: check if works
         public async override Task PlayAsync(Player player, Card cardPlayed, ICardPlayService cardPlayService)
         {
             _userCommunicator.SendErrorMessage("User used change direction card!\n");
@@ -33,12 +32,9 @@ namespace TakiApp.Services.Cards
             if (players.Count == 0)
                 throw new Exception("something went wrong!");
 
-            players.Reverse();
+            players = players.OrderByDescending(x => x.Order).ToList();
 
-            await _playersRepository.DeleteAllAsync();
-            await _playersRepository.CreateManyAsync(players);
-
-            await base.PlayAsync(player, cardPlayed, cardPlayService);
+            await _playersRepository.UpdateOrder(players);
         }
     }
 }
