@@ -16,6 +16,14 @@ namespace TakiApp.Dal
             await _collection.DeleteOneAsync(filter);
         }
 
+        public override async Task DeleteManyAsync(List<Card> values)
+        {
+            var listOfIds = values.Select(x => x.Id).ToList();
+            var filter = Builders<Card>.Filter.In(x => x.Id, listOfIds);
+
+            await _collection.DeleteManyAsync(filter);
+        }
+
         public async override Task<Card> FindOneAsync(ObjectId id)
         {
             var filter = Builders<Card>.Filter.Eq(x => x.Id, id);

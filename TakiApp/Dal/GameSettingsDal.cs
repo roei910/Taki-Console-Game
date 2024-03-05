@@ -16,6 +16,14 @@ namespace TakiApp.Dal
             await _collection.DeleteOneAsync(filter);
         }
 
+        public async override Task DeleteManyAsync(List<GameSettings> values)
+        {
+            var listOfIds = values.Select(x => x.Id).ToList();
+            var filter = Builders<GameSettings>.Filter.In(x => x.Id, listOfIds);
+
+            await _collection.DeleteManyAsync(filter);
+        }
+
         public async override Task<GameSettings> FindOneAsync(ObjectId objectId)
         {
             var filter = Builders<GameSettings>.Filter.Eq(x => x.Id, objectId);
