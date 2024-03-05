@@ -33,6 +33,12 @@ namespace TakiApp.Dal
             return found.First();
         }
 
+        public async override Task UpdateManyAsync(List<Player> valuesToUpdate)
+        {
+            foreach (var value in valuesToUpdate)
+                await UpdateOneAsync(value);
+        }
+
         public async override Task UpdateOneAsync(Player valueToUpdate)
         {
             var filter = Builders<Player>.Filter.Eq(x => x.Id, valueToUpdate.Id);

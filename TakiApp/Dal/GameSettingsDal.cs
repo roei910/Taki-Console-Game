@@ -32,6 +32,11 @@ namespace TakiApp.Dal
             return result.First();
         }
 
+        public override Task UpdateManyAsync(List<GameSettings> valuesToUpdate)
+        {
+            throw new NotImplementedException();
+        }
+
         public async override Task UpdateOneAsync(GameSettings valueToUpdate)
         {
             var filter = Builders<GameSettings>.Filter.Eq(x => x.Id, valueToUpdate.Id);

@@ -32,9 +32,19 @@ namespace TakiApp.Dal
             return found.First();
         }
 
-        public async override Task UpdateOneAsync(Card valueToUpdate)
+        public override Task UpdateManyAsync(List<Card> valuesToUpdate)
         {
             throw new NotImplementedException();
+        }
+
+        public override async Task UpdateOneAsync(Card valueToUpdate)
+        {
+            var filter = Builders<Card>.Filter.Eq(x => x.Id, valueToUpdate.Id);
+            var update = Builders<Card>.Update
+                .Set(x => x.CardColor, valueToUpdate.CardColor)
+                .Set(x => x.CardConfigurations, valueToUpdate.CardConfigurations);
+
+            await _collection.UpdateOneAsync(filter, update);
         }
     }
 }

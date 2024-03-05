@@ -55,5 +55,6 @@ namespace Taki.Dal
         public abstract Task<T> FindOneAsync(ObjectId objectId);
         public abstract Task DeleteAsync(T value);
         public abstract Task DeleteManyAsync(List<T> values);
+        public abstract Task UpdateManyAsync(List<T> valuesToUpdate);
     }
 }
