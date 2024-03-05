@@ -18,5 +18,10 @@ namespace TakiApp.Services.Cards
                 
             return cards;
         }
+
+        public override Task PlayAsync(Player player, Card cardPlayed, ICardPlayService cardPlayService)
+        {
+            return Task.CompletedTask;
+        }
     }
 }

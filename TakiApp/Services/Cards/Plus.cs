@@ -38,7 +38,6 @@ namespace TakiApp.Services.Cards
             if (playerCard == null)
             {
                 await _playersRepository.DrawCards(player, CardsToDraw(cardPlayed));
-                await _playersRepository.NextPlayerAsync(player);
 
                 return;
             }

@@ -18,6 +18,11 @@ namespace TakiApp.Services.Cards
             return cards;
         }
 
+        public override Task PlayAsync(Player player, Card cardPlayed, ICardPlayService cardPlayService)
+        {
+            throw new NotImplementedException();
+        }
+
         //Card card1 = new Card(ObjectId.GenerateNewId(), "8 card", Color.Blue.Name, []);
 
         //JObject jObject = new JObject();

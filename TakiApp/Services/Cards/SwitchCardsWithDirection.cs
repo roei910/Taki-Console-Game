@@ -14,5 +14,10 @@ namespace TakiApp.Services.Cards
         {
             throw new NotImplementedException();
         }
+
+        public override Task PlayAsync(Player player, Card cardPlayed, ICardPlayService cardPlayService)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
