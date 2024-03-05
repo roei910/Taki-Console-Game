@@ -24,8 +24,6 @@ using TakiApp.Services.Players;
 
 //TODO: change the way i keep the order. do order by everywhere, including cards
 
-
-
 var serviceProvider = new ServiceCollection()
     .AddSingleton<IConfiguration>(x => new ConfigurationBuilder()
         .AddJsonFile("appsettings.json", false, true)
@@ -49,6 +47,8 @@ var serviceProvider = new ServiceCollection()
     .AddSingleton<ICardService, TakiCard>()
     .AddSingleton<ICardService, Stop>()
     //.AddSingleton<ICardService, SuperTaki>()
+    //.AddSingleton<ICardService, SwitchCardsWithDirection>()
+    //.AddSingleton<ICardService, SwitchCardsWithUser>()
     .AddSingleton<CardsFactory>()
 
     .AddSingleton<IDiscardPileDal, DiscardPileDal>()
