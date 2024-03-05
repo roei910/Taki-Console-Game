@@ -40,18 +40,26 @@ using TakiApp.Services.Players;
 
 //TODO: the player will send CheckIns to see if he is still connected. if he doesnt reconnect for 10 secs it gets deleted, cards go back.
 
+
+
+//TODO: change the way i keep the order. do order by
+
+
+
 var serviceProvider = new ServiceCollection()
     .AddSingleton<IConfiguration>(x => new ConfigurationBuilder()
         .AddJsonFile("appsettings.json", false, true)
         .Build())
     .AddSingleton<ConstantVariables>()
     .AddSingleton<MongoDbConfig>()
+    .AddSingleton<Random>()
 
     .AddSingleton<IPlayerService, PlayerService>()
     .AddSingleton<List<IPlayerAlgorithm>>()
     .AddSingleton<IPlayerAlgorithm, ManualPlayerAlgorithm>()
     .AddSingleton<IPlayerAlgorithm, PlayerAlgorithm>()
 
+    .AddSingleton<ICardPlayService , CardPlayService>()
     .AddSingleton<List<ICardService>>()
     .AddSingleton<ICardService, ChangeColor>()
     .AddSingleton<ICardService, ChangeDirection>()

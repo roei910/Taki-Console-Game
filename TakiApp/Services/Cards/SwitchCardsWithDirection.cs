@@ -1,12 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using TakiApp.Interfaces;
+using TakiApp.Models;
 
 namespace TakiApp.Services.Cards
 {
-    internal class SwitchCardsWithDirection
+    public class SwitchCardsWithDirection : CardService
     {
+        public SwitchCardsWithDirection(IDiscardPileRepository discardPileRepository, IPlayersRepository playersRepository) : 
+            base(discardPileRepository, playersRepository)
+        {
+        }
+
+        public override List<Card> GenerateCardsForDeck()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

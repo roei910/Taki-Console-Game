@@ -4,56 +4,44 @@ using TakiApp.Models;
 
 namespace TakiApp.Services.Cards
 {
-    public class ChangeColor : ICardService
+    public class ChangeColor : CardService
     {
-        private readonly IDiscardPileRepository _discardPileRepository;
-        private readonly IPlayersRepository _playersRepository;
         private readonly IPlayerService _playerService;
 
-        public ChangeColor(IDiscardPileRepository discardPileRepository,
-            IPlayersRepository playersRepository,
-            IPlayerService playerService)
+        public ChangeColor(IPlayerService playerService, IDiscardPileRepository discardPileRepository, 
+            IPlayersRepository playersRepository) : 
+            base(discardPileRepository, playersRepository)
         {
-            _discardPileRepository = discardPileRepository;
-            _playersRepository = playersRepository;
             _playerService = playerService;
         }
 
-        public bool CanStackOtherOnThis(Card topDiscard, Card otherCard)
+        public override bool CanStackOtherOnThis(Card topDiscard, Card otherCard)
         {
             if (topDiscard.CardColor == Color.Empty.ToString())
                 return true;
 
-            return topDiscard.CardColor == otherCard.CardColor;
+            return base.CanStackOtherOnThis(topDiscard, otherCard);
         }
 
-        public int CardsToDraw(Card cardPlayed)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void FinishNoPlay(Card cardPlayed) { }
-
-        public List<Card> GenerateCardsForDeck()
+        public override List<Card> GenerateCardsForDeck()
         {
             return Enumerable.Range(0, 2)
                 .Select(j => new Card(typeof(ChangeColor).ToString(), Color.Empty.Name)).ToList();
         }
 
-        public async Task PlayAsync(Player player, Card cardPlayed, Card topDiscard)
+        public async override Task PlayAsync(Player player, Card cardPlayed, ICardPlayService cardPlayService)
         {
             while (!ColorCard.Colors.Contains(Color.FromName(cardPlayed.CardColor)))
                 cardPlayed.CardColor = _playerService.ChooseColor(player).Name;
 
-            await _discardPileRepository.AddCardAsync(cardPlayed);
-            await _playersRepository.NextPlayerAsync(player);
+            await base.PlayAsync(player, cardPlayed, cardPlayService);
         }
 
-        public void ResetCard(Card cardToReset)
+        public override async Task ResetCard(Card cardToReset)
         {
             cardToReset.CardColor = Color.Empty.Name;
 
-            _discardPileRepository.UpdateCard(cardToReset);
+            await _discardPileRepository.UpdateCardAsync(cardToReset);
         }
     }
 }

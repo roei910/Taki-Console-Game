@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using TakiApp.Interfaces;
 
 namespace TakiApp.Services.Cards
 {
-    internal class SwitchCardsWithUser
+    public class SwitchCardsWithUser : SwitchCardsWithDirection
     {
+        public SwitchCardsWithUser(IDiscardPileRepository discardPileRepository, IPlayersRepository playersRepository) : 
+            base(discardPileRepository, playersRepository) { }
     }
 }

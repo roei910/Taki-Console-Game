@@ -6,15 +6,39 @@ namespace TakiApp.Services.Cards
 {
     public class ChangeDirection : ColorCard
     {
-        public ChangeDirection(IDiscardPileRepository discardPileRepository, IPlayersRepository playersRepository) : 
-            base(discardPileRepository, playersRepository) { }
+        private readonly IUserCommunicator _userCommunicator;
+
+        public ChangeDirection(IDiscardPileRepository discardPileRepository, IPlayersRepository playersRepository,
+            IUserCommunicator userCommunicator) :
+            base(discardPileRepository, playersRepository) 
+        {
+            _userCommunicator = userCommunicator;
+        }
 
         public override List<Card> GenerateCardsForDeck()
         {
             var cards = new List<Color>() { Color.Blue, Color.Yellow, Color.Green, Color.Red }
-                .Select(color => new Card(typeof(ChangeDirection).ToString(), color.Name)).ToList();
+                .Select(color => new Card(typeof(ChangeDirection).ToString(), color.ToString())).ToList();
 
             return cards;
+        }
+
+        //TODO: check if works
+        public async override Task PlayAsync(Player player, Card cardPlayed, ICardPlayService cardPlayService)
+        {
+            _userCommunicator.SendErrorMessage("User used change direction card!\n");
+
+            var players = await _playersRepository.GetAllAsync();
+
+            if (players.Count == 0)
+                throw new Exception("something went wrong!");
+
+            players.Reverse();
+
+            await _playersRepository.DeleteAllAsync();
+            await _playersRepository.CreateManyAsync(players);
+
+            await base.PlayAsync(player, cardPlayed, cardPlayService);
         }
     }
 }

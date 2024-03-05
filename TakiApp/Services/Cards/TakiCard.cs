@@ -12,7 +12,7 @@ namespace TakiApp.Services.Cards
         public override List<Card> GenerateCardsForDeck()
         {
             var cards = new List<Color>() { Color.Blue, Color.Yellow, Color.Green, Color.Red }
-                .Select(color => new Card(typeof(TakiCard).ToString(), color.Name)).ToList();
+                .Select(color => new Card(typeof(TakiCard).ToString(), color.ToString())).ToList();
 
             return cards;
         }
