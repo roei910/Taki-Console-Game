@@ -17,9 +17,9 @@ namespace TakiApp.Dal
             await _collection.DeleteOneAsync(filter);
         }
 
-        public async override Task DeleteManyAsync(List<Player> values)
+        public async override Task DeleteManyAsync(List<Player> valuesToUpdate)
         {
-            var listOfIds = values.Select(x => x.Id).ToList();
+            var listOfIds = valuesToUpdate.Select(x => x.Id).ToList();
             var filter = Builders<Player>.Filter.In(x => x.Id, listOfIds);
 
             await _collection.DeleteManyAsync(filter);
@@ -39,7 +39,8 @@ namespace TakiApp.Dal
             var update = Builders<Player>.Update
                 .Set(x => x.LastCheckIn, DateTime.UtcNow)
                 .Set(x => x.Cards, valueToUpdate.Cards)
-                .Set(x => x.IsPlaying, valueToUpdate.IsPlaying);
+                .Set(x => x.IsPlaying, valueToUpdate.IsPlaying)
+                .Set(x => x.Order, valueToUpdate.Order);
 
             await _collection.UpdateOneAsync(filter, update);
         }

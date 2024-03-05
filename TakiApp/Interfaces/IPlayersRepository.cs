@@ -10,10 +10,11 @@ namespace TakiApp.Interfaces
         Task CreateManyAsync(List<Player> players);
         Task<Player> PlayerDrawCardAsync(Player player);
         Task WaitTurnAsync(ObjectId playerId);
-        Task NextPlayerAsync(Player player);
+        Task NextPlayerAsync();
         Task<Player> GetCurrentPlayerAsync();
         Task DeleteAllAsync();
         Task UpdatePlayer(Player player);
         Task DrawCards(Player player, int cardsToDraw);
+        Task UpdateOrder(List<Player> players);
     }
 }
