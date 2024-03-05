@@ -31,10 +31,10 @@ namespace TakiApp.Services.Cards
 
         public async override Task PlayAsync(Player player, Card cardPlayed, ICardPlayService cardPlayService)
         {
-            while (!ColorCard.Colors.Contains(Color.FromName(cardPlayed.CardColor)))
-                cardPlayed.CardColor = _playerService.ChooseColor(player).Name;
+            while (!ColorCard.Colors.Any(x => x.ToString() == cardPlayed.CardColor.ToString()))
+                cardPlayed.CardColor = _playerService.ChooseColor(player).ToString();
 
-            await base.PlayAsync(player, cardPlayed, cardPlayService);
+            await _discardPileRepository.UpdateCardAsync(cardPlayed);
         }
 
         public override async Task ResetCard(Card cardToReset)
