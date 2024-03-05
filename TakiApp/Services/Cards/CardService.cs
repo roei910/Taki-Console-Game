@@ -15,11 +15,6 @@ namespace TakiApp.Services.Cards
             _playersRepository = playersRepository;
         }
 
-        public virtual async Task PlayAsync(Player player, Card cardPlayed, ICardPlayService cardPlayService)
-        {
-            await _playersRepository.NextPlayerAsync(player);
-        }
-
         public virtual bool CanStackOtherOnThis(Card topDiscard, Card otherCard)
         {
             if (otherCard.CardColor == ColorCard.DEFAULT_COLOR.ToString())
@@ -36,6 +31,8 @@ namespace TakiApp.Services.Cards
         public virtual void FinishNoPlay(Card cardPlayed) { }
 
         public virtual Task ResetCard(Card cardToReset) => Task.CompletedTask;
+
+        public abstract Task PlayAsync(Player player, Card cardPlayed, ICardPlayService cardPlayService);
 
         public abstract List<Card> GenerateCardsForDeck();
     }

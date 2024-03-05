@@ -57,7 +57,6 @@ namespace TakiApp.Services.Players
 
             currentPlayer.Cards.Add(drawCard);
             await _playersRepository.UpdatePlayer(currentPlayer);
-            await _playersRepository.NextPlayerAsync(currentPlayer);
         }
     }
 }
