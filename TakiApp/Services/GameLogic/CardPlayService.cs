@@ -14,7 +14,8 @@ namespace TakiApp.Services.GameLogic
 
         public Func<Card, bool> CanStack(Card cardToStack)
         {
-            Func<Card, bool> canStack = (Card card) => MatchCardService(card).CanStackOtherOnThis(cardToStack, card);
+            var cardService = MatchCardService(cardToStack);
+            Func<Card, bool> canStack = (Card card) => cardService.CanStackOtherOnThis(cardToStack, card);
 
             return canStack;
         }
