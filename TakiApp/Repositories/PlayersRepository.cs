@@ -28,6 +28,10 @@ namespace TakiApp.Repositories
 
         public async Task CreatePlayerAsync(Player player)
         {
+            var players = await _playersDal.FindAsync();
+
+            player.Order = players.Count;
+
             await _playersDal.CreateOneAsync(player);
         }
 
@@ -55,22 +59,24 @@ namespace TakiApp.Repositories
         {
             var players = await _playersDal.FindAsync();
 
-            return players[0];
+            var ordered = players.Where(x => x.IsPlaying).ToList();
+
+            return ordered.First();
         }
 
-        public async Task NextPlayerAsync(Player player)
+        public async Task NextPlayerAsync()
         {
-            await _playersDal.DeleteAsync(player);
+            var players = await _playersDal.FindAsync();
+            var orderedPlayers = players.OrderBy(x => x.Order).ToList();
+            
+            var currentPlayer = orderedPlayers.Where(x => x.IsPlaying).First();
+            var nextPlayer = orderedPlayers.ElementAtOrDefault(orderedPlayers.IndexOf(currentPlayer) + 1) ?? orderedPlayers[0];
 
-            player.IsPlaying = false;
+            currentPlayer.IsPlaying = false;
+            await _playersDal.UpdateOneAsync(currentPlayer);
 
-            await _playersDal.CreateOneAsync(player);
-
-            var current = await GetCurrentPlayerAsync();
-
-            current.IsPlaying = true;
-
-            await _playersDal.UpdateOneAsync(current);
+            nextPlayer.IsPlaying = true;
+            await _playersDal.UpdateOneAsync(nextPlayer);
         }
 
         public async Task<Player> PlayerDrawCardAsync(Player player)
@@ -84,6 +90,15 @@ namespace TakiApp.Repositories
             await _playersDal.UpdateOneAsync(player);
 
             return player;
+        }
+
+        public async Task UpdateOrder(List<Player> players)
+        {
+            int count = 0;
+            foreach (Player player in players)
+                player.Order = count++;
+
+            await _playersDal.UpdateManyAsync(players);
         }
 
         public async Task UpdatePlayer(Player player)
