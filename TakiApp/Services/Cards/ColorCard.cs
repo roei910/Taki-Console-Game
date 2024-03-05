@@ -18,6 +18,13 @@ namespace TakiApp.Services.Cards
             _discardPileRepository = discardPileRepository;
             _playersRepository = playersRepository;
         }
+
+        public virtual async Task PlayAsync(Player player, Card cardPlayed, Card topDiscard)
+        {
+            await _discardPileRepository.AddCardAsync(cardPlayed);
+            await _playersRepository.NextPlayerAsync(player);
+        }
+
         public virtual bool CanStackOtherOnThis(Card topDiscard, Card otherCard)
         {
             if (topDiscard.CardColor == DEFAULT_COLOR.Name)
@@ -29,28 +36,12 @@ namespace TakiApp.Services.Cards
             return topDiscard.CardColor == otherCard.CardColor;
         }
 
-        public int CardsToDraw(Card cardPlayed)
-        {
-            throw new NotImplementedException();
-        }
+        public virtual int CardsToDraw(Card cardPlayed) => 1;
 
-        public void FinishNoPlay(Card cardPlayed)
-        {
-            throw new NotImplementedException();
-        }
+        public virtual void FinishNoPlay(Card cardPlayed) { }
+
+        public virtual void ResetCard(Card cardToReset) { }
 
         public abstract List<Card> GenerateCardsForDeck();
-
-        //TODO: make async
-        public async Task PlayAsync(Player player, Card cardPlayed, Card topDiscard)
-        {
-            await _discardPileRepository.AddCardAsync(cardPlayed);
-            await _playersRepository.NextPlayerAsync(player);
-        }
-
-        public void ResetCard(Card cardToReset)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
