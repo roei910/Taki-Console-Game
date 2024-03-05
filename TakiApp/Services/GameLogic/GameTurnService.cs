@@ -10,6 +10,7 @@ namespace TakiApp.Services.GameLogic
         private readonly IPlayersRepository _playerRepository;
         private readonly IPlayerService _playersService;
         private readonly IDiscardPileRepository _discardPileRepository;
+        //TODO: not used check if needed
         private readonly IDrawPileRepository _drawPileRepository;
         private readonly IUserCommunicator _userCommunicator;
         private readonly ICardPlayService _cardPlayService;
@@ -28,7 +29,7 @@ namespace TakiApp.Services.GameLogic
 
         public async Task PlayTurnByIdAsync(ObjectId playerId)
         {
-            var topDiscard = await _discardPileRepository.GetTopDiscard();
+            var topDiscard = await _discardPileRepository.GetTopDiscardAsync();
             var currentPlayer = await _playerRepository.GetCurrentPlayerAsync();
 
             _userCommunicator.SendAlertMessage($"Top discard: {topDiscard.Type}, {Color.FromName(topDiscard.CardColor)}");
