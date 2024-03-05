@@ -52,7 +52,7 @@ namespace TakiApp.Repositories
             return cards;
         }
 
-        public async Task UpdateCard(Card cardToUpdate)
+        public async Task UpdateCardAsync(Card cardToUpdate)
         {
             await _discardPileDal.UpdateOneAsync(cardToUpdate);
         }
