@@ -6,8 +6,9 @@ namespace TakiApp.Interfaces
     {
         Task AddCardAsync(Card card);
         Task DeleteAllAsync();
-        Task<Card> GetTopDiscard();
-        Task<List<Card>> RemoveCardsForShuffle();
+        Task<List<Card>> GetCardsOrderedAsync();
+        Task<Card> GetTopDiscardAsync();
+        Task<List<Card>> RemoveCardsForShuffleAsync();
         Task UpdateCardAsync(Card cardToUpdate);
     }
 }

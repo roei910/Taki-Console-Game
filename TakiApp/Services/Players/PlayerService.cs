@@ -18,11 +18,11 @@ namespace TakiApp.Services.Players
             this._drawPileRepository = drawPileRepository;
         }
 
-        public Card? PickCard(Player currentPlayer, Func<Card, bool> canStackOnTopDiscard)
+        public Card? PickCard(Player currentPlayer, Func<Card, bool> canStackOnTopDiscard, string? elseMessage = null)
         {
             var algorithm = MatchAlgorithm(currentPlayer);
 
-            var chosenCard = algorithm.ChooseCard(canStackOnTopDiscard, currentPlayer.Cards);
+            var chosenCard = algorithm.ChooseCard(canStackOnTopDiscard, currentPlayer.Cards, elseMessage);
 
             return chosenCard;
         }

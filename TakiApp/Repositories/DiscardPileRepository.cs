@@ -34,14 +34,21 @@ namespace TakiApp.Repositories
             await _discardPileDal.DeleteAllAsync();
         }
 
-        public async Task<Card> GetTopDiscard()
+        public async Task<List<Card>> GetCardsOrderedAsync()
+        {
+            var cards = await _discardPileDal.FindAsync();
+
+            return cards;
+        }
+
+        public async Task<Card> GetTopDiscardAsync()
         {
             var cards = await _discardPileDal.FindAsync();
 
             return cards[0];
         }
 
-        public async Task<List<Card>> RemoveCardsForShuffle()
+        public async Task<List<Card>> RemoveCardsForShuffleAsync()
         {
             var cards = await _discardPileDal.FindAsync();
             await _discardPileDal.DeleteAllAsync();
