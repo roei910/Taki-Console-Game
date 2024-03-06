@@ -14,6 +14,7 @@ namespace TakiApp.Services.GameLogic
         private readonly CardsFactory _cardsFactory;
         private readonly IDrawPileRepository _drawPileRepository;
         private readonly IDiscardPileRepository _discardPileRepository;
+        private readonly ConstantVariables _constantVariables;
         private GameSettings? _gameSettings;
         private Player? _onlinePlayer;
 
@@ -21,7 +22,7 @@ namespace TakiApp.Services.GameLogic
 
         public GameInitializer(IUserCommunicator userCommunicator, IGameSettingsRepository gameSettingsRepository,
             IPlayersRepository playersRepository, CardsFactory cardsFactory, IDrawPileRepository drawPileRepository, 
-            IDiscardPileRepository discardPileRepository)
+            IDiscardPileRepository discardPileRepository, ConstantVariables constantVariables)
         {
             _userCommunicator = userCommunicator;
             _gameSettingsRepository = gameSettingsRepository;
@@ -29,6 +30,7 @@ namespace TakiApp.Services.GameLogic
             _cardsFactory = cardsFactory;
             _drawPileRepository = drawPileRepository;
             _discardPileRepository = discardPileRepository;
+            _constantVariables = constantVariables;
         }
 
         public GameSettings GetGameSettings()
@@ -43,10 +45,18 @@ namespace TakiApp.Services.GameLogic
             if(_gameSettings == null)
             {
                 _userCommunicator.SendMessageToUser("Building a new Taki Game!");
-                var isOnline = _userCommunicator.GetMessageFromUser("Please enter type of game: online or normal");
-                var typeOfGame = _userCommunicator.GetMessageFromUser("Please enter pyramid or normal");
-                var numberOfPlayerCards = _userCommunicator.GetNumberFromUser("Please enter number of player cards");
-                var numberOfPlayers = _userCommunicator.GetNumberFromUser("Please enter number of players");
+
+                _userCommunicator.SendMessageToUser("Please enter type of game: online or normal");
+                var isOnline = _userCommunicator.UserPickItemFromList(new List<string>() { "online", "normal"});
+
+                _userCommunicator.SendMessageToUser("Please enter pyramid or normal");
+                var typeOfGame = _userCommunicator.UserPickItemFromList(new List<string>() { "pyramid", "normal" });
+
+                var numberOfPlayerCards = _userCommunicator.GetNumberFromUser("Please enter number of player cards", 
+                    _constantVariables.MinNumberOfPlayerCards, _constantVariables.MaxNumberOfPlayerCards);
+
+                var numberOfPlayers = _userCommunicator.GetNumberFromUser("Please enter number of players", 
+                    _constantVariables.MinNumberOfPlayers, _constantVariables.MaxNumberOfPlayers);
 
                 _gameSettings = new GameSettings()
                 {
@@ -73,9 +83,20 @@ namespace TakiApp.Services.GameLogic
 
             if (_gameSettings!.HasGameStarted)
             {
-                _userCommunicator.SendErrorMessage("the game already started without you, GoodBye!");
+                _userCommunicator.SendErrorMessage("Game already started, would you like to create a new game?");
 
-                //TODO: check if the game is playing or can be removed
+                string answer = _userCommunicator.UserPickItemFromList(new List<string>() { "yes", "no" });
+
+                if(answer == "no")
+                {
+                    _userCommunicator.SendErrorMessage("GoodBye!");
+                    return;
+                }
+
+                await _gameSettingsRepository.DeleteGameAsync();
+
+                await InitializeGame();
+
                 return;
             }
 
@@ -95,10 +116,11 @@ namespace TakiApp.Services.GameLogic
 
             //TODO: use the cards repository instead and update the players after
             foreach (var player in players)
-            {
-                while (player.Cards.Count < _gameSettings!.NumberOfPlayerCards)
-                    await _playersRepository.PlayerDrawCardAsync(player);
-            }
+                await _playersRepository.DrawCardsAsync(player, _gameSettings!.NumberOfPlayerCards);
+
+            //TODO: remove in the future
+            foreach(var player in players)
+                Console.WriteLine($"{player.Name}, {player.Cards.Count} cards");
         }
 
         private async Task InitializeCards()
@@ -107,9 +129,9 @@ namespace TakiApp.Services.GameLogic
             await _discardPileRepository.DeleteAllAsync();
 
             await _drawPileRepository.AddManyRandomAsync(_cardsFactory.GenerateDeck());
-            var drawCard = await _drawPileRepository.DrawCardAsync();
+            var drawCard = await _drawPileRepository.DrawCardsAsync();
 
-            await _discardPileRepository.AddCardAsync(drawCard!);
+            await _discardPileRepository.AddCardAsync(drawCard!.First());
         }
 
         private async Task InitializeOnline()
