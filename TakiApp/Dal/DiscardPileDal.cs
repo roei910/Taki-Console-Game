@@ -7,5 +7,12 @@ namespace TakiApp.Dal
     {
         public DiscardPileDal(MongoDbConfig configuration) : 
             base(configuration, configuration.DiscardPileCollectionName) { }
+
+        public async Task<List<Card>> GetOrderedCardsAsync()
+        {
+            var cards = await FindAsync();
+
+            return cards;
+        }
     }
 }
