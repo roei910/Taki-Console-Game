@@ -27,6 +27,9 @@ namespace TakiApp.Services.GameLogic
             await _gameInitializer.InitializeGame();
             var gameSettings = _gameInitializer.GetGameSettings();
 
+            if (gameSettings!.HasGameStarted)
+                return;
+
             if (gameSettings!.IsOnline)
             {
                 await StartOnlineGame();
@@ -42,7 +45,7 @@ namespace TakiApp.Services.GameLogic
 
             while (true)
             {
-                _userCommunicator.SendAlertMessage("waiting for your turn!");
+                _userCommunicator.SendAlertMessage("Waiting for your turn!\n");
 
                 await _gameTurnService.WaitTurnByIdAsync(player.Id);
                 await _gameTurnService.PlayTurnByIdAsync(player.Id);
