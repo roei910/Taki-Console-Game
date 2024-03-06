@@ -98,11 +98,12 @@ namespace Taki.Models.Messages
             Console.ForegroundColor = ConsoleColor.White;
         }
 
-        public T GetTypeFromUser<T>(List<T> values, Func<T, string>? toString = null)
+        public T UserPickItemFromList<T>(List<T> values, Func<T, string>? toString = null, bool printPrompt = false)
         {
             string message = string.Join('\n', values.Select((val, i) => $"{i + 1}. {toString?.Invoke(val) ?? val?.ToString()}"));
 
-            SendAlertMessage("Please pick by index from list by index:");
+            if(printPrompt)
+                SendAlertMessage("Please pick by index from list by index:");
             SendAlertMessage(message);
 
             int number = GetNumberFromUser();
@@ -111,6 +112,16 @@ namespace Taki.Models.Messages
                 number = GetNumberFromUser("Please choose an index from the list");
 
             return values[number - 1];
+        }
+
+        public int GetNumberFromUser(object? message, int minNumber, int maxNumber)
+        {
+            int number = GetNumberFromUser($"{message}, number between {minNumber} and {maxNumber}");
+
+            if (number < minNumber || number > maxNumber)
+                number = GetNumberFromUser("Please enter a valid number", minNumber, maxNumber);
+
+            return number;
         }
     }
 }
