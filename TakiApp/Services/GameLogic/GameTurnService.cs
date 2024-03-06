@@ -42,7 +42,6 @@ namespace TakiApp.Services.GameLogic
             {
                 await _playersService.DrawCard(currentPlayer);
                 await _playerRepository.NextPlayerAsync();
-
                 await _playerRepository.AddMessagesToPlayersAsync(currentPlayer, $"{currentPlayer.Name} drew card");
 
                 return;

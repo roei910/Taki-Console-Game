@@ -29,7 +29,7 @@ namespace TakiApp.Services.Cards
         {//TODO: test
             _userCommunicator.SendAlertMessage("please choose one more card or draw");
 
-            _userCommunicator.SendAlertMessage($"Top discard: {this}");
+            _userCommunicator.SendAlertMessage($"Top discard: {cardPlayed.Type}, {cardPlayed.CardColor}");
 
             Func<Card, bool> canStack = (Card card) => CanStackOtherOnThis(cardPlayed, card);
 
@@ -37,7 +37,7 @@ namespace TakiApp.Services.Cards
 
             if (playerCard == null)
             {
-                await _playersRepository.DrawCards(player, CardsToDraw(cardPlayed));
+                await _playersRepository.DrawCardsAsync(player, CardsToDraw(cardPlayed));
 
                 return;
             }
