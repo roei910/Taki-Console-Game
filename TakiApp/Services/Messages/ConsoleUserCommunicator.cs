@@ -5,6 +5,13 @@ namespace Taki.Models.Messages
 {
     public class ConsoleUserCommunicator : IUserCommunicator
     {
+        public ConsoleUserCommunicator() 
+        {
+            Console.Clear();
+            Console.WriteLine("Welcome to the taki game using the Console");
+            Console.WriteLine();
+        }
+
         public void SendErrorMessage(object? message)
         {
             SendColorMessageToUser(ConsoleColor.Red, message?.ToString() ?? "");
