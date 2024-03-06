@@ -27,6 +27,13 @@ namespace TakiApp.Services.GameLogic
             return cardService.CardsToDraw(topDiscard);
         }
 
+        public async Task FinishNoPlay(Card topDiscard)
+        {
+            var cardService = MatchCardService(topDiscard);
+            
+            await cardService.FinishNoPlay(topDiscard);
+        }
+
         public async Task PlayCardAsync(Player player, Card cardPlayed)
         {
             ICardService cardService = MatchCardService(cardPlayed);

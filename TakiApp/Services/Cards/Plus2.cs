@@ -26,11 +26,12 @@ namespace TakiApp.Services.Cards
         }
 
         public override int CardsToDraw(Card cardPlayed)
-        {//TODO: test
+        {
             var countPlus2 = (int)cardPlayed.CardConfigurations["countPlus2"]!;
 
             if (countPlus2 == 0)
                 return base.CardsToDraw(cardPlayed);
+
             return countPlus2 * 2;
         }
 
@@ -63,6 +64,16 @@ namespace TakiApp.Services.Cards
             await _discardPileRepository.UpdateCardAsync(cardPlayed);
 
             await base.PlayAsync(player, cardPlayed, cardPlayService);
+        }
+
+        public override async Task FinishNoPlay(Card cardPlayed)
+        {
+            cardPlayed.CardConfigurations["isOnlyPlus2Allowed"] = false;
+            cardPlayed.CardConfigurations["countPlus2"] = 0;
+
+            await _discardPileRepository.UpdateCardAsync(cardPlayed);
+
+            await base.FinishNoPlay(cardPlayed);
         }
     }
 }

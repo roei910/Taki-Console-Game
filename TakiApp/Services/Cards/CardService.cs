@@ -33,7 +33,7 @@ namespace TakiApp.Services.Cards
 
         public virtual int CardsToDraw(Card cardPlayed) => 1;
 
-        public virtual void FinishNoPlay(Card cardPlayed) { }
+        public virtual Task FinishNoPlay(Card cardPlayed) => Task.CompletedTask;
 
         public virtual Task ResetCard(Card cardToReset) => Task.CompletedTask;
         
