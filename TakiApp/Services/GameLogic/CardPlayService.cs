@@ -16,8 +16,15 @@ namespace TakiApp.Services.GameLogic
         {
             var cardService = MatchCardService(cardToStack);
             Func<Card, bool> canStack = (Card card) => cardService.CanStackOtherOnThis(cardToStack, card);
-
+            
             return canStack;
+        }
+
+        public int CardsToDraw(Card topDiscard)
+        {
+            var cardService = MatchCardService(topDiscard);
+
+            return cardService.CardsToDraw(topDiscard);
         }
 
         public async Task PlayCardAsync(Player player, Card cardPlayed)

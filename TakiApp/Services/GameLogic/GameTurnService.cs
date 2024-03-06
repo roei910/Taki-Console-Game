@@ -15,12 +15,12 @@ namespace TakiApp.Services.GameLogic
         private readonly IUserCommunicator _userCommunicator;
         private readonly ICardPlayService _cardPlayService;
 
-        public GameTurnService(IPlayersRepository playerRepository, IAlgorithmService playerService,
+        public GameTurnService(IPlayersRepository playerRepository, IAlgorithmService algorithmService,
             IDiscardPileRepository discardPileRepository, IDrawPileRepository drawPileRepository,
             IUserCommunicator userCommunicator, ICardPlayService cardPlayService)
         {
             _playerRepository = playerRepository;
-            _algorithmService = playerService;
+            _algorithmService = algorithmService;
             _discardPileRepository = discardPileRepository;
             _drawPileRepository = drawPileRepository;
             _userCommunicator = userCommunicator;
@@ -36,13 +36,13 @@ namespace TakiApp.Services.GameLogic
             _userCommunicator.SendAlertMessage($"Current player: {currentPlayer.Name}");
 
             var canStack = _cardPlayService.CanStack(topDiscard);
-            Card? card = _playersService.PickCard(currentPlayer, canStack);
+            Card? card = _algorithmService.PickCard(currentPlayer, canStack);
             
             if (card is null)
             {
-                await _playersService.DrawCard(currentPlayer);
+                await _playerRepository.DrawCardsAsync(currentPlayer, _cardPlayService.CardsToDraw(topDiscard));
                 await _playerRepository.NextPlayerAsync();
-                await _playerRepository.AddMessagesToPlayersAsync(currentPlayer, $"{currentPlayer.Name} drew card");
+                await _playerRepository.AddMessagesToPlayersAsync(currentPlayer, $"{currentPlayer.Name} drew a card\n");
 
                 return;
             }
@@ -68,7 +68,7 @@ namespace TakiApp.Services.GameLogic
             if (player != null && player.IsPlaying)
                 return;
 
-            await Task.Delay(3000);
+            await Task.Delay(1000);
             await WaitTurnByIdAsync(playerId);
         }
     }
