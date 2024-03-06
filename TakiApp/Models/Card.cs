@@ -8,6 +8,7 @@ namespace TakiApp.Models
         public ObjectId Id { get; set; }
         public string Type { get; set; }
         public string CardColor { get; set; }
+        public int Order { get; set; }
         public JObject CardConfigurations { get; set; } = [];
 
         [Newtonsoft.Json.JsonConstructor]
@@ -24,6 +25,11 @@ namespace TakiApp.Models
             Id = ObjectId.GenerateNewId();
             Type = type;
             CardColor = cardColor;
+        }
+
+        public override string ToString()
+        {
+            return $"{Type.Split('.').Last()}, {CardColor}";
         }
     }
 }
