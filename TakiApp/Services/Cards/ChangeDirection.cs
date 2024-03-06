@@ -25,7 +25,7 @@ namespace TakiApp.Services.Cards
 
         public async override Task PlayAsync(Player player, Card cardPlayed, ICardPlayService cardPlayService)
         {
-            _userCommunicator.SendErrorMessage("User used change direction card!\n");
+            await _playersRepository.SendMessagesFromPlayerAsync(player, $"Changing direction!\n");
 
             var players = await _playersRepository.GetAllAsync();
 
