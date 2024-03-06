@@ -6,14 +6,8 @@ namespace TakiApp.Services.Cards
 {
     public class Stop : ColorCard
     {
-        private readonly IUserCommunicator _userCommunicator;
-
-        public Stop(IDiscardPileRepository discardPileRepository, IPlayersRepository playersRepository,
-            IUserCommunicator userCommunicator) : 
-            base(discardPileRepository, playersRepository)
-        {
-            _userCommunicator = userCommunicator;
-        }
+        public Stop(IDiscardPileRepository discardPileRepository, IPlayersRepository playersRepository) : 
+            base(discardPileRepository, playersRepository) { }
 
         public override List<Card> GenerateCardsForDeck()
         {
@@ -25,11 +19,7 @@ namespace TakiApp.Services.Cards
 
         public async override Task PlayAsync(Player player, Card cardPlayed, ICardPlayService cardPlayService)
         {
-            await _playersRepository.NextPlayerAsync();
-
-            var nextPlayer = await _playersRepository.GetCurrentPlayerAsync();
-
-            _userCommunicator.SendErrorMessage($"Player {nextPlayer.Name} was stopped by {player.Name}");
+            await _playersRepository.SkipPlayers(1);
         }
     }
 }
