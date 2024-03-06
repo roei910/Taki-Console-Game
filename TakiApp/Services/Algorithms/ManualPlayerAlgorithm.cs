@@ -18,7 +18,8 @@ namespace Taki.Models.Algorithm
         {
             playerCards = OrderPlayerCardByColor(playerCards);
             _userCommunicator.SendAlertMessage("printing your current hand:");
-            var playerCardsString = playerCards.Select((card, i) => $"{i}. {card.Type}, {Color.FromName(card.CardColor)}").ToList();
+
+            var playerCardsString = playerCards.Select((card, i) => $"{i}. {card}").ToList();
             _userCommunicator.SendMessageToUser(string.Join("\n", playerCardsString));
 
             string message = $"Please choose one of your cards by index, " + (elseMessage is null ? $"-1 to draw a card" : elseMessage);
@@ -29,7 +30,7 @@ namespace Taki.Models.Algorithm
 
         public Color ChooseColor(List<Card> playerCards)
         {
-            return _userCommunicator.GetTypeFromUser(ColorCard.Colors);
+            return _userCommunicator.UserPickItemFromList(ColorCard.Colors, printPrompt: true);
         }
 
         public Player ChoosePlayer(List<Player> players)

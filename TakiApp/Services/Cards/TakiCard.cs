@@ -26,14 +26,13 @@ namespace TakiApp.Services.Cards
         }
 
         public override async Task PlayAsync(Player player, Card cardPlayed, ICardPlayService cardPlayService)
-        {//TODO: check
-            var isStackable = cardPlayService.CanStack(cardPlayed);
+        {
+            Func<Card,bool> isStackable = (Card card) => card.CardColor == cardPlayed.CardColor;
             Card topDiscard = cardPlayed;
 
-            _userCommunicator.SendAlertMessage("Taki Open!\n");
-            _userCommunicator.SendMessageToUser($"Only {topDiscard.CardColor} cards allowed");
+            _userCommunicator.SendAlertMessage($"Taki Open, Only {topDiscard.CardColor} cards allowed!\n");
 
-            Card? playerCard = _algorithmService.PickCard(player, isStackable);
+            Card? playerCard = _algorithmService.PickCard(player, isStackable, elseMessage: "or -1 to finish taki");
 
             while (playerCard is not null)
             {
@@ -42,7 +41,7 @@ namespace TakiApp.Services.Cards
                 await _discardPileRepository.AddCardAsync(playerCard);
 
                 player.Cards.Remove(playerCard);
-                await _playersRepository.UpdatePlayer(player);
+                await _playersRepository.UpdatePlayerAsync(player);
 
                 playerCard = _algorithmService.PickCard(player, isStackable, elseMessage: "or -1 to finish taki");
             }

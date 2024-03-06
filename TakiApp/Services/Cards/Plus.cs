@@ -44,7 +44,7 @@ namespace TakiApp.Services.Cards
 
             player.Cards.Remove(playerCard);
 
-            await _playersRepository.UpdatePlayer(player);
+            await _playersRepository.UpdatePlayerAsync(player);
 
             await _discardPileRepository.AddCardAsync(playerCard);
 
