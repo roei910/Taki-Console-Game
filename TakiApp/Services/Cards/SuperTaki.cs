@@ -8,8 +8,8 @@ namespace TakiApp.Services.Cards
     {
         public SuperTaki(IDiscardPileRepository discardPileRepository, 
             IPlayersRepository playersRepository, IUserCommunicator userCommunicator, 
-            IPlayerService playerService) : 
-            base(discardPileRepository, playersRepository, userCommunicator, playerService) { }
+            IAlgorithmService algorithmService) : 
+            base(discardPileRepository, playersRepository, userCommunicator, algorithmService) { }
 
         public override List<Card> GenerateCardsForDeck()
         {

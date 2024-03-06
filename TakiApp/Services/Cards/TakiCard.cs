@@ -7,14 +7,14 @@ namespace TakiApp.Services.Cards
     public class TakiCard : ColorCard
     {
         private readonly IUserCommunicator _userCommunicator;
-        private readonly IPlayerService _playerService;
+        private readonly IAlgorithmService _algorithmService;
 
         public TakiCard(IDiscardPileRepository discardPileRepository, IPlayersRepository playersRepository,
-            IUserCommunicator userCommunicator, IPlayerService playerService) : 
+            IUserCommunicator userCommunicator, IAlgorithmService algorithmService) : 
             base(discardPileRepository, playersRepository)
         {
             _userCommunicator = userCommunicator;
-            _playerService = playerService;
+            _algorithmService = algorithmService;
         }
 
         public override List<Card> GenerateCardsForDeck()
@@ -33,7 +33,7 @@ namespace TakiApp.Services.Cards
             _userCommunicator.SendAlertMessage("Taki Open!\n");
             _userCommunicator.SendMessageToUser($"Only {topDiscard.CardColor} cards allowed");
 
-            Card? playerCard = _playerService.PickCard(player, isStackable);
+            Card? playerCard = _algorithmService.PickCard(player, isStackable);
 
             while (playerCard is not null)
             {
@@ -44,7 +44,7 @@ namespace TakiApp.Services.Cards
                 player.Cards.Remove(playerCard);
                 await _playersRepository.UpdatePlayer(player);
 
-                playerCard = _playerService.PickCard(player, isStackable, elseMessage: "or -1 to finish taki");
+                playerCard = _algorithmService.PickCard(player, isStackable, elseMessage: "or -1 to finish taki");
             }
 
             _userCommunicator.SendAlertMessage("Taki Closed!\n");

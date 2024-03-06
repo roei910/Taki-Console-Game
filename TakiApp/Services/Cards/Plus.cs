@@ -7,14 +7,14 @@ namespace TakiApp.Services.Cards
     public class Plus : ColorCard
     {
         private readonly IUserCommunicator _userCommunicator;
-        private readonly IPlayerService _playerService;
+        private readonly IAlgorithmService _algorithmService;
 
         public Plus(IDiscardPileRepository discardPileRepository, IPlayersRepository playersRepository,
-            IUserCommunicator userCommunicator, IPlayerService playerService) : 
+            IUserCommunicator userCommunicator, IAlgorithmService algorithService) : 
             base(discardPileRepository, playersRepository)
         {
             _userCommunicator = userCommunicator;
-            _playerService = playerService;
+            _algorithmService = algorithService;
         }
 
         public override List<Card> GenerateCardsForDeck()
@@ -33,7 +33,7 @@ namespace TakiApp.Services.Cards
 
             Func<Card, bool> canStack = (Card card) => CanStackOtherOnThis(cardPlayed, card);
 
-            var playerCard = _playerService.PickCard(player, canStack);
+            var playerCard = _algorithmService.PickCard(player, canStack);
 
             if (playerCard == null)
             {

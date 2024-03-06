@@ -6,13 +6,13 @@ namespace TakiApp.Services.Cards
 {
     public class ChangeColor : CardService
     {
-        private readonly IPlayerService _playerService;
+        private readonly IAlgorithmService _algorithmService;
 
-        public ChangeColor(IPlayerService playerService, IDiscardPileRepository discardPileRepository, 
+        public ChangeColor(IAlgorithmService algorithmService, IDiscardPileRepository discardPileRepository, 
             IPlayersRepository playersRepository) : 
             base(discardPileRepository, playersRepository)
         {
-            _playerService = playerService;
+            _algorithmService = algorithmService;
         }
 
         public override bool CanStackOtherOnThis(Card topDiscard, Card otherCard)
@@ -35,7 +35,7 @@ namespace TakiApp.Services.Cards
         public async override Task PlayAsync(Player player, Card cardPlayed, ICardPlayService cardPlayService)
         {
             while (!ColorCard.Colors.Any(x => x.ToString() == cardPlayed.CardColor.ToString()))
-                cardPlayed.CardColor = _playerService.ChooseColor(player).ToString();
+                cardPlayed.CardColor = _algorithmService.ChooseColor(player).ToString();
 
             await _discardPileRepository.UpdateCardAsync(cardPlayed);
             await base.PlayAsync(player, cardPlayed, cardPlayService);

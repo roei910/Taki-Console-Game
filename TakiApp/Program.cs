@@ -9,6 +9,7 @@ using TakiApp.Factories;
 using TakiApp.Interfaces;
 using TakiApp.Models;
 using TakiApp.Repositories;
+using TakiApp.Services.Algorithms;
 using TakiApp.Services.Cards;
 using TakiApp.Services.GameLogic;
 using TakiApp.Services.Players;
@@ -32,7 +33,7 @@ var serviceProvider = new ServiceCollection()
     .AddSingleton<MongoDbConfig>()
     .AddSingleton<Random>()
 
-    .AddSingleton<IPlayerService, PlayerService>()
+    .AddSingleton<IAlgorithmService, AlgorithmService>()
     .AddSingleton<List<IPlayerAlgorithm>>()
     .AddSingleton<IPlayerAlgorithm, ManualPlayerAlgorithm>()
     .AddSingleton<IPlayerAlgorithm, PlayerAlgorithm>()

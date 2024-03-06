@@ -8,19 +8,19 @@ namespace TakiApp.Services.GameLogic
     public class GameTurnService : IGameTurnService
     {
         private readonly IPlayersRepository _playerRepository;
-        private readonly IPlayerService _playersService;
+        private readonly IAlgorithmService _algorithmService;
         private readonly IDiscardPileRepository _discardPileRepository;
         //TODO: not used check if needed
         private readonly IDrawPileRepository _drawPileRepository;
         private readonly IUserCommunicator _userCommunicator;
         private readonly ICardPlayService _cardPlayService;
 
-        public GameTurnService(IPlayersRepository playerRepository, IPlayerService playerService,
+        public GameTurnService(IPlayersRepository playerRepository, IAlgorithmService playerService,
             IDiscardPileRepository discardPileRepository, IDrawPileRepository drawPileRepository,
             IUserCommunicator userCommunicator, ICardPlayService cardPlayService)
         {
             _playerRepository = playerRepository;
-            _playersService = playerService;
+            _algorithmService = playerService;
             _discardPileRepository = discardPileRepository;
             _drawPileRepository = drawPileRepository;
             _userCommunicator = userCommunicator;

@@ -2,20 +2,15 @@
 using TakiApp.Interfaces;
 using TakiApp.Models;
 
-namespace TakiApp.Services.Players
+namespace TakiApp.Services.Algorithms
 {
-    public class PlayerService : IPlayerService
+    public class AlgorithmService : IAlgorithmService
     {
         private readonly List<IPlayerAlgorithm> _playerAlgorithms;
-        private readonly IPlayersRepository _playersRepository;
-        private readonly IDrawPileRepository _drawPileRepository;
 
-        public PlayerService(List<IPlayerAlgorithm> playerAlgorithms,
-            IPlayersRepository playersRepository, IDrawPileRepository drawPileRepository)
+        public AlgorithmService(List<IPlayerAlgorithm> playerAlgorithms)
         {
             _playerAlgorithms = playerAlgorithms;
-            this._playersRepository = playersRepository;
-            this._drawPileRepository = drawPileRepository;
         }
 
         public Card? PickCard(Player currentPlayer, Func<Card, bool> canStackOnTopDiscard, string? elseMessage = null)
@@ -31,7 +26,7 @@ namespace TakiApp.Services.Players
         {
             var algorithm = MatchAlgorithm(currentPlayer);
 
-            throw new NotImplementedException();
+            return algorithm.ChoosePlayer(players);
         }
 
         public Color ChooseColor(Player player)
@@ -46,17 +41,6 @@ namespace TakiApp.Services.Players
             var found = _playerAlgorithms.Where(algo => algo.ToString() == player.PlayerAlgorithm).FirstOrDefault();
 
             return found ?? throw new Exception("Couldnt find algorithm in the list");
-        }
-
-        public async Task DrawCard(Player currentPlayer)
-        {
-            Card? drawCard = await _drawPileRepository.DrawCardAsync();
-
-            if (drawCard is null)
-                return;
-
-            currentPlayer.Cards.Add(drawCard);
-            await _playersRepository.UpdatePlayer(currentPlayer);
         }
     }
 }
