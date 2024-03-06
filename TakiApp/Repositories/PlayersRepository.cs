@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson;
+using MongoDB.Driver.Linq;
 using TakiApp.Interfaces;
 using TakiApp.Models;
 
@@ -15,6 +16,15 @@ namespace TakiApp.Repositories
         {
             _playersDal = playersDal;
             _drawPileRepository = drawPileRepository;
+        }
+
+        public async Task AddMessagesToPlayersAsync(Player playerSent, string message)
+        {
+            var players = await _playersDal.FindAsync();
+            players.Remove(playerSent);
+            players.ForEach(p => p.Messages.Add($"Message from {playerSent.Name}: {message}"));
+
+            await _playersDal.UpdateManyAsync(players);
         }
 
         public async Task CreateManyAsync(List<Player> players)
@@ -40,7 +50,7 @@ namespace TakiApp.Repositories
             await _playersDal.DeleteAllAsync();
         }
 
-        public async Task DrawCards(Player player, int cardsToDraw)
+        public async Task DrawCardsAsync(Player player, int cardsToDraw)
         {
             List<Card> cards = await _drawPileRepository.DrawCardsAsync(cardsToDraw);
 
@@ -64,13 +74,19 @@ namespace TakiApp.Repositories
             return ordered.First();
         }
 
+        public async Task<Player> GetPlayerByIdAsync(ObjectId playerId)
+        {
+            var player = await _playersDal.FindOneAsync(playerId);
+
+            return player;
+        }
+
         public async Task NextPlayerAsync()
         {
             var players = await _playersDal.FindAsync();
-            var orderedPlayers = players.OrderBy(x => x.Order).ToList();
             
-            var currentPlayer = orderedPlayers.Where(x => x.IsPlaying).First();
-            var nextPlayer = orderedPlayers.ElementAtOrDefault(orderedPlayers.IndexOf(currentPlayer) + 1) ?? orderedPlayers[0];
+            var currentPlayer = players.Where(x => x.IsPlaying).First();
+            var nextPlayer = GetNextN(players, currentPlayer).ElementAt(0);
 
             currentPlayer.IsPlaying = false;
             await _playersDal.UpdateOneAsync(currentPlayer);
@@ -92,6 +108,23 @@ namespace TakiApp.Repositories
             return player;
         }
 
+        public async Task SkipPlayers(int playersToSkip = 1)
+        {
+            var players = await _playersDal.FindAsync();
+
+            var currentPlayer = players.Where(x => x.IsPlaying).First();
+            var nextNPlayers = GetNextN(players, currentPlayer, playersToSkip + 1);
+
+            currentPlayer.IsPlaying = false;
+            await _playersDal.UpdateOneAsync(currentPlayer);
+
+            for (int i = 0; i < nextNPlayers.Count - 1; i++)
+                nextNPlayers[i].Messages.Add($"You were stopped by {currentPlayer.Name}");
+
+            nextNPlayers.Last().IsPlaying = true;
+            await _playersDal.UpdateManyAsync(nextNPlayers);
+        }
+
         public async Task UpdateOrder(List<Player> players)
         {
             int count = 0;
@@ -106,17 +139,18 @@ namespace TakiApp.Repositories
             await _playersDal.UpdateOneAsync(player);
         }
 
-        public async Task WaitTurnAsync(ObjectId playerId)
+        private List<Player> GetNextN(List<Player> players, Player currentPlayer, int numberOfPlayers = 1)
         {
-            while (true)
-            {
-                var player = await _playersDal.FindOneAsync(playerId);
+            var orderedPlayers = players.OrderBy(x => x.Order).ToList();
+            var currentPlayerIndex = orderedPlayers.IndexOf(currentPlayer);
+            var playersBefore = orderedPlayers.GetRange(0, currentPlayerIndex);
 
-                if (player != null && player.IsPlaying)
-                    return;
+            orderedPlayers.RemoveRange(0, currentPlayerIndex);
+            orderedPlayers.AddRange(playersBefore);
+            orderedPlayers.RemoveAt(0);
+            orderedPlayers.Add(currentPlayer);
 
-                await Task.Run(async () => await Task.Delay(3000));
-            }
+            return orderedPlayers.Take(numberOfPlayers).ToList();
         }
     }
 }
