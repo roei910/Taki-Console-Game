@@ -17,7 +17,7 @@ namespace TakiApp.Services.GameLogic
 
         public GameTurnService(IPlayersRepository playerRepository, IPlayerService playerService,
             IDiscardPileRepository discardPileRepository, IDrawPileRepository drawPileRepository,
-            IUserCommunicator userCommunicator, List<ICardService> cardServices, ICardPlayService cardPlayService)
+            IUserCommunicator userCommunicator, ICardPlayService cardPlayService)
         {
             _playerRepository = playerRepository;
             _playersService = playerService;
