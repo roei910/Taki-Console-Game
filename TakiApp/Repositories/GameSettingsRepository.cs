@@ -7,14 +7,19 @@ namespace TakiApp.Repositories
     {
         private readonly IDal<GameSettings> _gameSettingsDal;
         private readonly IDal<Player> _playersDal;
+        private readonly IDrawPileDal _drawPileDal;
+        private readonly IDiscardPileDal _discardPileDal;
         private readonly IUserCommunicator _userCommunicator;
 
         public GameSettingsRepository(IDal<GameSettings> dal,
-            IUserCommunicator userCommunicator, IDal<Player> playersDal)
+            IUserCommunicator userCommunicator, IDal<Player> playersDal,
+            IDrawPileDal drawPileDal, IDiscardPileDal discardPileDal)
         {
             _gameSettingsDal = dal;
             _userCommunicator = userCommunicator;
             _playersDal = playersDal;
+            _drawPileDal = drawPileDal;
+            _discardPileDal = discardPileDal;
         }
 
         public async Task CreateGameSettings(GameSettings gameSettings)
@@ -47,7 +52,7 @@ namespace TakiApp.Repositories
                 return;
             }
 
-            _userCommunicator.SendAlertMessage("Waiting for game to start!");
+            _userCommunicator.SendAlertMessage("Waiting for game to start!\n");
 
             while (gameSettings!.HasGameStarted == false)
             {
@@ -61,6 +66,14 @@ namespace TakiApp.Repositories
             var gameSettings = await _gameSettingsDal.FindAsync();
 
             return gameSettings.FirstOrDefault();
+        }
+
+        public async Task DeleteGameAsync()
+        {
+            await _playersDal.DeleteAllAsync();
+            await _discardPileDal.DeleteAllAsync();
+            await _drawPileDal.DeleteAllAsync();
+            await _gameSettingsDal.DeleteAllAsync();
         }
     }
 }
