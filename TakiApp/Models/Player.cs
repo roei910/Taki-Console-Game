@@ -12,5 +12,6 @@ namespace TakiApp.Models
         public bool IsPlaying { get; set; } = false;
         public int Score { get; set; } = 0;
         public List<Card> Cards { get; set; } = [];
+        public List<string> Messages { get; set; } = [];
     }
 }

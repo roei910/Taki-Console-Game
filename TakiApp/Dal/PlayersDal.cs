@@ -46,7 +46,8 @@ namespace TakiApp.Dal
                 .Set(x => x.LastCheckIn, DateTime.UtcNow)
                 .Set(x => x.Cards, valueToUpdate.Cards)
                 .Set(x => x.IsPlaying, valueToUpdate.IsPlaying)
-                .Set(x => x.Order, valueToUpdate.Order);
+                .Set(x => x.Order, valueToUpdate.Order)
+                .Set(x => x.Messages, valueToUpdate.Messages);
 
             await _collection.UpdateOneAsync(filter, update);
         }
