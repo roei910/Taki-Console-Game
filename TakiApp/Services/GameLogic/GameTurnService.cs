@@ -41,6 +41,9 @@ namespace TakiApp.Services.GameLogic
             if (card is null)
             {
                 await _playersService.DrawCard(currentPlayer);
+                await _playerRepository.NextPlayerAsync();
+
+                await _playerRepository.AddMessagesToPlayersAsync(currentPlayer, $"{currentPlayer.Name} drew card");
 
                 return;
             }
@@ -54,8 +57,20 @@ namespace TakiApp.Services.GameLogic
 
         public async Task WaitTurnByIdAsync(ObjectId playerId)
         {
-            //TODO: update the screen from here when changes to the topdiscard is happening, maybe with is completed on the task
-            await _playerRepository.WaitTurnAsync(playerId);
+            Player player = await _playerRepository.GetPlayerByIdAsync(playerId);
+
+            foreach (var message in player.Messages)
+                _userCommunicator.SendAlertMessage(message);
+
+            player.Messages.Clear();
+
+            await _playerRepository.UpdatePlayer(player);
+
+            if (player != null && player.IsPlaying)
+                return;
+
+            await Task.Delay(3000);
+            await WaitTurnByIdAsync(playerId);
         }
     }
 }
