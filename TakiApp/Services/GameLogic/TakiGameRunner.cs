@@ -46,7 +46,6 @@ namespace TakiApp.Services.GameLogic
 
                 await _gameTurnService.WaitTurnByIdAsync(player.Id);
                 await _gameTurnService.PlayTurnByIdAsync(player.Id);
-                await _playersRepository.NextPlayerAsync();
             }
         }
 

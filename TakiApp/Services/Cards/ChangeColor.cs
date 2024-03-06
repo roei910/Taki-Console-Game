@@ -38,6 +38,7 @@ namespace TakiApp.Services.Cards
                 cardPlayed.CardColor = _playerService.ChooseColor(player).ToString();
 
             await _discardPileRepository.UpdateCardAsync(cardPlayed);
+            await base.PlayAsync(player, cardPlayed, cardPlayService);
         }
 
         public override async Task ResetCard(Card cardToReset)

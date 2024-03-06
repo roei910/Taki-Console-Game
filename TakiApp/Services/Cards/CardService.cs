@@ -26,14 +26,17 @@ namespace TakiApp.Services.Cards
             return topDiscard.Type == otherCard.Type;
         }
 
+        public virtual async Task PlayAsync(Player player, Card cardPlayed, ICardPlayService cardPlayService)
+        {
+            await _playersRepository.NextPlayerAsync();
+        }
+
         public virtual int CardsToDraw(Card cardPlayed) => 1;
 
         public virtual void FinishNoPlay(Card cardPlayed) { }
 
         public virtual Task ResetCard(Card cardToReset) => Task.CompletedTask;
-
-        public abstract Task PlayAsync(Player player, Card cardPlayed, ICardPlayService cardPlayService);
-
+        
         public abstract List<Card> GenerateCardsForDeck();
     }
 }

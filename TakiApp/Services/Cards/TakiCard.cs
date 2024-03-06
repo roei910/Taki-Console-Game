@@ -50,7 +50,12 @@ namespace TakiApp.Services.Cards
             _userCommunicator.SendAlertMessage("Taki Closed!\n");
 
             if (cardPlayed != topDiscard)
+            {
                 await cardPlayService.PlayCardAsync(player, topDiscard);
+                return;
+            }
+
+            await base.PlayAsync(player, cardPlayed, cardPlayService);
         }
     }
 }

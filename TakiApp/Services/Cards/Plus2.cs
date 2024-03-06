@@ -61,6 +61,8 @@ namespace TakiApp.Services.Cards
             cardPlayed.CardConfigurations["isOnlyPlus2Allowed"] = true;
 
             await _discardPileRepository.UpdateCardAsync(cardPlayed);
+
+            await base.PlayAsync(player, cardPlayed, cardPlayService);
         }
     }
 }

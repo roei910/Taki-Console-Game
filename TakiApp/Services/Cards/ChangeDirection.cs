@@ -35,6 +35,8 @@ namespace TakiApp.Services.Cards
             players = players.OrderByDescending(x => x.Order).ToList();
 
             await _playersRepository.UpdateOrder(players);
+
+            await base.PlayAsync(player, cardPlayed, cardPlayService);
         }
     }
 }
