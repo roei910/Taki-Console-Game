@@ -7,7 +7,7 @@ namespace TakiApp.Services.Cards
     public abstract class ColorCard : CardService
     {
         public static readonly Color DEFAULT_COLOR = Color.Empty;
-        public static List<Color> Colors = [Color.Green, Color.Red, Color.Yellow, Color.Blue];
+        public static readonly List<Color> Colors = [Color.Green, Color.Red, Color.Yellow, Color.Blue];
 
         protected ColorCard(IDiscardPileRepository discardPileRepository, IPlayersRepository playersRepository) : 
             base(discardPileRepository, playersRepository) { }
