@@ -38,7 +38,7 @@ namespace TakiApp.Services.Cards
                 cardPlayed.CardColor = _algorithmService.ChooseColor(player).ToString();
 
             await _discardPileRepository.UpdateCardAsync(cardPlayed);
-            await _playersRepository.SendMessagesFromPlayerAsync(player, $"Changed color to {cardPlayed.CardColor}");
+            await _playersRepository.SendMessagesToPlayersAsync(player.Name!, $"Changed color to {cardPlayed.CardColor}", player);
             await base.PlayAsync(player, cardPlayed, cardPlayService);
         }
 
