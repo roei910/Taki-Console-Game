@@ -5,7 +5,6 @@ using Taki.Models.Algorithm;
 using Taki.Models.Messages;
 using Taki.Serializers;
 using TakiApp.Dal;
-using TakiApp.Factories;
 using TakiApp.Interfaces;
 using TakiApp.Models;
 using TakiApp.Repositories;
@@ -14,9 +13,14 @@ using TakiApp.Services.Cards;
 using TakiApp.Services.GameLogic;
 
 //TODO: if a player finished his play we need to add in our screen what happened.
+
 //TODO: message when player chooses a card
 
 //TODO: the player will send CheckIns to see if he is still connected. if he doesnt reconnect for 10 secs it gets deleted, cards go back.
+
+//TODO: add pyramid functionality
+
+//TODO: add normal game not just online
 
 var serviceProvider = new ServiceCollection()
     .AddSingleton<IConfiguration>(x => new ConfigurationBuilder()
@@ -31,7 +35,6 @@ var serviceProvider = new ServiceCollection()
     .AddSingleton<IPlayerAlgorithm, ManualPlayerAlgorithm>()
     .AddSingleton<IPlayerAlgorithm, PlayerAlgorithm>()
 
-    .AddSingleton<ICardsFactory, CardsFactory>()
     .AddSingleton<ICardPlayService, CardPlayService>()
     .AddSingleton<List<ICardService>>()
     .AddSingleton<ICardService, NumberCard>()

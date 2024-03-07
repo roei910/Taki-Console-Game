@@ -10,26 +10,27 @@ namespace TakiApp.Services.GameLogic
         private readonly IUserCommunicator _userCommunicator;
         private readonly IGameSettingsRepository _gameSettingsRepository;
         private readonly IPlayersRepository _playersRepository;
-        private readonly ICardsFactory _cardsFactory;
         private readonly IDrawPileRepository _drawPileRepository;
         private readonly IDiscardPileRepository _discardPileRepository;
         private readonly ConstantVariables _constantVariables;
+        private readonly ICardPlayService _cardPlayService;
         private GameSettings? _gameSettings;
         private Player? _onlinePlayer;
 
         public Player GetPlayer => _onlinePlayer!;
 
         public GameInitializer(IUserCommunicator userCommunicator, IGameSettingsRepository gameSettingsRepository,
-            IPlayersRepository playersRepository, ICardsFactory cardsFactory, IDrawPileRepository drawPileRepository, 
-            IDiscardPileRepository discardPileRepository, ConstantVariables constantVariables)
+            IPlayersRepository playersRepository, IDrawPileRepository drawPileRepository, 
+            IDiscardPileRepository discardPileRepository, ConstantVariables constantVariables,
+            ICardPlayService cardPlayService)
         {
             _userCommunicator = userCommunicator;
             _gameSettingsRepository = gameSettingsRepository;
             _playersRepository = playersRepository;
-            _cardsFactory = cardsFactory;
             _drawPileRepository = drawPileRepository;
             _discardPileRepository = discardPileRepository;
             _constantVariables = constantVariables;
+            _cardPlayService = cardPlayService;
         }
 
         public GameSettings GetGameSettings()
@@ -126,7 +127,7 @@ namespace TakiApp.Services.GameLogic
             await _drawPileRepository.DeleteAllAsync();
             await _discardPileRepository.DeleteAllAsync();
 
-            await _drawPileRepository.ShuffleCardsAsync(_cardsFactory.GenerateDeck());
+            await _drawPileRepository.ShuffleCardsAsync(_cardPlayService.GenerateCardsDeck());
             var drawCard = await _drawPileRepository.DrawCardsAsync();
 
             await _discardPileRepository.AddCardOrderedAsync(drawCard!.First());

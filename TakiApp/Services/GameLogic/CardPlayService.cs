@@ -47,6 +47,18 @@ namespace TakiApp.Services.GameLogic
             await service.FinishPlayAsync(cardToReset);
         }
 
+        public List<Card> GenerateCardsDeck()
+        {
+            var cards = GenerateSingleDeck();
+
+            return cards.Concat(GenerateSingleDeck()).ToList();
+        }
+
+        private List<Card> GenerateSingleDeck()
+        {
+            return _cardServices.SelectMany(card => card.GenerateCardsForDeck()).ToList();
+        }
+
         private ICardService MatchCardService(Card card)
         {
             var found = _cardServices.Where(service => service.ToString() == card.Type.Split(':')[0]).FirstOrDefault();

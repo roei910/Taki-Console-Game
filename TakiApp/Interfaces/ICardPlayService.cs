@@ -9,5 +9,6 @@ namespace TakiApp.Interfaces
         int CardsToDraw(Card topDiscard);
         Task FinishNoPlayAsync(Card topDiscard);
         Task FinishPlayAsync(Card cardToReset);
+        List<Card> GenerateCardsDeck();
     }
 }
