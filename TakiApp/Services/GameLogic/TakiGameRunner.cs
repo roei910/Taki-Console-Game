@@ -1,4 +1,5 @@
 ﻿using TakiApp.Interfaces;
+using TakiApp.Models;
 
 namespace TakiApp.Services.GameLogic
 {
@@ -48,7 +49,28 @@ namespace TakiApp.Services.GameLogic
                 _userCommunicator.SendAlertMessage("Waiting for your turn!\n");
 
                 await _gameTurnService.WaitTurnByIdAsync(player.Id);
-                await _gameTurnService.PlayTurnByIdAsync(player.Id);
+
+                var gameSettings = await _gameSettingsRepository.GetGameSettingsAsync();
+
+                if (gameSettings!.HasGameEnded)
+                {
+                    _userCommunicator.SendMessageToUser("The game ended, hope you had fun");
+
+                    return;
+                }
+
+                player = await _gameTurnService.PlayTurnByIdAsync(player.Id);
+
+                if (player.Cards.Count == 0)
+                {
+                    _userCommunicator.SendMessageToUser("You finished your hand!");
+
+                    await _gameSettingsRepository.UpdateWinnersAsync(player.Name!);
+
+                    await _gameTurnService.WaitGameEndAsync(player.Id);
+
+                    return;
+                }
             }
         }
 
