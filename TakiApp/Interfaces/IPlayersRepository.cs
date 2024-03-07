@@ -15,8 +15,9 @@ namespace TakiApp.Interfaces
         Task UpdatePlayerAsync(Player player);
         Task<List<Card>> DrawCardsAsync(Player player, int cardsToDraw);
         Task UpdateOrder(List<Player> players);
-        Task SendMessagesFromPlayerAsync(Player playerSent, string message);
         Task SkipPlayers(int playersToSkip = 1);
         Task<Player> GetPlayerByIdAsync(ObjectId playerId);
+        Task<List<Player>> GetWinnersAsync();
+        Task SendMessagesToPlayersAsync(string from, string message, params Player[] excludedPlayers);
     }
 }
