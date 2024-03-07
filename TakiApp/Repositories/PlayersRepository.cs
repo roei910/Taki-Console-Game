@@ -18,13 +18,13 @@ namespace TakiApp.Repositories
             _drawPileRepository = drawPileRepository;
         }
 
-        public async Task SendMessagesFromPlayerAsync(Player playerSent, string message)
+        public async Task SendMessagesToPlayersAsync(string from, string message, params Player[] excludedPlayers)
         {
             var players = await _playersDal.FindAsync();
 
-            players = players.Where(x => x.Id != playerSent.Id).ToList();
+            players = players.Where(p => !excludedPlayers.Any(excluded => excluded.Id == p.Id)).ToList();
 
-            await SendMessagesToPlayersAsync(players, playerSent.Name!, message);
+            await SendMessagesToPlayersAsync(players, from, message);
         }
 
         public async Task CreateManyAsync(List<Player> players)
@@ -95,10 +95,11 @@ namespace TakiApp.Repositories
 
             nextPlayer.IsPlaying = true;
             await _playersDal.UpdateOneAsync(nextPlayer);
+            
+            await SendMessagesToPlayersAsync("System", $"{nextPlayer.Name} is playing\n", nextPlayer);
 
             players.Remove(currentPlayer);
             players.Remove(nextPlayer);
-            await SendMessagesToPlayersAsync(players, "System", $"{nextPlayer.Name} is playing\n");
 
             return nextPlayer;
         }
@@ -158,6 +159,8 @@ namespace TakiApp.Repositories
             orderedPlayers.RemoveAt(0);
             orderedPlayers.Add(currentPlayer);
 
+            orderedPlayers = orderedPlayers.Where(x => x.Cards.Count != 0).ToList();
+
             return orderedPlayers.Take(numberOfPlayers).ToList();
         }
 
@@ -166,6 +169,15 @@ namespace TakiApp.Repositories
             players.ForEach(p => p.Messages.Add($"Message from {sender}: {message}"));
 
             await _playersDal.UpdateManyAsync(players);
+        }
+
+        public async Task<List<Player>> GetWinnersAsync()
+        {
+            var players = await _playersDal.FindAsync();
+
+            var winners = players.Where(x => x.Cards.Count == 0).ToList();
+
+            return winners;
         }
     }
 }
