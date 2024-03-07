@@ -12,14 +12,17 @@ using TakiApp.Repositories;
 using TakiApp.Services.Algorithms;
 using TakiApp.Services.Cards;
 using TakiApp.Services.GameLogic;
-using TakiApp.Services.Players;
+
+//TODO: if a player finished his play we need to add in our screen what happened.
+//TODO: message when player chooses a card
+
+
+
+
 
 //TODO: check what happends when someone exists and doesnt come back to the game
 //TODO: when someone connects to the game other people will get a message saying someone joined the game
 
-//TODO: if a player finished his play we need to add in our screen what happened.
-
-//TODO: if we stop a game in the middle we need to know what to do with it to continue the game, choose your name from the list
 
 //TODO: the player will send CheckIns to see if he is still connected. if he doesnt reconnect for 10 secs it gets deleted, cards go back.
 
@@ -38,19 +41,19 @@ var serviceProvider = new ServiceCollection()
     .AddSingleton<IPlayerAlgorithm, ManualPlayerAlgorithm>()
     .AddSingleton<IPlayerAlgorithm, PlayerAlgorithm>()
 
-    .AddSingleton<ICardPlayService , CardPlayService>()
+    .AddSingleton<ICardsFactory, CardsFactory>()
+    .AddSingleton<ICardPlayService, CardPlayService>()
     .AddSingleton<List<ICardService>>()
-    .AddSingleton<ICardService, ChangeColor>()
-    .AddSingleton<ICardService, ChangeDirection>()
     .AddSingleton<ICardService, NumberCard>()
-    .AddSingleton<ICardService, Plus>()
-    .AddSingleton<ICardService, Plus2>()
-    .AddSingleton<ICardService, TakiCard>()
     .AddSingleton<ICardService, Stop>()
+    //.AddSingleton<ICardService, ChangeColor>()
+    //.AddSingleton<ICardService, ChangeDirection>()
+    //.AddSingleton<ICardService, Plus>()
+    //.AddSingleton<ICardService, Plus2>()
+    //.AddSingleton<ICardService, TakiCard>()
     //.AddSingleton<ICardService, SuperTaki>()
     //.AddSingleton<ICardService, SwitchCardsWithDirection>()
     //.AddSingleton<ICardService, SwitchCardsWithUser>()
-    .AddSingleton<CardsFactory>()
 
     .AddSingleton<IDiscardPileDal, DiscardPileDal>()
     .AddSingleton<IDrawPileDal, DrawPileDal>()
