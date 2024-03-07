@@ -25,7 +25,6 @@ namespace TakiApp.Services.GameLogic
 
         public async Task PlayTurnByIdAsync(ObjectId playerId)
         {
-            //TODO: need to add the reset card
             var topDiscard = await _discardPileRepository.GetTopDiscardAsync();
             var currentPlayer = await _playerRepository.GetCurrentPlayerAsync();
 
@@ -39,7 +38,7 @@ namespace TakiApp.Services.GameLogic
             
             if (card is null)
             {
-                await _cardPlayService.FinishNoPlay(topDiscard);
+                await _cardPlayService.FinishNoPlayAsync(topDiscard);
 
                 var cardsDrew = await _playerRepository.DrawCardsAsync(currentPlayer, cardsToDraw);
                 if(cardsDrew.Count == 0)
@@ -60,6 +59,7 @@ namespace TakiApp.Services.GameLogic
             await _discardPileRepository.AddCardAsync(card);
 
             await _cardPlayService.PlayCardAsync(currentPlayer, card);
+            await _cardPlayService.FinishPlayAsync(topDiscard);
         }
 
         public async Task WaitTurnByIdAsync(ObjectId playerId)

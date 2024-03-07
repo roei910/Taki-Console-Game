@@ -35,7 +35,7 @@ namespace TakiApp.Services.Cards
 
         public virtual Task FinishNoPlay(Card cardPlayed) => Task.CompletedTask;
 
-        public virtual Task ResetCard(Card cardToReset) => Task.CompletedTask;
+        public virtual Task FinishPlayAsync(Card cardToReset) => Task.CompletedTask;
         
         public abstract List<Card> GenerateCardsForDeck();
     }

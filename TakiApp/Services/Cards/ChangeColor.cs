@@ -42,7 +42,7 @@ namespace TakiApp.Services.Cards
             await base.PlayAsync(player, cardPlayed, cardPlayService);
         }
 
-        public override async Task ResetCard(Card cardToReset)
+        public override async Task FinishPlayAsync(Card cardToReset)
         {
             cardToReset.CardColor = Color.Empty.Name;
 

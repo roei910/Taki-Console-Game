@@ -7,6 +7,7 @@ namespace TakiApp.Interfaces
         Task PlayCardAsync(Player player, Card cardPlayed);
         Func<Card, bool> CanStack(Card topDiscard);
         int CardsToDraw(Card topDiscard);
-        Task FinishNoPlay(Card topDiscard);
+        Task FinishNoPlayAsync(Card topDiscard);
+        Task FinishPlayAsync(Card cardToReset);
     }
 }

@@ -8,5 +8,5 @@ public interface ICardService
     int CardsToDraw(Card cardPlayed);
     Task PlayAsync(Player player, Card cardPlayed, ICardPlayService cardPlayService);
     Task FinishNoPlay(Card cardPlayed);
-    Task ResetCard(Card cardToReset);
+    Task FinishPlayAsync(Card cardToReset);
 }
