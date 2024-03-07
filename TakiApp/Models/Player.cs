@@ -8,11 +8,11 @@ namespace TakiApp.Models
         public int Order { get; set; }
         public string? Name { get; set; }
         public string? PlayerAlgorithm { get; set; }
+        public int NumberOfCurrentHandCards { get; set; }
         public DateTime? LastCheckIn { get; set; }
         public bool IsPlaying { get; set; } = false;
         public int Score { get; set; } = 0;
         public List<Card> Cards { get; set; } = [];
         public List<string> Messages { get; set; } = [];
-        public int NumberOfCurrentHandCards;
     }
 }

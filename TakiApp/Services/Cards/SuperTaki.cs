@@ -16,5 +16,10 @@ namespace TakiApp.Services.Cards
             return Enumerable.Range(0, 2)
                 .Select(j => new Card(typeof(SuperTaki).ToString(), Color.Empty.ToString())).ToList();
         }
+
+        public override Task PlayAsync(Player player, Card cardPlayed, ICardPlayService cardPlayService)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
