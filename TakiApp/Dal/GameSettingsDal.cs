@@ -42,7 +42,9 @@ namespace TakiApp.Dal
             var filter = Builders<GameSettings>.Filter.Eq(x => x.Id, valueToUpdate.Id);
             var update = Builders<GameSettings>.Update
                 .Set(x => x.NumberOfPlayerCards, valueToUpdate.NumberOfPlayerCards)
-                .Set(x => x.HasGameStarted, valueToUpdate.HasGameStarted);
+                .Set(x => x.HasGameStarted, valueToUpdate.HasGameStarted)
+                .Set(x => x.HasGameEnded, valueToUpdate.HasGameEnded)
+                .Set(x => x.winners, valueToUpdate.winners);
 
             await _collection.UpdateOneAsync(filter, update);
         }
