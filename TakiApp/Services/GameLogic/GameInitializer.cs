@@ -11,7 +11,7 @@ namespace TakiApp.Services.GameLogic
         private readonly IUserCommunicator _userCommunicator;
         private readonly IGameSettingsRepository _gameSettingsRepository;
         private readonly IPlayersRepository _playersRepository;
-        private readonly CardsFactory _cardsFactory;
+        private readonly ICardsFactory _cardsFactory;
         private readonly IDrawPileRepository _drawPileRepository;
         private readonly IDiscardPileRepository _discardPileRepository;
         private readonly ConstantVariables _constantVariables;
@@ -21,7 +21,7 @@ namespace TakiApp.Services.GameLogic
         public Player GetPlayer => _onlinePlayer!;
 
         public GameInitializer(IUserCommunicator userCommunicator, IGameSettingsRepository gameSettingsRepository,
-            IPlayersRepository playersRepository, CardsFactory cardsFactory, IDrawPileRepository drawPileRepository, 
+            IPlayersRepository playersRepository, ICardsFactory cardsFactory, IDrawPileRepository drawPileRepository, 
             IDiscardPileRepository discardPileRepository, ConstantVariables constantVariables)
         {
             _userCommunicator = userCommunicator;
@@ -49,8 +49,8 @@ namespace TakiApp.Services.GameLogic
                 _userCommunicator.SendMessageToUser("Please enter type of game: online or normal");
                 var isOnline = _userCommunicator.UserPickItemFromList(new List<string>() { "online", "normal"});
 
-                _userCommunicator.SendMessageToUser("Please enter pyramid or normal");
-                var typeOfGame = _userCommunicator.UserPickItemFromList(new List<string>() { "pyramid", "normal" });
+                _userCommunicator.SendMessageToUser("Please enter normal or pyramid");
+                var typeOfGame = _userCommunicator.UserPickItemFromList(new List<string>() { "normal", "pyramid" });
 
                 var numberOfPlayerCards = _userCommunicator.GetNumberFromUser("Please enter number of player cards", 
                     _constantVariables.MinNumberOfPlayerCards, _constantVariables.MaxNumberOfPlayerCards);
@@ -66,12 +66,15 @@ namespace TakiApp.Services.GameLogic
                     NumberOfPlayerCards = numberOfPlayerCards,
                     TypeOfGame = typeOfGame,
                     NumberOfPlayers = numberOfPlayers,
+                    NumberOfWinners = _constantVariables.NumberOfTotalWinners
                 };
 
                 await _gameSettingsRepository.CreateGameSettings(_gameSettings);
 
                 await InitializeCards();
 
+                //TODO: fix not allowing normal game
+                
                 await GenerateOnlinePlayer();
 
                 await _gameSettingsRepository.WaitGameStartAsync(1);
