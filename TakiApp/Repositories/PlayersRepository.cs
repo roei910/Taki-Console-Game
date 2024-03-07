@@ -50,12 +50,15 @@ namespace TakiApp.Repositories
             await _playersDal.DeleteAllAsync();
         }
 
-        public async Task<List<Card>> DrawCardsAsync(Player player, int cardsToDraw)
+        public async Task<List<Card>> DrawCardsAsync(Player player, int cardsToDraw, bool messageUsers = false)
         {
             List<Card> cards = await _drawPileRepository.DrawCardsAsync(cardsToDraw);
 
             player.Cards.AddRange(cards);
             await _playersDal.UpdateOneAsync(player);
+
+            await SendMessagesToPlayersAsync(player.Name!,
+                    $"{player.Name} drew {cards.Count} card(s)\n", player);
 
             return cards;
         }
@@ -102,19 +105,6 @@ namespace TakiApp.Repositories
             players.Remove(nextPlayer);
 
             return nextPlayer;
-        }
-
-        public async Task<Player> PlayerDrawCardAsync(Player player)
-        {
-            var card = await _drawPileRepository.DrawCardsAsync();
-
-            if (card == null)
-                return player;
-
-            player.Cards.AddRange(card);
-            await _playersDal.UpdateOneAsync(player);
-
-            return player;
         }
 
         public async Task SkipPlayers(int playersToSkip = 1)
@@ -169,15 +159,6 @@ namespace TakiApp.Repositories
             players.ForEach(p => p.Messages.Add($"Message from {sender}: {message}"));
 
             await _playersDal.UpdateManyAsync(players);
-        }
-
-        public async Task<List<Player>> GetWinnersAsync()
-        {
-            var players = await _playersDal.FindAsync();
-
-            var winners = players.Where(x => x.Cards.Count == 0).ToList();
-
-            return winners;
         }
     }
 }

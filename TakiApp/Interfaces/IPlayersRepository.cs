@@ -12,7 +12,7 @@ namespace TakiApp.Interfaces
         Task<Player> GetCurrentPlayerAsync();
         Task DeleteAllAsync();
         Task UpdatePlayerAsync(Player player);
-        Task<List<Card>> DrawCardsAsync(Player player, int cardsToDraw);
+        Task<List<Card>> DrawCardsAsync(Player player, int cardsToDraw, bool messageUsers = false);
         Task UpdateOrder(List<Player> players);
         Task SkipPlayers(int playersToSkip = 1);
         Task<Player> GetPlayerByIdAsync(ObjectId playerId);
