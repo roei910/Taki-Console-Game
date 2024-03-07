@@ -1,8 +1,9 @@
-﻿using TakiApp.Models;
+﻿using TakiApp.Interfaces;
+using TakiApp.Models;
 
 namespace TakiApp.Factories
 {
-    public class CardsFactory
+    public class CardsFactory : ICardsFactory
     {
         private readonly List<ICardService> _cards;
 
