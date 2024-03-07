@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using TakiApp.Interfaces;
+﻿using TakiApp.Interfaces;
 
 namespace Taki.Models.Messages
 {
@@ -8,7 +7,7 @@ namespace Taki.Models.Messages
         public ConsoleUserCommunicator() 
         {
             Console.Clear();
-            Console.WriteLine("Welcome to the taki game using the Console");
+            Console.WriteLine("Welcome to the taki game");
             Console.WriteLine();
         }
 
@@ -38,15 +37,6 @@ namespace Taki.Models.Messages
             return answer;
         }
 
-        public int GetCharFromUser(object? message)
-        {
-            Console.WriteLine(message);
-            int answer = Console.Read();
-            Console.WriteLine();
-
-            return answer;
-        }
-
         public int GetNumberFromUser(object? message = null)
         {
             if(message is not null)
@@ -60,35 +50,6 @@ namespace Taki.Models.Messages
             Console.WriteLine();
 
             return number;
-        }
-
-        public string? AlertGetMessageFromUser(object? message)
-        {
-            SendAlertMessage(message);
-            return Console.ReadLine();
-        }
-
-        public void SendColorMessageToUser(Color color, object? message)
-        {
-            SendColorMessageToUser(ColorToConsoleColor(color), message);
-            Console.WriteLine();
-        }
-
-        private ConsoleColor ColorToConsoleColor(Color color)
-        {
-            if (color.Equals(Color.Red))
-                return ConsoleColor.Red;
-
-            if (color.Equals(Color.Green))
-                return ConsoleColor.Green;
-
-            if (color.Equals(Color.Blue))
-                return ConsoleColor.Blue;
-
-            if (color.Equals(Color.Yellow))
-                return ConsoleColor.Yellow;
-
-            return ConsoleColor.White;
         }
 
         private void SendColorMessageToUser(ConsoleColor color, object? message)

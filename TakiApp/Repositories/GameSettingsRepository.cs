@@ -95,11 +95,6 @@ namespace TakiApp.Repositories
             await _playersDal.UpdateManyAsync(players);
         }
 
-        public async Task UpdateGameSettings(GameSettings gameSettings)
-        {
-            await _gameSettingsDal.UpdateOneAsync(gameSettings);
-        }
-
         public async Task UpdateWinnersAsync(string name)
         {
             var gameSettings = await GetGameSettingsAsync();

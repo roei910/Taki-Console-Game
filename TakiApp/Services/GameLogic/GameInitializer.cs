@@ -1,6 +1,5 @@
 ﻿using MongoDB.Bson;
 using Taki.Models.Algorithm;
-using TakiApp.Factories;
 using TakiApp.Interfaces;
 using TakiApp.Models;
 
@@ -120,10 +119,6 @@ namespace TakiApp.Services.GameLogic
             //TODO: use the cards repository instead and update the players after
             foreach (var player in players)
                 await _playersRepository.DrawCardsAsync(player, _gameSettings!.NumberOfPlayerCards);
-
-            //TODO: remove in the future
-            foreach(var player in players)
-                Console.WriteLine($"{player.Name}, {player.Cards.Count} cards");
         }
 
         private async Task InitializeCards()

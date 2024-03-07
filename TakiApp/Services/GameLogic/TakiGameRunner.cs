@@ -1,5 +1,4 @@
 ﻿using TakiApp.Interfaces;
-using TakiApp.Models;
 
 namespace TakiApp.Services.GameLogic
 {
