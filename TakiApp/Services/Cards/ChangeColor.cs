@@ -44,7 +44,7 @@ namespace TakiApp.Services.Cards
 
         public override async Task FinishPlayAsync(Card cardToReset)
         {
-            cardToReset.CardColor = Color.Empty.Name;
+            cardToReset.CardColor = Color.Empty.ToString();
 
             await _discardPileRepository.UpdateCardAsync(cardToReset);
         }
