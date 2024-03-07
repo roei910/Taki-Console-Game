@@ -26,10 +26,10 @@ namespace TakiApp.Services.Cards
         }
 
         public override async Task PlayAsync(Player player, Card cardPlayed, ICardPlayService cardPlayService)
-        {//TODO: test
-            _userCommunicator.SendAlertMessage("please choose one more card or draw");
+        {
+            _userCommunicator.SendAlertMessage("Please choose one more card or draw\n");
 
-            _userCommunicator.SendAlertMessage($"Top discard: {cardPlayed.Type}, {cardPlayed.CardColor}");
+            _userCommunicator.SendAlertMessage($"Top discard: {cardPlayed}\n");
 
             Func<Card, bool> canStack = (Card card) => CanStackOtherOnThis(cardPlayed, card);
 
@@ -37,7 +37,12 @@ namespace TakiApp.Services.Cards
 
             if (playerCard == null)
             {
-                await _playersRepository.DrawCardsAsync(player, CardsToDraw(cardPlayed));
+                var cardsDrew = await _playersRepository.DrawCardsAsync(player, CardsToDraw(cardPlayed));
+
+                if (cardsDrew.Count == 0)
+                    _userCommunicator.SendErrorMessage("Couldnt draw cards from deck");
+
+                await base.PlayAsync(player, cardPlayed, cardPlayService);
 
                 return;
             }
