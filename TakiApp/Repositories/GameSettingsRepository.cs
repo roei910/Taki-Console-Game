@@ -75,5 +75,38 @@ namespace TakiApp.Repositories
             await _drawPileDal.DeleteAllAsync();
             await _gameSettingsDal.DeleteAllAsync();
         }
+
+        public async Task FinishGameAsync()
+        {
+            var gameSettings = await GetGameSettingsAsync();
+
+            gameSettings!.HasGameEnded = true;
+
+            await _gameSettingsDal.UpdateOneAsync(gameSettings);
+
+            var players = await _playersDal.FindAsync();
+            players = players.Select(x =>
+            {
+                x.IsPlaying = true;
+
+                return x;
+            }).ToList();
+
+            await _playersDal.UpdateManyAsync(players);
+        }
+
+        public async Task UpdateGameSettings(GameSettings gameSettings)
+        {
+            await _gameSettingsDal.UpdateOneAsync(gameSettings);
+        }
+
+        public async Task UpdateWinnersAsync(string name)
+        {
+            var gameSettings = await GetGameSettingsAsync();
+
+            gameSettings!.winners.Add(name);
+
+            await _gameSettingsDal.UpdateOneAsync(gameSettings);
+        }
     }
 }
