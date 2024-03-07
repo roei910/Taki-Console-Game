@@ -6,14 +6,9 @@ namespace TakiApp.Services.Cards
 {
     public class ChangeDirection : ColorCard
     {
-        private readonly IUserCommunicator _userCommunicator;
-
-        public ChangeDirection(IDiscardPileRepository discardPileRepository, IPlayersRepository playersRepository,
-            IUserCommunicator userCommunicator) :
-            base(discardPileRepository, playersRepository) 
-        {
-            _userCommunicator = userCommunicator;
-        }
+        public ChangeDirection(IDiscardPileRepository discardPileRepository, 
+            IPlayersRepository playersRepository) :
+            base(discardPileRepository, playersRepository) { }
 
         public override List<Card> GenerateCardsForDeck()
         {
