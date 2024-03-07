@@ -41,16 +41,11 @@ namespace TakiApp.Services.GameLogic
             {
                 await _cardPlayService.FinishNoPlayAsync(topDiscard);
 
-                var cardsDrew = await _playerRepository.DrawCardsAsync(currentPlayer, cardsToDraw);
-                if(cardsDrew.Count == 0)
-                {
-                    _userCommunicator.SendErrorMessage("Couldnt draw cards from deck");
-                    await _playerRepository.NextPlayerAsync();
+                var cardsDrew = await _playerRepository.DrawCardsAsync(currentPlayer, cardsToDraw, true);
 
-                    return currentPlayer;
-                }
-                await _playerRepository.SendMessagesToPlayersAsync(currentPlayer.Name!, 
-                    $"{currentPlayer.Name} drew {cardsDrew.Count} card(s)\n", currentPlayer);
+                if (cardsDrew.Count == 0)
+                    _userCommunicator.SendErrorMessage("Couldnt draw cards from deck");
+
                 await _playerRepository.NextPlayerAsync();
 
                 return currentPlayer;
