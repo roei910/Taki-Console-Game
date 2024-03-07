@@ -3,6 +3,7 @@ using TakiApp.Models;
 
 namespace TakiApp.Factories
 {
+    //TODO: maybe delete and move the function to the cards service
     public class CardsFactory : ICardsFactory
     {
         private readonly List<ICardService> _cards;
