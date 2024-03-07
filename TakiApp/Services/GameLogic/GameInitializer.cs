@@ -131,10 +131,10 @@ namespace TakiApp.Services.GameLogic
             await _drawPileRepository.DeleteAllAsync();
             await _discardPileRepository.DeleteAllAsync();
 
-            await _drawPileRepository.AddManyRandomAsync(_cardsFactory.GenerateDeck());
+            await _drawPileRepository.ShuffleCardsAsync(_cardsFactory.GenerateDeck());
             var drawCard = await _drawPileRepository.DrawCardsAsync();
 
-            await _discardPileRepository.AddCardAsync(drawCard!.First());
+            await _discardPileRepository.AddCardOrderedAsync(drawCard!.First());
         }
 
         private async Task InitializeOnline()

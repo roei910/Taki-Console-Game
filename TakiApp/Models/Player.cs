@@ -13,5 +13,6 @@ namespace TakiApp.Models
         public int Score { get; set; } = 0;
         public List<Card> Cards { get; set; } = [];
         public List<string> Messages { get; set; } = [];
+        public int NumberOfCurrentHandCards;
     }
 }

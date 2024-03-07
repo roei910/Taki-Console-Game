@@ -8,19 +8,25 @@ namespace TakiApp.Repositories
     {
         private readonly IDrawPileDal _drawPileDal;
         private readonly Random _random;
-        private readonly IDiscardPileDal _discardPileDal;
+        private readonly IDiscardPileRepository _discardPileRepository;
 
         public DrawPileRepository(IDrawPileDal drawPileDal, Random random,
-            IDiscardPileDal discardPileDal)
+            IDiscardPileRepository discardPileRepository)
         {
             _drawPileDal = drawPileDal;
             _random = random;
-            _discardPileDal = discardPileDal;
+            _discardPileRepository = discardPileRepository;
         }
 
-        public async Task AddManyRandomAsync(List<Card> cards)
+        public async Task ShuffleCardsAsync(List<Card> cards)
         {
             var cardsShuffled = cards.OrderBy(x => _random.Next(cards.Count)).ToList();
+
+            cardsShuffled = cardsShuffled.Select((card, index) =>
+            {
+                card.Order = index;
+                return card;
+            }).ToList();
 
             await _drawPileDal.CreateManyAsync(cardsShuffled);
         }
@@ -38,7 +44,7 @@ namespace TakiApp.Repositories
 
             if (drawCards.Count == 0)
             {
-                List<Card> discardPile = await _discardPileDal.GetOrderedCardsAsync();
+                List<Card> discardPile = await _discardPileRepository.GetCardsOrderedAsync();
 
                 var topDiscard = discardPile.First();
                 discardPile.Remove(topDiscard);
@@ -46,9 +52,9 @@ namespace TakiApp.Repositories
                 if (discardPile.Count == 0)
                     return [];
 
-                await _discardPileDal.DeleteAllAsync();
-                await _discardPileDal.CreateOneAsync(topDiscard);
-                await AddManyRandomAsync(discardPile);
+                await _discardPileRepository.DeleteAllAsync();
+                await _discardPileRepository.AddCardOrderedAsync(topDiscard);
+                await ShuffleCardsAsync(discardPile);
 
                 cards = await _drawPileDal.FindAsync();
 

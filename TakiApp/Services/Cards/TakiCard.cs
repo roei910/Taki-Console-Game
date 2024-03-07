@@ -38,7 +38,7 @@ namespace TakiApp.Services.Cards
             {
                 topDiscard = playerCard;
                 _userCommunicator.SendAlertMessage($"Top discard: {topDiscard}");
-                await _discardPileRepository.AddCardAsync(playerCard);
+                await _discardPileRepository.AddCardOrderedAsync(playerCard);
 
                 player.Cards.Remove(playerCard);
                 await _playersRepository.UpdatePlayerAsync(player);

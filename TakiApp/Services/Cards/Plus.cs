@@ -46,7 +46,7 @@ namespace TakiApp.Services.Cards
 
             await _playersRepository.UpdatePlayerAsync(player);
 
-            await _discardPileRepository.AddCardAsync(playerCard);
+            await _discardPileRepository.AddCardOrderedAsync(playerCard);
 
             await cardPlayService.PlayCardAsync(player, playerCard);
         }

@@ -49,7 +49,8 @@ namespace TakiApp.Services.GameLogic
 
                     return currentPlayer;
                 }
-                await _playerRepository.SendMessagesToPlayersAsync(currentPlayer.Name!, $"{currentPlayer.Name} drew {cardsDrew.Count} card(s)\n", currentPlayer);
+                await _playerRepository.SendMessagesToPlayersAsync(currentPlayer.Name!, 
+                    $"{currentPlayer.Name} drew {cardsDrew.Count} card(s)\n", currentPlayer);
                 await _playerRepository.NextPlayerAsync();
 
                 return currentPlayer;
@@ -57,7 +58,7 @@ namespace TakiApp.Services.GameLogic
 
             currentPlayer.Cards.Remove(card);
             await _playerRepository.UpdatePlayerAsync(currentPlayer);
-            await _discardPileRepository.AddCardAsync(card);
+            await _discardPileRepository.AddCardOrderedAsync(card);
 
             await _cardPlayService.PlayCardAsync(currentPlayer, card);
             await _cardPlayService.FinishPlayAsync(topDiscard);

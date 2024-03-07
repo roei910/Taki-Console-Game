@@ -12,21 +12,12 @@ namespace TakiApp.Repositories
             _discardPileDal = discardPileDal;
         }
 
-        public async Task AddCardAsync(Card card)
+        public async Task AddCardOrderedAsync(Card card)
         {
             var cards = await _discardPileDal.FindAsync();
-
-            if (cards.Count == 0)
-            {
-                await _discardPileDal.CreateOneAsync(card);
-
-                return;
-            }
-
-            await _discardPileDal.DeleteAllAsync();
+            card.Order = cards.Count;
 
             await _discardPileDal.CreateOneAsync(card);
-            await _discardPileDal.CreateManyAsync(cards);
         }
 
         public async Task DeleteAllAsync()
@@ -37,26 +28,16 @@ namespace TakiApp.Repositories
         public async Task<List<Card>> GetCardsOrderedAsync()
         {
             var cards = await _discardPileDal.FindAsync();
+            cards = cards.OrderByDescending(x => x.Order).ToList();
 
             return cards;
         }
 
         public async Task<Card> GetTopDiscardAsync()
         {
-            var cards = await _discardPileDal.FindAsync();
+            var cards = await GetCardsOrderedAsync();
 
             return cards[0];
-        }
-
-        public async Task<List<Card>> RemoveCardsForShuffleAsync()
-        {
-            var cards = await _discardPileDal.FindAsync();
-            await _discardPileDal.DeleteAllAsync();
-            await _discardPileDal.CreateOneAsync(cards[0]);
-
-            cards.RemoveAt(0);
-
-            return cards;
         }
 
         public async Task UpdateCardAsync(Card cardToUpdate)
