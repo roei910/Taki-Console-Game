@@ -57,7 +57,8 @@ namespace TakiApp.Repositories
             player.Cards.AddRange(cards);
             await _playersDal.UpdateOneAsync(player);
 
-            await SendMessagesToPlayersAsync(player.Name!,
+            if(messageUsers)
+                await SendMessagesToPlayersAsync(player.Name!,
                     $"{player.Name} drew {cards.Count} card(s)\n", player);
 
             return cards;
@@ -159,6 +160,12 @@ namespace TakiApp.Repositories
             players.ForEach(p => p.Messages.Add($"Message from {sender}: {message}"));
 
             await _playersDal.UpdateManyAsync(players);
+        }
+
+        public async Task UpdateManyAsync(List<Player> players)
+        {
+            foreach(var player in players)
+                await UpdatePlayerAsync(player);
         }
     }
 }

@@ -17,5 +17,6 @@ namespace TakiApp.Interfaces
         Task SkipPlayers(int playersToSkip = 1);
         Task<Player> GetPlayerByIdAsync(ObjectId playerId);
         Task SendMessagesToPlayersAsync(string from, string message, params Player[] excludedPlayers);
+        Task UpdateManyAsync(List<Player> players);
     }
 }

@@ -1,4 +1,5 @@
-﻿using TakiApp.Models;
+﻿using MongoDB.Bson;
+using TakiApp.Models;
 
 namespace TakiApp.Interfaces
 {
@@ -6,6 +7,7 @@ namespace TakiApp.Interfaces
     {
         Task AddCardOrderedAsync(Card card);
         Task DeleteAllAsync();
+        Task<Card> GetCardById(ObjectId objectId);
         Task<List<Card>> GetCardsOrderedAsync();
         Task<Card> GetTopDiscardAsync();
         Task UpdateCardAsync(Card cardToUpdate);

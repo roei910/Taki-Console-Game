@@ -1,4 +1,5 @@
-﻿using TakiApp.Interfaces;
+﻿using MongoDB.Bson;
+using TakiApp.Interfaces;
 using TakiApp.Models;
 
 namespace TakiApp.Repositories
@@ -23,6 +24,13 @@ namespace TakiApp.Repositories
         public async Task DeleteAllAsync()
         {
             await _discardPileDal.DeleteAllAsync();
+        }
+
+        public async Task<Card> GetCardById(ObjectId objectId)
+        {
+            Card card = await _discardPileDal.FindOneAsync(objectId);
+
+            return card;
         }
 
         public async Task<List<Card>> GetCardsOrderedAsync()
