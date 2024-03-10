@@ -15,7 +15,7 @@ namespace TakiApp.Services.Cards
             _algorithmService = algorithmService;
         }
 
-        public override bool CanStackOtherOnThis(Card topDiscard, Card otherCard)
+        public override bool CanStackOtherOnThis(Card topDiscard, Card otherCard, ICardPlayService cardPlayService)
         {
             if (topDiscard.CardColor == Color.Empty.ToString())
                 return true;
@@ -23,7 +23,7 @@ namespace TakiApp.Services.Cards
             if (topDiscard.CardColor == otherCard.CardColor)
                 return true;
 
-            return base.CanStackOtherOnThis(topDiscard, otherCard);
+            return base.CanStackOtherOnThis(topDiscard, otherCard, cardPlayService);
         }
 
         public override List<Card> GenerateCardsForDeck()
@@ -39,6 +39,7 @@ namespace TakiApp.Services.Cards
 
             await _discardPileRepository.UpdateCardAsync(cardPlayed);
             await _playersRepository.SendMessagesToPlayersAsync(player.Name!, $"Changed color to {cardPlayed.CardColor}", player);
+
             await base.PlayAsync(player, cardPlayed, cardPlayService);
         }
 

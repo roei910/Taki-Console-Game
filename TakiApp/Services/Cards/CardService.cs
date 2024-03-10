@@ -15,7 +15,7 @@ namespace TakiApp.Services.Cards
             _playersRepository = playersRepository;
         }
 
-        public virtual bool CanStackOtherOnThis(Card topDiscard, Card otherCard)
+        public virtual bool CanStackOtherOnThis(Card topDiscard, Card otherCard, ICardPlayService cardPlayService)
         {
             if (otherCard.CardColor == ColorCard.DEFAULT_COLOR.ToString())
                 return true;

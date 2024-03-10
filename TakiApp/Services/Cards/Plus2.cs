@@ -35,14 +35,14 @@ namespace TakiApp.Services.Cards
             return countPlus2 * 2;
         }
 
-        public override bool CanStackOtherOnThis(Card topDiscard, Card otherCard)
+        public override bool CanStackOtherOnThis(Card topDiscard, Card otherCard, ICardPlayService cardPlayService)
         {
             var isOnlyPlus2Allowed = (bool)topDiscard.CardConfigurations["isOnlyPlus2Allowed"]!;
 
             if (isOnlyPlus2Allowed)
                 return topDiscard.Type == otherCard.Type;
 
-            return base.CanStackOtherOnThis(topDiscard, otherCard);
+            return base.CanStackOtherOnThis(topDiscard, otherCard, cardPlayService);
         }
 
         public override async Task PlayAsync(Player player, Card cardPlayed, ICardPlayService cardPlayService)

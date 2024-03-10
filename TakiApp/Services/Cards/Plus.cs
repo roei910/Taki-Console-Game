@@ -31,7 +31,7 @@ namespace TakiApp.Services.Cards
 
             _userCommunicator.SendAlertMessage($"Top discard: {cardPlayed}\n");
 
-            Func<Card, bool> canStack = (Card card) => CanStackOtherOnThis(cardPlayed, card);
+            Func<Card, bool> canStack = (Card card) => CanStackOtherOnThis(cardPlayed, card, cardPlayService);
 
             var playerCard = _algorithmService.PickCard(player, canStack);
 
