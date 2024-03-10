@@ -62,7 +62,7 @@ namespace TakiApp.Services.GameLogic
 
                 if (player.Cards.Count == 0)
                 {
-                    _userCommunicator.SendMessageToUser("You finished your hand!");
+                    _userCommunicator.SendMessageToUser("You finished your hand!\n");
 
                     await _gameSettingsRepository.UpdateWinnersAsync(player.Name!);
 
@@ -83,21 +83,25 @@ namespace TakiApp.Services.GameLogic
 
                 var gameSettings = await _gameSettingsRepository.GetGameSettingsAsync();
 
-                if (gameSettings!.HasGameEnded)
-                {
-                    _userCommunicator.SendMessageToUser("The game ended, hope you had fun");
-
-                    //TODO: read messages
-                    return;
-                }
-
                 player = await _gameTurnService.PlayTurnByIdAsync(player.Id);
 
                 if (player.Cards.Count == 0)
                 {
-                    _userCommunicator.SendMessageToUser("You finished your hand!");
+                    _userCommunicator.SendMessageToUser("You finished your hand!\n");
 
-                    await _gameSettingsRepository.UpdateWinnersAsync(player.Name!);
+                    gameSettings = await _gameSettingsRepository.UpdateWinnersAsync(player.Name!);
+                }
+
+                if (gameSettings!.HasGameEnded)
+                {
+                    _userCommunicator.SendMessageToUser("The game ended, hope you had fun");
+
+                    var winnersList = gameSettings.winners.Select((winner, index) => $"{index + 1}. {winner}").ToList();
+                    var message = "game finished the winners are:\n" + string.Join("\n", winnersList) + "\n";
+
+                    _userCommunicator.SendMessageToUser(message);
+
+                    return;
                 }
             }
         }

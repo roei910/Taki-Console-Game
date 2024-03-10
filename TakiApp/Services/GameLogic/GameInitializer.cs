@@ -73,8 +73,6 @@ namespace TakiApp.Services.GameLogic
 
                 await InitializeCards();
 
-                //TODO: fix not allowing normal game
-
                 if (_gameSettings.IsOnline)
                 {
                     await GenerateOnlinePlayer();
@@ -115,9 +113,18 @@ namespace TakiApp.Services.GameLogic
         {
             var players = await _playersRepository.GetAllAsync();
 
-            //TODO: use the cards repository instead and update the players after
-            foreach (var player in players)
-                await _playersRepository.DrawCardsAsync(player, _gameSettings!.NumberOfPlayerCards);
+            var cards = await _drawPileRepository.DrawCardsAsync(players.Count * _gameSettings!.NumberOfPlayerCards);
+
+            while(cards.Count > 0)
+            {
+                foreach (var player in players) 
+                {
+                    player.Cards.Add(cards[0]);
+                    cards.RemoveAt(0);
+                }
+            }
+
+            await _playersRepository.UpdateManyAsync(players);
         }
 
         private async Task InitializeCards()
