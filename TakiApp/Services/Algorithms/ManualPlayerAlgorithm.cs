@@ -19,6 +19,7 @@ namespace Taki.Models.Algorithm
             playerCards = OrderPlayerCardByColor(playerCards);
             _userCommunicator.SendAlertMessage("printing your current hand:");
 
+            //TODO: use the user communicator function with list, and an else option?
             var playerCardsString = playerCards.Select((card, i) => $"{i}. {card}").ToList();
             _userCommunicator.SendMessageToUser(string.Join("\n", playerCardsString));
 
@@ -56,7 +57,7 @@ namespace Taki.Models.Algorithm
             if (index == -1)
                 return null;
 
-            Card playerCard = playerCards.ElementAt(index);
+            Card playerCard = playerCards[index];
             if (!isSimilarTo(playerCard))
             {
                 _userCommunicator.SendErrorMessage("card does not meet the stacking rules");

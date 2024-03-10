@@ -67,7 +67,7 @@ namespace TakiApp.Services.Cards
 
             if (cards.Count > 1)
             {
-                var previousCard = cards.ElementAt(1);
+                var previousCard = cards[1];
                 cardToUpdate.CardConfigurations["prevCardId"] =
                     previousCard.Type == typeof(SwitchCardsWithDirection).ToString() ?
                         previousCard.CardConfigurations["prevCardId"] : previousCard.Id.ToString();

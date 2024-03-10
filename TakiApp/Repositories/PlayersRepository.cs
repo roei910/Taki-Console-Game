@@ -92,7 +92,7 @@ namespace TakiApp.Repositories
             var players = await _playersDal.FindAsync();
             
             var currentPlayer = players.Where(x => x.IsPlaying).First();
-            var nextPlayer = GetNextN(players, currentPlayer).ElementAt(0);
+            var nextPlayer = GetNextN(players, currentPlayer)[0];
 
             currentPlayer.IsPlaying = false;
             await _playersDal.UpdateOneAsync(currentPlayer);
