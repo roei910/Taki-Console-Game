@@ -40,7 +40,7 @@ namespace TakiApp.Services.GameLogic
 
         public async Task InitializeGame()
         {
-            _gameSettings = _gameSettingsRepository.GetGameSettingsAsync().Result;
+            _gameSettings = await _gameSettingsRepository.GetGameSettingsAsync();
 
             if(_gameSettings == null)
             {
@@ -74,12 +74,17 @@ namespace TakiApp.Services.GameLogic
                 await InitializeCards();
 
                 //TODO: fix not allowing normal game
-                
-                await GenerateOnlinePlayer();
 
-                await _gameSettingsRepository.WaitGameStartAsync(1);
+                if (_gameSettings.IsOnline)
+                {
+                    await GenerateOnlinePlayer();
+                    await _gameSettingsRepository.WaitGameStartAsync(1);
+                    await DrawCards();
 
-                await DrawCards();
+                    return;
+                }
+
+                await InitializeNormal();
 
                 return;
             }
@@ -103,14 +108,7 @@ namespace TakiApp.Services.GameLogic
                 return;
             }
 
-            if (!_gameSettings.IsOnline)
-            {
-                await InitializeNormal();
-
-                return;
-            }
-
-            await InitializeOnline();
+            await InitializeOnlinePlayer();
         }
 
         private async Task DrawCards()
@@ -133,7 +131,7 @@ namespace TakiApp.Services.GameLogic
             await _discardPileRepository.AddCardOrderedAsync(drawCard!.First());
         }
 
-        private async Task InitializeOnline()
+        private async Task InitializeOnlinePlayer()
         {
             await GenerateOnlinePlayer();
 
@@ -178,6 +176,8 @@ namespace TakiApp.Services.GameLogic
             await _playersRepository.CreateManyAsync(players);
 
             await DrawCards();
+
+            await _gameSettingsRepository.WaitGameStartAsync(players.Count);
         }
     }
 }

@@ -75,9 +75,31 @@ namespace TakiApp.Services.GameLogic
 
         private async Task StartNormal()
         {
-            var players = await _playersRepository.GetAllAsync();
+            while (true)
+            {
+                var player = await _playersRepository.GetCurrentPlayerAsync();
 
-            await _gameSettingsRepository.WaitGameStartAsync(players.Count);
+                _userCommunicator.SendMessageToUser($"User playing: {player.Name}");
+
+                var gameSettings = await _gameSettingsRepository.GetGameSettingsAsync();
+
+                if (gameSettings!.HasGameEnded)
+                {
+                    _userCommunicator.SendMessageToUser("The game ended, hope you had fun");
+
+                    //TODO: read messages
+                    return;
+                }
+
+                player = await _gameTurnService.PlayTurnByIdAsync(player.Id);
+
+                if (player.Cards.Count == 0)
+                {
+                    _userCommunicator.SendMessageToUser("You finished your hand!");
+
+                    await _gameSettingsRepository.UpdateWinnersAsync(player.Name!);
+                }
+            }
         }
     }
 }
