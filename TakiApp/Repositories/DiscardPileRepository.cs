@@ -26,7 +26,7 @@ namespace TakiApp.Repositories
             await _discardPileDal.DeleteAllAsync();
         }
 
-        public async Task<Card> GetCardById(ObjectId objectId)
+        public async Task<Card> GetCardByIdAsync(ObjectId objectId)
         {
             Card card = await _discardPileDal.FindOneAsync(objectId);
 

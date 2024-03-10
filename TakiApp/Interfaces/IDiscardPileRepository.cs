@@ -7,7 +7,7 @@ namespace TakiApp.Interfaces
     {
         Task AddCardOrderedAsync(Card card);
         Task DeleteAllAsync();
-        Task<Card> GetCardById(ObjectId objectId);
+        Task<Card> GetCardByIdAsync(ObjectId objectId);
         Task<List<Card>> GetCardsOrderedAsync();
         Task<Card> GetTopDiscardAsync();
         Task UpdateCardAsync(Card cardToUpdate);
