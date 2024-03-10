@@ -97,7 +97,7 @@ namespace TakiApp.Repositories
             return gameSettings;
         }
 
-        public async Task UpdateWinnersAsync(string name)
+        public async Task<GameSettings> UpdateWinnersAsync(string name)
         {
             var gameSettings = await GetGameSettingsAsync();
 
@@ -113,6 +113,8 @@ namespace TakiApp.Repositories
             }
 
             await _gameSettingsDal.UpdateOneAsync(gameSettings);
+
+            return gameSettings;
         }
     }
 }
