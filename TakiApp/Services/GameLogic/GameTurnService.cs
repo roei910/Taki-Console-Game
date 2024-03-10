@@ -35,7 +35,7 @@ namespace TakiApp.Services.GameLogic
             var canStack = _cardPlayService.CanStack(topDiscard);
             var cardsToDraw = _cardPlayService.CardsToDraw(topDiscard);
 
-            Card? card = _algorithmService.PickCard(currentPlayer, canStack, $"or draw {cardsToDraw} card(s)");
+            Card? card = _algorithmService.PickCard(currentPlayer, canStack, $"or -1 to draw {cardsToDraw} card(s)");
             
             if (card is null)
             {
