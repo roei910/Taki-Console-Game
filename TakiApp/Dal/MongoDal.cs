@@ -5,7 +5,6 @@ using TakiApp.Models;
 
 namespace Taki.Dal
 {
-    //TODO: implement the IMongoCollection interface instead!
     public abstract class MongoDal<T> : IDal<T>
     {
         protected readonly MongoClient _client;
