@@ -72,14 +72,14 @@ namespace TakiApp.Services.GameLogic
             if (gameSettings!.HasGameEnded)
                 return;
 
-            if (gameSettings!.winners.Count == gameSettings.NumberOfWinners)
-            {
-                var winnersList = gameSettings.winners.Select((winner, index) => $"{index + 1}. {winner}").ToList();
-                var message = "game finished the winners are:\n" + string.Join("\n", winnersList) + "\n";
+            //if (gameSettings!.winners.Count == gameSettings.NumberOfWinners)
+            //{
+            //    var winnersList = gameSettings.winners.Select((winner, index) => $"{index + 1}. {winner}").ToList();
+            //    var message = "game finished the winners are:\n" + string.Join("\n", winnersList) + "\n";
 
-                await _playerRepository.SendMessagesToPlayersAsync("System", message);
-                await _gameSettingsRepository.FinishGameAsync();
-            }
+            //    await _playerRepository.SendMessagesToPlayersAsync("System", message);
+            //    await _gameSettingsRepository.FinishGameAsync();
+            //}
 
             await Task.Delay(1000);
             await WaitGameEndAsync(id);

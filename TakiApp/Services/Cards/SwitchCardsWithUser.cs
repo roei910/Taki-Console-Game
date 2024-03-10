@@ -23,7 +23,7 @@ namespace TakiApp.Services.Cards
         public override async Task PlayAsync(Player player, Card cardPlayed, ICardPlayService cardPlayService)
         {
             var players = await _playersRepository.GetAllAsync();
-            players = players.Where(p => p.Id != player.Id).ToList();
+            players = players.Where(p => p.Id != player.Id && p.Cards.Count > 0).ToList();
 
             Player playerToSwitch = _algorithmService.PickOtherPlayer(player, players);
 

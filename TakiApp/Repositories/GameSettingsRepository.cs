@@ -6,20 +6,20 @@ namespace TakiApp.Repositories
     public class GameSettingsRepository : IGameSettingsRepository
     {
         private readonly IDal<GameSettings> _gameSettingsDal;
-        private readonly IDal<Player> _playersDal;
         private readonly IDrawPileDal _drawPileDal;
         private readonly IDiscardPileDal _discardPileDal;
+        private readonly IPlayersRepository _playersRepository;
         private readonly IUserCommunicator _userCommunicator;
 
         public GameSettingsRepository(IDal<GameSettings> dal,
-            IUserCommunicator userCommunicator, IDal<Player> playersDal,
-            IDrawPileDal drawPileDal, IDiscardPileDal discardPileDal)
+            IUserCommunicator userCommunicator, IDrawPileDal drawPileDal, 
+            IDiscardPileDal discardPileDal, IPlayersRepository playersRepository)
         {
             _gameSettingsDal = dal;
             _userCommunicator = userCommunicator;
-            _playersDal = playersDal;
             _drawPileDal = drawPileDal;
             _discardPileDal = discardPileDal;
+            _playersRepository = playersRepository;
         }
 
         public async Task CreateGameSettings(GameSettings gameSettings)
@@ -41,11 +41,11 @@ namespace TakiApp.Repositories
                 gameSettings.HasGameStarted = true;
                 await _gameSettingsDal.UpdateOneAsync(gameSettings);
 
-                var players = await _playersDal.FindAsync();
+                var players = await _playersRepository.GetAllAsync();
                 var first = players[0];
                 first.IsPlaying = true;
 
-                await _playersDal.UpdateOneAsync(first);
+                await _playersRepository.UpdatePlayerAsync(first);
 
                 _userCommunicator.SendAlertMessage(message);
 
@@ -70,13 +70,13 @@ namespace TakiApp.Repositories
 
         public async Task DeleteGameAsync()
         {
-            await _playersDal.DeleteAllAsync();
+            await _playersRepository.DeleteAllAsync();
             await _discardPileDal.DeleteAllAsync();
             await _drawPileDal.DeleteAllAsync();
             await _gameSettingsDal.DeleteAllAsync();
         }
 
-        public async Task FinishGameAsync()
+        public async Task<GameSettings> FinishGameAsync()
         {
             var gameSettings = await GetGameSettingsAsync();
 
@@ -84,7 +84,7 @@ namespace TakiApp.Repositories
 
             await _gameSettingsDal.UpdateOneAsync(gameSettings);
 
-            var players = await _playersDal.FindAsync();
+            var players = await _playersRepository.GetAllAsync();
             players = players.Select(x =>
             {
                 x.IsPlaying = true;
@@ -92,7 +92,9 @@ namespace TakiApp.Repositories
                 return x;
             }).ToList();
 
-            await _playersDal.UpdateManyAsync(players);
+            await _playersRepository.UpdateManyAsync(players);
+
+            return gameSettings;
         }
 
         public async Task UpdateWinnersAsync(string name)
@@ -100,6 +102,15 @@ namespace TakiApp.Repositories
             var gameSettings = await GetGameSettingsAsync();
 
             gameSettings!.winners.Add(name);
+
+            if (gameSettings!.winners.Count == gameSettings.NumberOfWinners)
+            {
+                var winnersList = gameSettings.winners.Select((winner, index) => $"{index + 1}. {winner}").ToList();
+                var message = "game finished the winners are:\n" + string.Join("\n", winnersList) + "\n";
+
+                await _playersRepository.SendMessagesToPlayersAsync("System", message);
+                gameSettings = await FinishGameAsync();
+            }
 
             await _gameSettingsDal.UpdateOneAsync(gameSettings);
         }

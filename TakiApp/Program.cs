@@ -22,6 +22,8 @@ using TakiApp.Services.GameLogic;
 
 //TODO: add normal game not just online
 
+//TODO: switch user with change color not working correctly
+
 var serviceProvider = new ServiceCollection()
     .AddSingleton<IConfiguration>(x => new ConfigurationBuilder()
         .AddJsonFile("appsettings.json", false, true)

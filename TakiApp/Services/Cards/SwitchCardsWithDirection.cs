@@ -79,6 +79,7 @@ namespace TakiApp.Services.Cards
         private async Task SwitchPlayers()
         {
             var players = await _playersRepository.GetAllAsync();
+            players = players.Where(p => p.Cards.Count > 0).ToList();
 
             List<Card> savedCards = players[0].Cards;
             players[0].Cards = [];
