@@ -1,21 +1,41 @@
-﻿using TakiApp.Interfaces;
+﻿using System.Drawing;
+using TakiApp.Interfaces;
 using TakiApp.Models;
 
 namespace TakiApp.Services.Cards
 {
     public class SwitchCardsWithUser : SwitchCardsWithDirection
     {
-        public SwitchCardsWithUser(IDiscardPileRepository discardPileRepository, IPlayersRepository playersRepository) : 
-            base(discardPileRepository, playersRepository) { }
+        private readonly IAlgorithmService _algorithmService;
+
+        public SwitchCardsWithUser(IDiscardPileRepository discardPileRepository, IPlayersRepository playersRepository, 
+            IAlgorithmService algorithmService) : base(discardPileRepository, playersRepository)
+        {
+            _algorithmService = algorithmService;
+        }
 
         public override List<Card> GenerateCardsForDeck()
         {
-            throw new NotImplementedException();
+            return Enumerable.Range(0, 2)
+                .Select(j => new Card(typeof(SwitchCardsWithUser).ToString(), Color.Empty.ToString())).ToList();
         }
 
-        public override Task PlayAsync(Player player, Card cardPlayed, ICardPlayService cardPlayService)
+        public override async Task PlayAsync(Player player, Card cardPlayed, ICardPlayService cardPlayService)
         {
-            throw new NotImplementedException();
+            var players = await _playersRepository.GetAllAsync();
+            players = players.Where(p => p.Id != player.Id).ToList();
+
+            Player playerToSwitch = _algorithmService.PickOtherPlayer(player, players);
+
+            (player.Cards, playerToSwitch.Cards) = (playerToSwitch.Cards, player.Cards);
+
+            await UpdatePreviousCard(cardPlayed);
+            await _playersRepository.UpdateManyAsync(new List<Player>() { player, playerToSwitch });
+
+            await _playersRepository.SendMessagesToPlayersAsync(
+                player.Name!, $"Player: {player.Name} used switch cards with Player: {playerToSwitch.Name}!\n", player);
+
+            await _playersRepository.NextPlayerAsync();
         }
     }
 }

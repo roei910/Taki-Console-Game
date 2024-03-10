@@ -6,8 +6,8 @@ namespace TakiApp.Services.Cards
 {
     public class TakiCard : ColorCard
     {
-        private readonly IUserCommunicator _userCommunicator;
-        private readonly IAlgorithmService _algorithmService;
+        protected readonly IUserCommunicator _userCommunicator;
+        protected readonly IAlgorithmService _algorithmService;
 
         public TakiCard(IDiscardPileRepository discardPileRepository, IPlayersRepository playersRepository,
             IUserCommunicator userCommunicator, IAlgorithmService algorithmService) : 

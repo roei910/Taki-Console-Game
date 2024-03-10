@@ -17,9 +17,34 @@ namespace TakiApp.Services.Cards
                 .Select(j => new Card(typeof(SuperTaki).ToString(), Color.Empty.ToString())).ToList();
         }
 
-        public override Task PlayAsync(Player player, Card cardPlayed, ICardPlayService cardPlayService)
+        public override async Task PlayAsync(Player player, Card cardPlayed, ICardPlayService cardPlayService)
         {
-            throw new NotImplementedException();
+            while (!Colors.Any(x => x.ToString() == cardPlayed.CardColor.ToString()))
+                cardPlayed.CardColor = _algorithmService.ChooseColor(player).ToString();
+
+            await _discardPileRepository.UpdateCardAsync(cardPlayed);
+            await _playersRepository.SendMessagesToPlayersAsync(player.Name!, $"Changed color to {cardPlayed.CardColor}", player);
+
+            await base.PlayAsync(player, cardPlayed, cardPlayService);
+        }
+
+        public override bool CanStackOtherOnThis(Card topDiscard, Card otherCard, ICardPlayService cardPlayService)
+        {
+            if (topDiscard.CardColor == DEFAULT_COLOR.ToString())
+                return true;
+
+            return base.CanStackOtherOnThis(topDiscard, otherCard, cardPlayService);
+        }
+
+        public override async Task FinishPlayAsync(Card cardToReset)
+        {
+            Card topDiscard = await _discardPileRepository.GetTopDiscardAsync();
+
+            if (topDiscard.Id != cardToReset.Id)
+            {
+                cardToReset.CardColor = DEFAULT_COLOR.ToString();
+                await _discardPileRepository.UpdateCardAsync(cardToReset);
+            }
         }
     }
 }
