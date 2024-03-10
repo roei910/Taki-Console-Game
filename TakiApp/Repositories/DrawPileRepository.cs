@@ -38,7 +38,7 @@ namespace TakiApp.Repositories
 
         public async Task<List<Card>> DrawCardsAsync(int cardsToDraw = 1)
         {
-            var cards = await _drawPileDal.FindAsync();//TODO: make order in cards
+            var cards = await _drawPileDal.FindAsync();
 
             var drawCards = cards.Take(cardsToDraw).ToList();
 
