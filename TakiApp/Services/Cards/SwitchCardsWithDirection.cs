@@ -30,20 +30,22 @@ namespace TakiApp.Services.Cards
 
         public override bool CanStackOtherOnThis(Card topDiscard, Card otherCard, ICardPlayService cardPlayService)
         {
-            if (topDiscard.CardConfigurations["prevCardId"] == null)
+            var prevCardId = topDiscard.CardConfigurations["prevCardId"];
+
+            if (prevCardId == null)
                 return true;
 
-            topDiscard = Task.Run(async () =>
+            if (!ObjectId.TryParse(prevCardId!.ToString(), out ObjectId objectId))
+                throw new Exception("couldnt find the card, error!");
+
+            var cardTask = Task.Run(async () =>
             {
-                ObjectId objectId;
-
-                if(!ObjectId.TryParse(topDiscard.CardConfigurations["prevCardId"]!.ToString(), out objectId))
-                    throw new Exception("couldnt find the card, error!");
-
-                Card card = await _discardPileRepository.GetCardById(objectId);
+                var card = await _discardPileRepository.GetCardByIdAsync(objectId);
 
                 return card;
-            }).Result;
+            });
+
+            topDiscard = cardTask.Result;
 
             return cardPlayService.CanStack(topDiscard)(otherCard);
         }
