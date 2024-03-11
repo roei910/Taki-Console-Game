@@ -45,7 +45,7 @@ namespace TakiApp.Repositories
         {
             var cards = await GetCardsOrderedAsync();
 
-            return cards[0];
+            return cards.First();
         }
 
         public async Task UpdateCardAsync(Card cardToUpdate)

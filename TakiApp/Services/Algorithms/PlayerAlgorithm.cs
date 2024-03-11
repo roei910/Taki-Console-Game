@@ -11,13 +11,9 @@ namespace Taki.Models.Algorithm
             if (playerCards.Count == 0)
                 return null;
 
-            Card? playerCard = Task.Run(async () =>
-            {
-                Card? card = playerCards.FirstOrDefault(card => isSimilarTo(card!));
-                await Task.Delay(2000);
+            Task.Delay(5000).Wait();
 
-                return card;
-            }).Result;
+            Card? playerCard = playerCards.FirstOrDefault(card => isSimilarTo(card!)); 
 
             return playerCard;
         }
@@ -26,6 +22,7 @@ namespace Taki.Models.Algorithm
         {
             var colors = playerCards
                 .Select(card => Color.FromName(card.CardColor))
+                .Where(color => color.Name != Color.Empty.Name)
                 .GroupBy(c => c);
 
             if (colors.Count() == 0)

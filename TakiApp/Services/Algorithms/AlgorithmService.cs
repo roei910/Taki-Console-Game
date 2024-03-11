@@ -33,7 +33,9 @@ namespace TakiApp.Services.Algorithms
         {
             var algo = MatchAlgorithm(player);
 
-            return algo.ChooseColor(player.Cards);
+            var color = algo.ChooseColor(player.Cards);
+
+            return color;
         }
 
         private IPlayerAlgorithm MatchAlgorithm(Player player)
