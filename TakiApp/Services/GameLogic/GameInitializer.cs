@@ -5,6 +5,7 @@ using TakiApp.Models;
 
 namespace TakiApp.Services.GameLogic
 {
+    //TODO: check the initializer and restore functionality maybe create classes for them
     public class GameInitializer : IGameInitializer
     {
         private readonly IUserCommunicator _userCommunicator;
@@ -52,11 +53,16 @@ namespace TakiApp.Services.GameLogic
                 _userCommunicator.SendMessageToUser("Please enter normal or pyramid");
                 var typeOfGame = _userCommunicator.UserPickItemFromList(new List<string>() { "normal", "pyramid" });
 
-                var numberOfPlayerCards = _userCommunicator.GetNumberFromUser("Please enter number of player cards", 
-                    _constantVariables.MinNumberOfPlayerCards, _constantVariables.MaxNumberOfPlayerCards);
-
-                var numberOfPlayers = _userCommunicator.GetNumberFromUser("Please enter number of players", 
+                var numberOfPlayers = _userCommunicator.GetNumberFromUser("Please enter number of players",
                     _constantVariables.MinNumberOfPlayers, _constantVariables.MaxNumberOfPlayers);
+
+                int maxNumberOfPlayerCards = _cardPlayService.GenerateCardsDeck().Count / numberOfPlayers - 1;
+
+                var maxCards = maxNumberOfPlayerCards > _constantVariables.MaxNumberOfPlayerCards ?
+                    _constantVariables.MaxNumberOfPlayerCards : maxNumberOfPlayerCards;
+
+                var numberOfPlayerCards = _userCommunicator.GetNumberFromUser("Please enter number of player cards", 
+                    _constantVariables.MinNumberOfPlayerCards, maxCards);
 
                 _gameSettings = new GameSettings()
                 {
@@ -91,11 +97,23 @@ namespace TakiApp.Services.GameLogic
             {
                 _userCommunicator.SendErrorMessage("Game already started, would you like to create a new game?");
 
-                string answer = _userCommunicator.UserPickItemFromList(new List<string>() { "yes", "no" });
+                var choices = new List<string>() { "yes", "no" };
+
+                if (!_gameSettings.IsOnline)
+                    choices.Add("continue previous game");
+
+                string answer = _userCommunicator.UserPickItemFromList(choices);
 
                 if(answer == "no")
                 {
                     _userCommunicator.SendErrorMessage("GoodBye!");
+                    return;
+                }
+
+                if(answer == "continue previous game")
+                {
+                    //TODO: continue the previous offline game
+
                     return;
                 }
 
