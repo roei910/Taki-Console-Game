@@ -22,8 +22,6 @@ using TakiApp.Shared.Models;
 
 //TODO: add game restore to continue playing while in a normal game // maybe game states => control the store and restore, initialize
 
-//TODO: add restart game
-
 var serviceProvider = new ServiceCollection()
     .AddSingleton<IConfiguration>(x => new ConfigurationBuilder()
         .AddJsonFile("appsettings.json", false, true)
@@ -60,6 +58,7 @@ var serviceProvider = new ServiceCollection()
     .AddSingleton<IDiscardPileRepository, DiscardPileRepository>()
     .AddSingleton<IPlayersRepository, PlayersRepository>()
 
+    .AddSingleton<IComputerPlayersRunner, ComputerPlayersRunner>()
     .AddSingleton<IUserCommunicator, ConsoleUserCommunicator>()
     .AddSingleton<IGameInitializer, GameInitializer>()
     .AddSingleton<IGameTurnService, GameTurnService>()
