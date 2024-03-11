@@ -58,6 +58,7 @@ var serviceProvider = new ServiceCollection()
     .AddSingleton<IDiscardPileRepository, DiscardPileRepository>()
     .AddSingleton<IPlayersRepository, PlayersRepository>()
 
+    .AddSingleton<IGameScore, GameScore>()
     .AddSingleton<IComputerPlayersRunner, ComputerPlayersRunner>()
     .AddSingleton<IUserCommunicator, ConsoleUserCommunicator>()
     .AddSingleton<IGameInitializer, GameInitializer>()
