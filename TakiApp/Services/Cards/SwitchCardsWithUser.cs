@@ -30,7 +30,7 @@ namespace TakiApp.Services.Cards
 
             (player.Cards, playerToSwitch.Cards) = (playerToSwitch.Cards, player.Cards);
 
-            await UpdatePreviousCard(cardPlayed);
+            await UpdatePreviousCardAsync(cardPlayed);
             await _playersRepository.UpdateManyAsync(new List<Player>() { player, playerToSwitch });
 
             await _playersRepository.SendMessagesToPlayersAsync(

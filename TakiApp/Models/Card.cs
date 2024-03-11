@@ -1,10 +1,14 @@
 ﻿using MongoDB.Bson;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using TakiApp.Serializers;
 
 namespace TakiApp.Models
 {
     public class Card
     {
+        [JsonProperty("_id")] // Map the _id field in JSON to the Id property
+        [JsonConverter(typeof(ObjectIdConverter))]
         public ObjectId Id { get; set; }
         public string Type { get; set; }
         public string CardColor { get; set; }

@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson;
+using Newtonsoft.Json;
 using System.Drawing;
 using TakiApp.Interfaces;
 using TakiApp.Models;
@@ -19,7 +20,7 @@ namespace TakiApp.Services.Cards
 
         public override async Task PlayAsync(Player player, Card cardPlayed, ICardPlayService cardPlayService)
         {
-            await UpdatePreviousCard(cardPlayed);
+            await UpdatePreviousCardAsync(cardPlayed);
 
             await SwitchPlayers();
 
@@ -30,25 +31,18 @@ namespace TakiApp.Services.Cards
         }
 
         public override bool CanStackOtherOnThis(Card topDiscard, Card otherCard, ICardPlayService cardPlayService)
-        {//TODO: check why sometimes cant parse object id
-            var prevCardId = topDiscard.CardConfigurations["prevCardId"];
+        {
+            var prevCardJSON = topDiscard.CardConfigurations["prevCard"];
 
-            if (prevCardId == null)
+            if (prevCardJSON is null)
                 return true;
 
-            if (!ObjectId.TryParse(prevCardId!.ToString(), out ObjectId objectId))
-                throw new Exception("couldnt parse the object id!");
+            Card? prevCard = JsonConvert.DeserializeObject<Card>(prevCardJSON.ToString());
 
-            var cardTask = Task.Run(async () =>
-            {
-                var card = await _discardPileRepository.GetCardByIdAsync(objectId);
+            if (prevCard is null)
+                return true;
 
-                return card;
-            });
-
-            topDiscard = cardTask.Result;
-
-            return cardPlayService.CanStack(topDiscard)(otherCard);
+            return cardPlayService.CanStack(prevCard)(otherCard);
         }
 
         public override async Task FinishPlayAsync(Card cardToReset)
@@ -57,21 +51,23 @@ namespace TakiApp.Services.Cards
 
             if (topDiscard.Id != cardToReset.Id)
             {
-                cardToReset.CardConfigurations["prevCardId"] = null;
+                cardToReset.CardConfigurations["prevCard"] = null;
                 await _discardPileRepository.UpdateCardAsync(cardToReset);
             }
         }
         
-        protected async Task UpdatePreviousCard(Card cardToUpdate)
+        protected async Task UpdatePreviousCardAsync(Card cardToUpdate)
         {
             var cards = await _discardPileRepository.GetCardsOrderedAsync();
 
             if (cards.Count > 1)
             {
                 var previousCard = cards[1];
-                cardToUpdate.CardConfigurations["prevCardId"] =
-                    previousCard.Type == typeof(SwitchCardsWithDirection).ToString() ?
-                        previousCard.CardConfigurations["prevCardId"] : previousCard.Id.ToString();
+                
+                cardToUpdate.CardConfigurations["prevCard"] = 
+                    previousCard.Type == typeof(SwitchCardsWithDirection).ToString() ? 
+                    previousCard.CardConfigurations["prevCardId"] :
+                    JsonConvert.SerializeObject(previousCard);
 
                 await _discardPileRepository.UpdateCardAsync(cardToUpdate);
             }
