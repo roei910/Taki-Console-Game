@@ -7,6 +7,7 @@ namespace TakiApp.Shared.Models
         public ObjectId Id { get; set; }
         public int NumberOfPlayerCards { get; set; }
         public int NumberOfPlayers { get; set; }
+        public int NumberOfManualPlayers { get; set; }
         public string? TypeOfGame { get; set; }
         public bool IsOnline { get; set; }
         public int NumberOfWinners { get; set; }

@@ -23,6 +23,14 @@ namespace TakiApp.Services.GameLogic
 
         public async Task Run()
         {
+            var isInitialized = await _gameInitializer.IsGameInitializedAsync();
+
+            if(isInitialized)
+            {
+                //game was initialized need to restore on normal game only
+                //allow create new game if online
+            }
+
             await _gameInitializer.InitializeGame();
             var gameSettings = _gameInitializer.GetGameSettings();
 
@@ -54,7 +62,7 @@ namespace TakiApp.Services.GameLogic
                 {
                     _userCommunicator.SendMessageToUser("The game ended, hope you had fun");
 
-                    return;
+                    break;
                 }
 
                 player = await _gameTurnService.PlayTurnByIdAsync(player.Id);
@@ -67,9 +75,13 @@ namespace TakiApp.Services.GameLogic
 
                     await _gameTurnService.WaitGameEndAsync(player.Id);
 
-                    return;
+                    break;
                 }
             }
+
+            await _gameSettingsRepository.DeleteGameAsync();
+
+            await Run();
         }
 
         private async Task StartNormal()
@@ -93,16 +105,20 @@ namespace TakiApp.Services.GameLogic
 
                 if (gameSettings!.HasGameEnded)
                 {
-                    _userCommunicator.SendMessageToUser("The game ended, hope you had fun");
+                    _userCommunicator.SendMessageToUser("The game ended, hope you had fun\n");
 
                     var winnersList = gameSettings.winners.Select((winner, index) => $"{index + 1}. {winner}").ToList();
                     var message = "game finished the winners are:\n" + string.Join("\n", winnersList) + "\n";
 
                     _userCommunicator.SendMessageToUser(message);
 
-                    return;
+                    break;
                 }
             }
+
+            await _gameSettingsRepository.DeleteGameAsync();
+
+            await Run();
         }
     }
 }
