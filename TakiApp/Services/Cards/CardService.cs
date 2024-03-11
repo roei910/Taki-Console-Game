@@ -19,16 +19,13 @@ namespace TakiApp.Services.Cards
 
         public virtual bool CanStackOtherOnThis(Card topDiscard, Card otherCard, ICardPlayService cardPlayService)
         {
-            if (otherCard.CardColor == ColorCard.DEFAULT_COLOR.ToString())
+            if (otherCard.CardColor == ColorCard.DEFAULT_COLOR.Name)
                 return true;
 
-            if (topDiscard.CardColor == ColorCard.DEFAULT_COLOR.ToString())
+            if (topDiscard.CardColor == ColorCard.DEFAULT_COLOR.Name)
                 return true;
 
             var ans = topDiscard.Type == otherCard.Type;
-
-            if (!ans)
-                _userCommunicator.SendErrorMessage($"Previous card was {topDiscard}");
 
             return ans;
         }

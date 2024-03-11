@@ -17,7 +17,7 @@ namespace TakiApp.Services.Cards
 
         public override bool CanStackOtherOnThis(Card topDiscard, Card otherCard, ICardPlayService cardPlayService)
         {
-            if (topDiscard.CardColor == Color.Empty.ToString())
+            if (topDiscard.CardColor == Color.Empty.Name)
                 return true;
 
             if (topDiscard.CardColor == otherCard.CardColor)
@@ -29,23 +29,23 @@ namespace TakiApp.Services.Cards
         public override List<Card> GenerateCardsForDeck()
         {
             return Enumerable.Range(0, 2)
-                .Select(j => new Card(typeof(ChangeColor).ToString(), Color.Empty.ToString())).ToList();
+                .Select(j => new Card(typeof(ChangeColor).ToString(), Color.Empty.Name)).ToList();
         }
 
         public async override Task PlayAsync(Player player, Card cardPlayed, ICardPlayService cardPlayService)
         {
-            while (!ColorCard.Colors.Any(x => x.ToString() == cardPlayed.CardColor.ToString()))
-                cardPlayed.CardColor = _algorithmService.ChooseColor(player).ToString();
+            while (!ColorCard.Colors.Any(x => x.Name == cardPlayed.CardColor))
+                cardPlayed.CardColor = _algorithmService.ChooseColor(player).Name;
 
             await _discardPileRepository.UpdateCardAsync(cardPlayed);
-            await _playersRepository.SendMessagesToPlayersAsync(player.Name!, $"Changed color to {cardPlayed.CardColor}", player);
+            await _playersRepository.SendMessagesToPlayersAsync(player.Name!, $"Changed color to {cardPlayed.CardColor}\n", player);
 
             await base.PlayAsync(player, cardPlayed, cardPlayService);
         }
 
         public override async Task FinishPlayAsync(Card cardToReset)
         {
-            cardToReset.CardColor = Color.Empty.ToString();
+            cardToReset.CardColor = Color.Empty.Name;
 
             await _discardPileRepository.UpdateCardAsync(cardToReset);
         }

@@ -18,7 +18,7 @@ namespace TakiApp.Services.Cards
         public override List<Card> GenerateCardsForDeck()
         {
             return Enumerable.Range(0, 2)
-                .Select(j => new Card(typeof(SwitchCardsWithUser).ToString(), Color.Empty.ToString())).ToList();
+                .Select(j => new Card(typeof(SwitchCardsWithUser).ToString(), Color.Empty.Name)).ToList();
         }
 
         public override async Task PlayAsync(Player player, Card cardPlayed, ICardPlayService cardPlayService)

@@ -15,7 +15,7 @@ namespace TakiApp.Services.Cards
 
         public override bool CanStackOtherOnThis(Card topDiscard, Card otherCard, ICardPlayService cardPlayService)
         {
-            if (topDiscard.CardColor == DEFAULT_COLOR.ToString())
+            if (topDiscard.CardColor == DEFAULT_COLOR.Name)
                 return true;
 
             if (topDiscard.CardColor == otherCard.CardColor)

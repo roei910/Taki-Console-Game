@@ -14,13 +14,13 @@ namespace TakiApp.Services.Cards
         public override List<Card> GenerateCardsForDeck()
         {
             return Enumerable.Range(0, 2)
-                .Select(j => new Card(typeof(SuperTaki).ToString(), Color.Empty.ToString())).ToList();
+                .Select(j => new Card(typeof(SuperTaki).ToString(), Color.Empty.Name)).ToList();
         }
 
         public override async Task PlayAsync(Player player, Card cardPlayed, ICardPlayService cardPlayService)
         {
-            while (!Colors.Any(x => x.ToString() == cardPlayed.CardColor.ToString()))
-                cardPlayed.CardColor = _algorithmService.ChooseColor(player).ToString();
+            while (!Colors.Any(x => x.Name == cardPlayed.CardColor))
+                cardPlayed.CardColor = _algorithmService.ChooseColor(player).Name;
 
             await _discardPileRepository.UpdateCardAsync(cardPlayed);
             await _playersRepository.SendMessagesToPlayersAsync(player.Name!, $"Changed color to {cardPlayed.CardColor}", player);
@@ -30,7 +30,7 @@ namespace TakiApp.Services.Cards
 
         public override bool CanStackOtherOnThis(Card topDiscard, Card otherCard, ICardPlayService cardPlayService)
         {
-            if (topDiscard.CardColor == DEFAULT_COLOR.ToString())
+            if (topDiscard.CardColor == DEFAULT_COLOR.Name)
                 return true;
 
             return base.CanStackOtherOnThis(topDiscard, otherCard, cardPlayService);

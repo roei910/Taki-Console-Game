@@ -18,7 +18,7 @@ namespace TakiApp.Services.Cards
             cardConfigurations["countPlus2"] = 0;
 
             var cards = new List<Color>() { Color.Blue, Color.Yellow, Color.Green, Color.Red }
-                .Select(color => new Card(typeof(Plus2).ToString(), color.ToString()) 
+                .Select(color => new Card(typeof(Plus2).ToString(), color.Name) 
                 { 
                     CardConfigurations = cardConfigurations 
                 }).ToList();
@@ -43,8 +43,6 @@ namespace TakiApp.Services.Cards
             if (isOnlyPlus2Allowed)
             {
                 var ans = topDiscard.Type == otherCard.Type;
-
-                _userCommunicator.SendErrorMessage("Only plus 2 cards are allowed!");
 
                 return ans;
             }
