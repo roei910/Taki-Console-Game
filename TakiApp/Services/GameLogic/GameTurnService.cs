@@ -1,9 +1,13 @@
 ﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using TakiApp.Shared.Interfaces;
 using TakiApp.Shared.Models;
 
 namespace TakiApp.Services.GameLogic
 {
+    //TODO: add messages inside taki for card picked
+    //await _playerRepository.SendMessagesToPlayersAsync("System", $"{currentPlayer.Name} picked card {card}\n");
+
     public class GameTurnService : IGameTurnService
     {
         private readonly IPlayersRepository _playerRepository;
@@ -25,12 +29,13 @@ namespace TakiApp.Services.GameLogic
             _gameSettingsRepository = gameSettingsRepository;
         }
 
-        public async Task<Player> PlayTurnByIdAsync(ObjectId playerId)
+        public async Task<Player> PlayTurnByIdAsync(ObjectId playerId, bool shouldGetTerminalGetMessages = true)
         {
             var topDiscard = await _discardPileRepository.GetTopDiscardAsync();
             var currentPlayer = await _playerRepository.GetCurrentPlayerAsync();
 
-            _userCommunicator.SendAlertMessage($"Top discard: {topDiscard}");
+            if(shouldGetTerminalGetMessages)
+                _userCommunicator.SendAlertMessage($"Top discard: {topDiscard}");
 
             var canStack = _cardPlayService.CanStack(topDiscard);
             var cardsToDraw = _cardPlayService.CardsToDraw(topDiscard);
@@ -50,6 +55,8 @@ namespace TakiApp.Services.GameLogic
 
                 return currentPlayer;
             }
+
+            await _playerRepository.SendMessagesToPlayersAsync("System", $"{currentPlayer.Name} picked card {card}\n");
 
             currentPlayer.Cards.Remove(card);
             await _playerRepository.UpdatePlayerAsync(currentPlayer);
@@ -76,17 +83,18 @@ namespace TakiApp.Services.GameLogic
             await WaitGameEndAsync(id);
         }
 
-        public async Task WaitTurnByIdAsync(ObjectId playerId)
+        public async Task WaitTurnByIdAsync(ObjectId playerId, bool shouldReadMessages = true)
         {
             Player player = await _playerRepository.GetPlayerByIdAsync(playerId);
 
-            await SendMessagesToPlayer(player);
+            if(shouldReadMessages)
+                await SendMessagesToPlayer(player);
 
             if (player != null && player.IsPlaying)
                 return;
 
             await Task.Delay(1000);
-            await WaitTurnByIdAsync(playerId);
+            await WaitTurnByIdAsync(playerId, shouldReadMessages);
         }
 
         private async Task SendMessagesToPlayer(Player player)
