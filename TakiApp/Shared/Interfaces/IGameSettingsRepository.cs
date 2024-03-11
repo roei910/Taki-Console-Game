@@ -8,7 +8,7 @@ namespace TakiApp.Shared.Interfaces
         Task DeleteGameAsync();
         Task<GameSettings> FinishGameAsync();
         Task<GameSettings?> GetGameSettingsAsync();
-        Task<GameSettings> UpdateWinnersAsync(string name);
+        Task<GameSettings> UpdateWinnersAsync(Player player);
         Task WaitGameStartAsync(int numberOfCurrentPlayers);
     }
 }

@@ -71,7 +71,7 @@ namespace TakiApp.Services.GameLogic
                 {
                     _userCommunicator.SendMessageToUser("You finished your hand!\n");
 
-                    await _gameSettingsRepository.UpdateWinnersAsync(player.Name!);
+                    await _gameSettingsRepository.UpdateWinnersAsync(player);
 
                     await _gameTurnService.WaitGameEndAsync(player.Id);
 
@@ -100,7 +100,7 @@ namespace TakiApp.Services.GameLogic
                 {
                     _userCommunicator.SendMessageToUser("You finished your hand!\n");
 
-                    gameSettings = await _gameSettingsRepository.UpdateWinnersAsync(player.Name!);
+                    gameSettings = await _gameSettingsRepository.UpdateWinnersAsync(player);
                 }
 
                 if (gameSettings!.HasGameEnded)

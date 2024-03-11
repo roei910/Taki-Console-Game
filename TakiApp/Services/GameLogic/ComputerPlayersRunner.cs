@@ -78,9 +78,9 @@ namespace TakiApp.Services.GameLogic
 
             if (player.Cards.Count == 0)
             {
-                await _gameSettingsRepository.UpdateWinnersAsync(player.Name!);
+                await _gameSettingsRepository.UpdateWinnersAsync(player);
 
-                await _gameTurnService.WaitGameEndAsync(player.Id);
+                await _gameTurnService.WaitGameEndAsync(player.Id, false);
 
                 return;
             }

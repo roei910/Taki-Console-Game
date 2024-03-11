@@ -1,5 +1,4 @@
 ﻿using MongoDB.Bson;
-using MongoDB.Driver;
 using TakiApp.Shared.Interfaces;
 using TakiApp.Shared.Models;
 
@@ -68,7 +67,7 @@ namespace TakiApp.Services.GameLogic
             return currentPlayer;
         }
 
-        public async Task WaitGameEndAsync(ObjectId id)
+        public async Task WaitGameEndAsync(ObjectId id, bool shouldReadMessages = true)
         {
             var player = await _playerRepository.GetPlayerByIdAsync(id);
 
