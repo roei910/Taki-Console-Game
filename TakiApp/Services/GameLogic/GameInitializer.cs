@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson;
+using System.Xml.Linq;
 using Taki.Models.Algorithm;
 using TakiApp.Shared.Interfaces;
 using TakiApp.Shared.Models;
@@ -6,7 +7,8 @@ using TakiApp.Shared.Models;
 namespace TakiApp.Services.GameLogic
 {
     //TODO: check the initializer and restore functionality maybe create classes for them
-    //TODO: create tasks for computer players => they will run seperately and know when to play 
+
+    //TODO: update the scores in the beggining if the user wants
     public class GameInitializer : IGameInitializer
     {
         private readonly IUserCommunicator _userCommunicator;
@@ -17,6 +19,7 @@ namespace TakiApp.Services.GameLogic
         private readonly ConstantVariables _constantVariables;
         private readonly ICardPlayService _cardPlayService;
         private readonly IComputerPlayersRunner _computerPlayersRunner;
+        private readonly IGameScore _gameScore;
         private GameSettings? _gameSettings;
         private Player? _onlinePlayer;
 
@@ -25,7 +28,8 @@ namespace TakiApp.Services.GameLogic
         public GameInitializer(IUserCommunicator userCommunicator, IGameSettingsRepository gameSettingsRepository,
             IPlayersRepository playersRepository, IDrawPileRepository drawPileRepository, 
             IDiscardPileRepository discardPileRepository, ConstantVariables constantVariables,
-            ICardPlayService cardPlayService, IComputerPlayersRunner computerPlayersRunner)
+            ICardPlayService cardPlayService, IComputerPlayersRunner computerPlayersRunner,
+            IGameScore gameScore)
         {
             _userCommunicator = userCommunicator;
             _gameSettingsRepository = gameSettingsRepository;
@@ -35,6 +39,7 @@ namespace TakiApp.Services.GameLogic
             _constantVariables = constantVariables;
             _cardPlayService = cardPlayService;
             _computerPlayersRunner = computerPlayersRunner;
+            _gameScore = gameScore;
         }
 
         public GameSettings GetGameSettings()
@@ -218,6 +223,16 @@ namespace TakiApp.Services.GameLogic
                 IsPlaying = false
             };
 
+            int score = _gameScore.GetScoreByName(_onlinePlayer.Name!);
+
+            if (score != GameScore.NO_SCORE)
+            {
+                string? answer = _userCommunicator.GetMessageFromUser($"would you like to load the existing " +
+                    $"score of {score} for user {_onlinePlayer.Name!}, y or else to avoid");
+                if (answer == "y")
+                    _onlinePlayer.Score = score;
+            }
+
             await _playersRepository.CreatePlayerAsync(_onlinePlayer);
 
             return _onlinePlayer;
@@ -237,6 +252,16 @@ namespace TakiApp.Services.GameLogic
                         Cards = [],
                         IsPlaying = false
                     };
+
+                    int score = _gameScore.GetScoreByName(player.Name!);
+
+                    if (score != GameScore.NO_SCORE)
+                    {
+                        string? answer = _userCommunicator.GetMessageFromUser($"would you like to load the existing " +
+                            $"score of {score} for user {player.Name!}, y or else to avoid");
+                        if (answer == "y")
+                            player.Score = score;
+                    }
 
                     return player;
                 }).ToList();

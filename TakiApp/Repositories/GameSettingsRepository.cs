@@ -1,4 +1,5 @@
-﻿using TakiApp.Shared.Interfaces;
+﻿using Taki.Models.Algorithm;
+using TakiApp.Shared.Interfaces;
 using TakiApp.Shared.Models;
 
 namespace TakiApp.Repositories
@@ -9,17 +10,20 @@ namespace TakiApp.Repositories
         private readonly IDrawPileDal _drawPileDal;
         private readonly IDiscardPileDal _discardPileDal;
         private readonly IPlayersRepository _playersRepository;
+        private readonly IGameScore _gameScore;
         private readonly IUserCommunicator _userCommunicator;
 
         public GameSettingsRepository(IDal<GameSettings> dal,
             IUserCommunicator userCommunicator, IDrawPileDal drawPileDal, 
-            IDiscardPileDal discardPileDal, IPlayersRepository playersRepository)
+            IDiscardPileDal discardPileDal, IPlayersRepository playersRepository,
+            IGameScore gameScore)
         {
             _gameSettingsDal = dal;
             _userCommunicator = userCommunicator;
             _drawPileDal = drawPileDal;
             _discardPileDal = discardPileDal;
             _playersRepository = playersRepository;
+            _gameScore = gameScore;
         }
 
         public async Task CreateGameSettings(GameSettings gameSettings)
@@ -97,11 +101,14 @@ namespace TakiApp.Repositories
             return gameSettings;
         }
 
-        public async Task<GameSettings> UpdateWinnersAsync(string name)
+        public async Task<GameSettings> UpdateWinnersAsync(Player player)
         {
             var gameSettings = await GetGameSettingsAsync();
 
-            gameSettings!.winners.Add(name);
+            if (gameSettings!.winners.Count == 0 && player.PlayerAlgorithm == typeof(ManualPlayerAlgorithm).ToString())
+                _gameScore.SetScoreByName(player.Name! ,player.Score + 1);
+            
+            gameSettings!.winners.Add(player.Name!);
 
             await _gameSettingsDal.UpdateOneAsync(gameSettings);
 
