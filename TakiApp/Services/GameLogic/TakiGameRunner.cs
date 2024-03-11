@@ -1,11 +1,10 @@
-﻿using TakiApp.Interfaces;
+﻿using TakiApp.Shared.Interfaces;
 
 namespace TakiApp.Services.GameLogic
 {
     public class TakiGameRunner : ITakiGameRunner
     {
         private readonly IUserCommunicator _userCommunicator;
-
         private readonly IPlayersRepository _playersRepository;
         private readonly IGameSettingsRepository _gameSettingsRepository;
         private readonly IGameInitializer _gameInitializer;

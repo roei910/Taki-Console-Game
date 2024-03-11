@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson;
 
-namespace TakiApp.Models
+namespace TakiApp.Shared.Models
 {
     public class GameSettings
     {

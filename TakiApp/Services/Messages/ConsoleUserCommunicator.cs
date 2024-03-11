@@ -1,4 +1,4 @@
-﻿using TakiApp.Interfaces;
+﻿using TakiApp.Shared.Interfaces;
 
 namespace Taki.Models.Messages
 {

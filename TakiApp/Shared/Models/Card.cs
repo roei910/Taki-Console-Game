@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using TakiApp.Serializers;
 
-namespace TakiApp.Models
+namespace TakiApp.Shared.Models
 {
     public class Card
     {
@@ -15,7 +15,7 @@ namespace TakiApp.Models
         public int Order { get; set; }
         public JObject CardConfigurations { get; set; } = [];
 
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public Card(ObjectId id, string type, string cardColor, JObject cardConfigurations)
         {
             Type = type;

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Taki.Extensions;
 
-namespace TakiApp.Models
+namespace TakiApp.Shared.Models
 {
     public class ConstantVariables
     {

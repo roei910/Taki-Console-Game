@@ -1,5 +1,5 @@
-﻿using TakiApp.Interfaces;
-using TakiApp.Models;
+﻿using TakiApp.Shared.Interfaces;
+using TakiApp.Shared.Models;
 
 namespace TakiApp.Repositories
 {
@@ -103,6 +103,8 @@ namespace TakiApp.Repositories
 
             gameSettings!.winners.Add(name);
 
+            await _gameSettingsDal.UpdateOneAsync(gameSettings);
+
             if (gameSettings!.winners.Count == gameSettings.NumberOfWinners)
             {
                 var winnersList = gameSettings.winners.Select((winner, index) => $"{index + 1}. {winner}").ToList();
@@ -111,8 +113,6 @@ namespace TakiApp.Repositories
                 await _playersRepository.SendMessagesToPlayersAsync("System", message);
                 gameSettings = await FinishGameAsync();
             }
-
-            await _gameSettingsDal.UpdateOneAsync(gameSettings);
 
             return gameSettings;
         }

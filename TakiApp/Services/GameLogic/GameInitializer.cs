@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson;
 using Taki.Models.Algorithm;
-using TakiApp.Interfaces;
-using TakiApp.Models;
+using TakiApp.Shared.Interfaces;
+using TakiApp.Shared.Models;
 
 namespace TakiApp.Services.GameLogic
 {
@@ -50,8 +50,8 @@ namespace TakiApp.Services.GameLogic
                 _userCommunicator.SendMessageToUser("Please enter type of game: online or normal");
                 var isOnline = _userCommunicator.UserPickItemFromList(new List<string>() { "online", "normal"});
 
-                _userCommunicator.SendMessageToUser("Please enter normal or pyramid");
-                var typeOfGame = _userCommunicator.UserPickItemFromList(new List<string>() { "normal", "pyramid" });
+                //_userCommunicator.SendMessageToUser("Please enter normal or pyramid");
+                //var typeOfGame = _userCommunicator.UserPickItemFromList(new List<string>() { "normal", "pyramid" });
 
                 var numberOfPlayers = _userCommunicator.GetNumberFromUser("Please enter number of players",
                     _constantVariables.MinNumberOfPlayers, _constantVariables.MaxNumberOfPlayers);
@@ -70,7 +70,7 @@ namespace TakiApp.Services.GameLogic
                     HasGameStarted = false,
                     IsOnline = isOnline == "online",
                     NumberOfPlayerCards = numberOfPlayerCards,
-                    TypeOfGame = typeOfGame,
+                    //TypeOfGame = typeOfGame,
                     NumberOfPlayers = numberOfPlayers,
                     NumberOfWinners = _constantVariables.NumberOfTotalWinners
                 };

@@ -5,14 +5,12 @@ using Taki.Models.Algorithm;
 using Taki.Models.Messages;
 using Taki.Serializers;
 using TakiApp.Dal;
-using TakiApp.Interfaces;
-using TakiApp.Models;
 using TakiApp.Repositories;
 using TakiApp.Services.Algorithms;
 using TakiApp.Services.Cards;
 using TakiApp.Services.GameLogic;
-
-//TODO: if a player finished his play we need to add in our screen what happened.
+using TakiApp.Shared.Interfaces;
+using TakiApp.Shared.Models;
 
 //TODO: message when player chooses a card
 
@@ -20,9 +18,11 @@ using TakiApp.Services.GameLogic;
 
 //TODO: add pyramid functionality
 
-//TODO: add normal game not just online
+//TODO: add score and restore score
 
-//TODO: switch user with change color not working correctly
+//TODO: add game restore to continue playing while in a normal game // maybe game states => control the store and restore, initialize
+
+//TODO: add restart game
 
 var serviceProvider = new ServiceCollection()
     .AddSingleton<IConfiguration>(x => new ConfigurationBuilder()

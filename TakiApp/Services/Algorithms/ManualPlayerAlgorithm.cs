@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
-using TakiApp.Interfaces;
-using TakiApp.Models;
 using TakiApp.Services.Cards;
+using TakiApp.Shared.Interfaces;
+using TakiApp.Shared.Models;
 
 namespace Taki.Models.Algorithm
 {

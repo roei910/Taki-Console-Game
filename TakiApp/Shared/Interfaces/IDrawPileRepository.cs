@@ -1,6 +1,6 @@
-﻿using TakiApp.Models;
+﻿using TakiApp.Shared.Models;
 
-namespace TakiApp.Interfaces
+namespace TakiApp.Shared.Interfaces
 {
     public interface IDrawPileRepository
     {

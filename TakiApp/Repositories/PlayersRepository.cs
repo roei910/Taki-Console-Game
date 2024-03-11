@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver.Linq;
-using TakiApp.Interfaces;
-using TakiApp.Models;
+using TakiApp.Shared.Interfaces;
+using TakiApp.Shared.Models;
 
 namespace TakiApp.Repositories
 {

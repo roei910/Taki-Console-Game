@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System.Drawing;
-using TakiApp.Interfaces;
-using TakiApp.Models;
+using TakiApp.Shared.Interfaces;
+using TakiApp.Shared.Models;
 
 namespace TakiApp.Services.Cards
 {

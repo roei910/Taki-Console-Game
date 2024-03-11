@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson;
 
-namespace TakiApp.Interfaces
+namespace TakiApp.Shared.Interfaces
 {
     public interface IDal<T>
     {
