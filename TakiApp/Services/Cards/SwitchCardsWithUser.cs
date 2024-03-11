@@ -9,7 +9,8 @@ namespace TakiApp.Services.Cards
         private readonly IAlgorithmService _algorithmService;
 
         public SwitchCardsWithUser(IDiscardPileRepository discardPileRepository, IPlayersRepository playersRepository, 
-            IAlgorithmService algorithmService) : base(discardPileRepository, playersRepository)
+            IAlgorithmService algorithmService, IUserCommunicator userCommunicator) : 
+            base(discardPileRepository, playersRepository, userCommunicator)
         {
             _algorithmService = algorithmService;
         }

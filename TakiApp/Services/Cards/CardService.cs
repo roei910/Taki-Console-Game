@@ -7,12 +7,14 @@ namespace TakiApp.Services.Cards
     {
         protected readonly IDiscardPileRepository _discardPileRepository;
         protected readonly IPlayersRepository _playersRepository;
+        protected readonly IUserCommunicator _userCommunicator;
 
         public CardService(IDiscardPileRepository discardPileRepository,
-            IPlayersRepository playersRepository)
+            IPlayersRepository playersRepository, IUserCommunicator userCommunicator)
         {
             _discardPileRepository = discardPileRepository;
             _playersRepository = playersRepository;
+            _userCommunicator = userCommunicator;
         }
 
         public virtual bool CanStackOtherOnThis(Card topDiscard, Card otherCard, ICardPlayService cardPlayService)
@@ -23,7 +25,12 @@ namespace TakiApp.Services.Cards
             if (topDiscard.CardColor == ColorCard.DEFAULT_COLOR.ToString())
                 return true;
 
-            return topDiscard.Type == otherCard.Type;
+            var ans = topDiscard.Type == otherCard.Type;
+
+            if (!ans)
+                _userCommunicator.SendErrorMessage($"Previous card was {topDiscard}");
+
+            return ans;
         }
 
         public virtual async Task PlayAsync(Player player, Card cardPlayed, ICardPlayService cardPlayService)

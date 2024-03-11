@@ -6,14 +6,12 @@ namespace TakiApp.Services.Cards
 {
     public class Plus : ColorCard
     {
-        private readonly IUserCommunicator _userCommunicator;
         private readonly IAlgorithmService _algorithmService;
 
         public Plus(IDiscardPileRepository discardPileRepository, IPlayersRepository playersRepository,
             IUserCommunicator userCommunicator, IAlgorithmService algorithService) : 
-            base(discardPileRepository, playersRepository)
+            base(discardPileRepository, playersRepository, userCommunicator)
         {
-            _userCommunicator = userCommunicator;
             _algorithmService = algorithService;
         }
 

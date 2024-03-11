@@ -7,8 +7,9 @@ namespace TakiApp.Services.Cards
 {
     public class SwitchCardsWithDirection : CardService
     {
-        public SwitchCardsWithDirection(IDiscardPileRepository discardPileRepository, IPlayersRepository playersRepository) : 
-            base(discardPileRepository, playersRepository) { }
+        public SwitchCardsWithDirection(IDiscardPileRepository discardPileRepository, IPlayersRepository playersRepository,
+            IUserCommunicator userCommunicator) : 
+            base(discardPileRepository, playersRepository, userCommunicator) { }
 
         public override List<Card> GenerateCardsForDeck()
         {
@@ -29,14 +30,14 @@ namespace TakiApp.Services.Cards
         }
 
         public override bool CanStackOtherOnThis(Card topDiscard, Card otherCard, ICardPlayService cardPlayService)
-        {
+        {//TODO: check why sometimes cant parse object id
             var prevCardId = topDiscard.CardConfigurations["prevCardId"];
 
             if (prevCardId == null)
                 return true;
 
             if (!ObjectId.TryParse(prevCardId!.ToString(), out ObjectId objectId))
-                throw new Exception("couldnt find the card, error!");
+                throw new Exception("couldnt parse the object id!");
 
             var cardTask = Task.Run(async () =>
             {

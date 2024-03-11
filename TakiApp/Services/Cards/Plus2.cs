@@ -7,8 +7,9 @@ namespace TakiApp.Services.Cards
 {
     public class Plus2 : ColorCard
     {
-        public Plus2(IDiscardPileRepository discardPileRepository, IPlayersRepository playersRepository) : 
-            base(discardPileRepository, playersRepository) { }
+        public Plus2(IDiscardPileRepository discardPileRepository, IPlayersRepository playersRepository,
+            IUserCommunicator userCommunicator) : 
+            base(discardPileRepository, playersRepository, userCommunicator) { }
 
         public override List<Card> GenerateCardsForDeck()
         {
@@ -40,7 +41,14 @@ namespace TakiApp.Services.Cards
             var isOnlyPlus2Allowed = (bool)topDiscard.CardConfigurations["isOnlyPlus2Allowed"]!;
 
             if (isOnlyPlus2Allowed)
-                return topDiscard.Type == otherCard.Type;
+            {
+                var ans = topDiscard.Type == otherCard.Type;
+
+                _userCommunicator.SendErrorMessage("Only plus 2 cards are allowed!");
+
+                return ans;
+            }
+
 
             return base.CanStackOtherOnThis(topDiscard, otherCard, cardPlayService);
         }

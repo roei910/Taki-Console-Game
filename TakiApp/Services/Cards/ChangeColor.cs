@@ -9,8 +9,8 @@ namespace TakiApp.Services.Cards
         private readonly IAlgorithmService _algorithmService;
 
         public ChangeColor(IAlgorithmService algorithmService, IDiscardPileRepository discardPileRepository, 
-            IPlayersRepository playersRepository) : 
-            base(discardPileRepository, playersRepository)
+            IPlayersRepository playersRepository, IUserCommunicator userCommunicator) : 
+            base(discardPileRepository, playersRepository, userCommunicator)
         {
             _algorithmService = algorithmService;
         }

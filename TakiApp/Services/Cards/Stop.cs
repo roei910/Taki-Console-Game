@@ -6,8 +6,9 @@ namespace TakiApp.Services.Cards
 {
     public class Stop : ColorCard
     {
-        public Stop(IDiscardPileRepository discardPileRepository, IPlayersRepository playersRepository) : 
-            base(discardPileRepository, playersRepository) { }
+        public Stop(IDiscardPileRepository discardPileRepository, IPlayersRepository playersRepository,
+            IUserCommunicator userCommunicator) : 
+            base(discardPileRepository, playersRepository, userCommunicator) { }
 
         public override List<Card> GenerateCardsForDeck()
         {

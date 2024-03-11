@@ -7,8 +7,8 @@ namespace TakiApp.Services.Cards
     public class ChangeDirection : ColorCard
     {
         public ChangeDirection(IDiscardPileRepository discardPileRepository, 
-            IPlayersRepository playersRepository) :
-            base(discardPileRepository, playersRepository) { }
+            IPlayersRepository playersRepository, IUserCommunicator userCommunicator) :
+            base(discardPileRepository, playersRepository, userCommunicator) { }
 
         public override List<Card> GenerateCardsForDeck()
         {

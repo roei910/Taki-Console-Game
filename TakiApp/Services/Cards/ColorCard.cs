@@ -9,8 +9,9 @@ namespace TakiApp.Services.Cards
         public static readonly Color DEFAULT_COLOR = Color.Empty;
         public static readonly List<Color> Colors = [Color.Green, Color.Red, Color.Yellow, Color.Blue];
 
-        protected ColorCard(IDiscardPileRepository discardPileRepository, IPlayersRepository playersRepository) : 
-            base(discardPileRepository, playersRepository) { }
+        protected ColorCard(IDiscardPileRepository discardPileRepository, IPlayersRepository playersRepository, 
+            IUserCommunicator userCommunicator) : 
+            base(discardPileRepository, playersRepository, userCommunicator) { }
 
         public override bool CanStackOtherOnThis(Card topDiscard, Card otherCard, ICardPlayService cardPlayService)
         {
