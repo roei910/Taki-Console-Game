@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using TakiApp.Serializers;
+using TakiApp.Services.Cards;
 
 namespace TakiApp.Shared.Models
 {
@@ -33,7 +34,12 @@ namespace TakiApp.Shared.Models
 
         public override string ToString()
         {
-            return $"{Type.Split('.').Last()}, {CardColor}";
+            var str = $"{Type.Split('.').Last()}";
+
+            if (CardColor != ColorCard.DEFAULT_COLOR.Name)
+                str += $", {CardColor}";
+            
+            return str;
         }
     }
 }
