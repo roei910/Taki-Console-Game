@@ -1,5 +1,4 @@
 ﻿using MongoDB.Bson;
-using System.Xml.Linq;
 using Taki.Models.Algorithm;
 using TakiApp.Shared.Interfaces;
 using TakiApp.Shared.Models;
@@ -7,8 +6,6 @@ using TakiApp.Shared.Models;
 namespace TakiApp.Services.GameLogic
 {
     //TODO: check the initializer and restore functionality maybe create classes for them
-
-    //TODO: update the scores in the beggining if the user wants
     public class GameInitializer : IGameInitializer
     {
         private readonly IUserCommunicator _userCommunicator;

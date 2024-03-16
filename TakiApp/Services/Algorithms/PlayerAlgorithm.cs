@@ -11,7 +11,7 @@ namespace Taki.Models.Algorithm
             if (playerCards.Count == 0)
                 return null;
 
-            Task.Delay(5000).Wait();
+            Task.Delay(500).Wait();
 
             Card? playerCard = playerCards.FirstOrDefault(card => isSimilarTo(card!)); 
 
